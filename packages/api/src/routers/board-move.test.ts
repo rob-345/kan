@@ -52,6 +52,9 @@ vi.mock("@kan/db/repository/list.repo", () => ({
   getByPublicId: vi.fn(),
 }));
 
+vi.mock("../utils/integrationJobs", () => ({
+  enqueueGoogleBoardSync: vi.fn(),
+}));
 vi.mock("../utils/permissions", () => ({
   assertCanEdit: vi.fn(),
   assertCanDelete: vi.fn(),

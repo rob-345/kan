@@ -53,6 +53,12 @@ vi.mock("@kan/shared/utils", () => ({
   generateAvatarUrl: vi.fn(),
   normalizeDescription: vi.fn((description: string) => description),
 }));
+vi.mock("../utils/integrationJobs", () => ({
+  enqueueChatEvent: vi.fn(),
+  enqueueGoogleBoardSync: vi.fn(),
+  enqueueGoogleCardSync: vi.fn(),
+  enqueueGoogleListSync: vi.fn(),
+}));
 vi.mock("../utils/notifications", () => ({
   sendMentionEmails: vi.fn(),
 }));

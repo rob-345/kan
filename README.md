@@ -187,8 +187,8 @@ pnpm dev
 | `BETTER_AUTH_ALLOWED_DOMAINS`             | Comma-separated list of allowed domains for OIDC logins   | For OIDC/Social login                       | `example.com,subsidiary.com`                                |
 | `BETTER_AUTH_SECRET`                      | Auth encryption secret                                    | Yes                                         | Random 32+ char string                                      |
 | `BETTER_AUTH_TRUSTED_ORIGINS`             | Allowed callback origins                                  | No                                          | `http://localhost:3000,http://localhost:3001`               |
-| `GOOGLE_CLIENT_ID`                        | Google OAuth client ID                                    | For Google login                            | `xxx.apps.googleusercontent.com`                            |
-| `GOOGLE_CLIENT_SECRET`                    | Google OAuth client secret                                | For Google login                            | `xxx`                                                       |
+| `GOOGLE_CLIENT_ID`                        | Google OAuth client ID                                    | For Google login, Calendar and Tasks        | `xxx.apps.googleusercontent.com`                            |
+| `GOOGLE_CLIENT_SECRET`                    | Google OAuth client secret                                | For Google login, Calendar and Tasks        | `xxx`                                                       |
 | `DISCORD_CLIENT_ID`                       | Discord OAuth client ID                                   | For Discord login                           | `xxx`                                                       |
 | `DISCORD_CLIENT_SECRET`                   | Discord OAuth client secret                               | For Discord login                           | `xxx`                                                       |
 | `GITHUB_CLIENT_ID`                        | GitHub OAuth client ID                                    | For GitHub login                            | `xxx`                                                       |
@@ -216,6 +216,20 @@ pnpm dev
 | `LOG_LEVEL`                               | Log verbosity level (debug, info, warn, error)            | No (defaults to debug in dev, info in prod) | `info`                                                      |
 
 See `.env.example` for a complete list of supported environment variables.
+
+## Google Workspace 🗓️
+
+**Google Chat.** Workspace admins can post card updates to Chat spaces from **Settings → Google Chat**. In the Chat space, open **Apps & integrations → Webhooks → Add webhook**, copy the URL and paste it into Kan. Each space can follow every board or one board, and you choose which events it gets (new cards, moves, comments, completed cards, due date reminders and more). Messages about the same card are threaded together. Your Google Workspace admin must allow incoming webhooks in Chat.
+
+**Google Calendar and Tasks.** With `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` set, everyone gets **Connect Google** under **Settings → Account**. Kan then keeps a "Kan" calendar (an event at each due time, carrying the card's reminder) and a "Kan" task list in their own Google account, for the cards they're a member of. Kan can only see the calendar and task list it creates. Google Tasks stores dates only, so tasks show the due day without a time.
+
+To set it up in Google Cloud:
+
+1. Enable the **Google Calendar API** and the **Google Tasks API**.
+2. On the OAuth consent screen, choose **Internal** (Google Workspace) and add the scopes `.../auth/calendar.app.created` and `.../auth/tasks`.
+3. On the OAuth client, add `{NEXT_PUBLIC_BASE_URL}/api/integrations/google/callback` as an authorised redirect URI.
+
+Google calls run in the background through the same scheduler as due date reminders, and retry if Google is briefly unavailable.
 
 ## MCP Server (AI Control) 🤖
 

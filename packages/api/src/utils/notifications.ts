@@ -1,7 +1,7 @@
 import { env } from "next-runtime-env";
 
 import type { dbClient } from "@kan/db/client";
-import type { NotificationType } from "@kan/db/schema";
+import type { GoogleChatEvent, NotificationType } from "@kan/db/schema";
 import * as cardRepo from "@kan/db/repository/card.repo";
 import * as memberRepo from "@kan/db/repository/member.repo";
 import * as notificationRepo from "@kan/db/repository/notification.repo";
@@ -11,6 +11,7 @@ import * as workspaceRepo from "@kan/db/repository/workspace.repo";
 import { sendEmail } from "@kan/email";
 import { createLogger } from "@kan/logger";
 
+import { enqueueChatEvent } from "./integrationJobs";
 import { getNewMentionPublicIds } from "./mention-notifications";
 
 const log = createLogger("notifications");
@@ -26,9 +27,21 @@ export interface CardNotificationMetadata {
   dueDate?: string | null;
 }
 
+/** Card notifications that are also posted to Google Chat spaces. */
+const chatEventForNotification: Partial<
+  Record<NotificationType, GoogleChatEvent>
+> = {
+  "card.comment.added": "card.comment.added",
+  "card.moved": "card.moved",
+  "card.dueDate.changed": "card.dueDate.changed",
+  "card.archived": "card.archived",
+  "card.member.added": "card.member.added",
+};
+
 /**
  * Records an in-app notification for everyone following a card (its watchers,
- * its board's watchers and its members), except the person who acted.
+ * its board's watchers and its members), except the person who acted, and
+ * posts it to any Google Chat spaces that want it.
  * Never throws: notifications must not break the action that caused them.
  */
 export async function notifyCardAudience({
@@ -51,6 +64,23 @@ export async function notifyCardAudience({
   /** Notify exactly these users instead of the card's audience. */
   onlyUserIds?: string[];
 }) {
+  const chatEvent = chatEventForNotification[type];
+  if (chatEvent) {
+    void enqueueChatEvent(db, {
+      event: chatEvent,
+      cardId,
+      actorUserId,
+      actorName: metadata?.actorName,
+      commentId,
+      memberUserId: type === "card.member.added" ? onlyUserIds?.[0] : undefined,
+      context: {
+        fromListName: metadata?.fromListName,
+        toListName: metadata?.toListName,
+        dueDate: metadata?.dueDate,
+      },
+    });
+  }
+
   try {
     const audience =
       onlyUserIds ?? (await watcherRepo.getCardAudienceUserIds(db, cardId));

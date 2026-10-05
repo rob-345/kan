@@ -25,6 +25,7 @@ import {
   boardUpdateResponseSchema,
 } from "../schemas";
 import { createAvatarUrlResolver } from "../utils/avatarUrls";
+import { enqueueGoogleBoardSync } from "../utils/integrationJobs";
 import { assertCanDelete, assertCanEdit, assertPermission } from "../utils/permissions";
 
 export const boardRouter = createTRPCRouter({
@@ -702,6 +703,8 @@ export const boardRouter = createTRPCRouter({
 
           await activityRepo.bulkCreate(ctx.db, activities);
         }
+
+        void enqueueGoogleBoardSync(ctx.db, board.id);
       }
 
       return { success: true };

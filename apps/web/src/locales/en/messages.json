@@ -60,7 +60,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        326
+        361
       ]
     ],
     "translation": "{0} | {1}"
@@ -92,7 +92,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        63
+        67
       ]
     ],
     "translation": "{0} has been added to your favorites."
@@ -108,7 +108,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        64
+        68
       ]
     ],
     "translation": "{0} has been removed from your favorites."
@@ -124,7 +124,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        563
+        567
       ]
     ],
     "translation": "{0} labels"
@@ -140,10 +140,171 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        887
+        951
       ]
     ],
     "translation": "{0} not found"
+  },
+  "qa2/Os": {
+    "translation": "{actor} added you to {card}",
+    "message": "{actor} added you to {card}",
+    "placeholders": {
+      "actor": [
+        "actor"
+      ],
+      "card": [
+        "card"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        42
+      ]
+    ]
+  },
+  "Z+MrcX": {
+    "translation": "{actor} archived {card}",
+    "message": "{actor} archived {card}",
+    "placeholders": {
+      "actor": [
+        "actor"
+      ],
+      "card": [
+        "card"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        40
+      ]
+    ]
+  },
+  "FF0CHB": {
+    "translation": "{actor} commented on {card}",
+    "message": "{actor} commented on {card}",
+    "placeholders": {
+      "actor": [
+        "actor"
+      ],
+      "card": [
+        "card"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        30
+      ]
+    ]
+  },
+  "NmIFtw": {
+    "translation": "{actor} mentioned you on {card}",
+    "message": "{actor} mentioned you on {card}",
+    "placeholders": {
+      "actor": [
+        "actor"
+      ],
+      "card": [
+        "card"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        28
+      ]
+    ]
+  },
+  "a2djTA": {
+    "translation": "{actor} moved {card}",
+    "message": "{actor} moved {card}",
+    "placeholders": {
+      "actor": [
+        "actor"
+      ],
+      "card": [
+        "card"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        34
+      ]
+    ]
+  },
+  "zNWNy6": {
+    "translation": "{actor} moved {card} from {0} to {1}",
+    "message": "{actor} moved {card} from {0} to {1}",
+    "placeholders": {
+      "0": [
+        "notification.fromListName"
+      ],
+      "1": [
+        "notification.toListName"
+      ],
+      "actor": [
+        "actor"
+      ],
+      "card": [
+        "card"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        33
+      ]
+    ]
+  },
+  "qi15q2": {
+    "translation": "{actor} removed the due date from {card}",
+    "message": "{actor} removed the due date from {card}",
+    "placeholders": {
+      "actor": [
+        "actor"
+      ],
+      "card": [
+        "card"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        38
+      ]
+    ]
+  },
+  "qjpMFI": {
+    "translation": "{actor} set {card} to be due {0}",
+    "message": "{actor} set {card} to be due {0}",
+    "placeholders": {
+      "0": [
+        "format(new Date(notification.dueDate), \"MMM d, yyyy\")"
+      ],
+      "actor": [
+        "actor"
+      ],
+      "card": [
+        "card"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        37
+      ]
+    ]
   },
   "0xWkkH": {
     "message": "{boardCount, plural, one {Import board (1)} other {Import boards ({boardCount})}}",
@@ -160,6 +321,105 @@
       ]
     ],
     "translation": "{boardCount, plural, one {Import board (1)} other {Import boards ({boardCount})}}"
+  },
+  "+Vp/+4": {
+    "translation": "{card} is due {0}",
+    "message": "{card} is due {0}",
+    "placeholders": {
+      "0": [
+        "formatDistanceToNow(new Date(notification.dueDate), { addSuffix: true })"
+      ],
+      "card": [
+        "card"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        45
+      ]
+    ]
+  },
+  "38vLqY": {
+    "translation": "{card} is due soon",
+    "message": "{card} is due soon",
+    "placeholders": {
+      "card": [
+        "card"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        46
+      ]
+    ]
+  },
+  "bhmw0b": {
+    "translation": "{days} days before",
+    "message": "{days} days before",
+    "placeholders": {
+      "days": [
+        "days"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DueDateDetails.tsx",
+        17
+      ]
+    ]
+  },
+  "BS6eFb": {
+    "translation": "{entityLabel} (copy)",
+    "message": "{entityLabel} (copy)",
+    "placeholders": {
+      "entityLabel": [
+        "entityLabel"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/CopyListModal.tsx",
+        14
+      ]
+    ]
+  },
+  "MXO9xS": {
+    "translation": "{hours} hours before",
+    "message": "{hours} hours before",
+    "placeholders": {
+      "hours": [
+        "hours"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DueDateDetails.tsx",
+        14
+      ]
+    ]
+  },
+  "f1HVsp": {
+    "translation": "{minutes} minutes before",
+    "message": "{minutes} minutes before",
+    "placeholders": {
+      "minutes": [
+        "minutes"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DueDateDetails.tsx",
+        11
+      ]
+    ]
   },
   "yndBF+": {
     "message": "{projectCount, plural, one {Import project (1)} other {Import projects ({projectCount})}}",
@@ -250,6 +510,30 @@
     ],
     "translation": "$8/month"
   },
+  "1t5Pn5": {
+    "translation": "1 day before",
+    "message": "1 day before",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DueDateDetails.tsx",
+        17
+      ]
+    ]
+  },
+  "l3g2XN": {
+    "translation": "1 hour before",
+    "message": "1 hour before",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DueDateDetails.tsx",
+        14
+      ]
+    ]
+  },
   "zMlxCA": {
     "message": "1 user",
     "placeholders": {},
@@ -322,6 +606,18 @@
     ],
     "translation": "404 - Page Not Found | kan.bn"
   },
+  "cYur8a": {
+    "translation": "a card",
+    "message": "a card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        24
+      ]
+    ]
+  },
   "/rn4RE": {
     "message": "A powerful, flexible kanban app that helps you organise work, track progress, and deliver results—all in one place.",
     "placeholders": {},
@@ -341,7 +637,7 @@
     "origin": [
       [
         "src/components/SettingsLayout.tsx",
-        41
+        43
       ]
     ],
     "translation": "Account"
@@ -416,6 +712,14 @@
         33
       ],
       [
+        "src/views/settings/components/GoogleChatSpaceList.tsx",
+        85
+      ],
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        292
+      ],
+      [
         "src/views/settings/components/NewWebhookModal.tsx",
         321
       ],
@@ -433,7 +737,7 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        481
+        522
       ],
       [
         "src/views/public/board/CardModal.tsx",
@@ -473,7 +777,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextMenu.tsx",
-        50
+        54
       ]
     ],
     "translation": "Add / edit label"
@@ -485,7 +789,7 @@
     "origin": [
       [
         "src/views/board/components/List.tsx",
-        152
+        179
       ]
     ],
     "translation": "Add a card"
@@ -513,7 +817,7 @@
       ],
       [
         "src/views/board/components/List.tsx",
-        139
+        166
       ]
     ],
     "translation": "Add card"
@@ -529,7 +833,7 @@
       ],
       [
         "src/views/card/components/Dropdown.tsx",
-        123
+        149
       ]
     ],
     "translation": "Add checklist"
@@ -562,6 +866,18 @@
     ],
     "translation": "Add comment... (type '/' to open commands or '@' to mention)"
   },
+  "3kS8Hp": {
+    "translation": "Add cover",
+    "message": "Add cover",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CoverSelector.tsx",
+        110
+      ]
+    ]
+  },
   "gL/7jw": {
     "message": "Add description... (type '/' to open commands or '@' to mention)",
     "placeholders": {},
@@ -585,6 +901,18 @@
       ]
     ],
     "translation": "Add details..."
+  },
+  "vMIeYz": {
+    "translation": "Add Google Chat space",
+    "message": "Add Google Chat space",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        168
+      ]
+    ]
   },
   "lyqwgn": {
     "message": "Add label",
@@ -618,6 +946,22 @@
     ],
     "translation": "Add member"
   },
+  "mmrqm5": {
+    "translation": "Add space",
+    "message": "Add space",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        304
+      ],
+      [
+        "src/views/settings/GoogleChatSettings.tsx",
+        35
+      ]
+    ]
+  },
   "pBsoKL": {
     "message": "Add to favorites",
     "placeholders": {},
@@ -625,7 +969,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        138
+        184
       ]
     ],
     "translation": "Add to favorites"
@@ -656,7 +1000,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        102
+        105
       ]
     ],
     "translation": "added {0} labels: <0>{labelList}</0>"
@@ -668,7 +1012,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        132
+        135
       ]
     ],
     "translation": "added a checklist"
@@ -680,7 +1024,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        135
+        138
       ]
     ],
     "translation": "added a checklist item"
@@ -692,7 +1036,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        128
+        131
       ]
     ],
     "translation": "added a label to the card"
@@ -704,7 +1048,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        130
+        133
       ]
     ],
     "translation": "added a member to the card"
@@ -716,7 +1060,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        140
+        143
       ]
     ],
     "translation": "added an attachment"
@@ -732,7 +1076,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        278
+        288
       ]
     ],
     "translation": "added an attachment <0>{0}</0>"
@@ -748,7 +1092,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        208
+        218
       ]
     ],
     "translation": "added checklist <0>{0}</0>"
@@ -764,7 +1108,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        232
+        242
       ]
     ],
     "translation": "added checklist item <0>{0}</0>"
@@ -780,7 +1124,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        192
+        202
       ]
     ],
     "translation": "added label <0>{0}</0>"
@@ -792,7 +1136,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        60
+        64
       ]
     ],
     "translation": "Added to favorites"
@@ -899,6 +1243,22 @@
       ]
     ],
     "translation": "Advanced security, compliance, and dedicated support for large organizations."
+  },
+  "me3LEG": {
+    "translation": "All boards",
+    "message": "All boards",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceList.tsx",
+        89
+      ],
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        234
+      ]
+    ]
   },
   "h2ztFt": {
     "message": "All Free features +",
@@ -1068,7 +1428,7 @@
     "origin": [
       [
         "src/components/SettingsLayout.tsx",
-        65
+        67
       ],
       [
         "src/views/pricing/components/FeatureComparisonTable.tsx",
@@ -1180,10 +1540,38 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        118
+        142
       ]
     ],
     "translation": "Archive board"
+  },
+  "E5Y3nW": {
+    "translation": "Archive card",
+    "message": "Archive card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/CardContextMenu.tsx",
+        78
+      ],
+      [
+        "src/views/card/components/Dropdown.tsx",
+        178
+      ]
+    ]
+  },
+  "aLuntb": {
+    "translation": "Archive list",
+    "message": "Archive list",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/List.tsx",
+        209
+      ]
+    ]
   },
   "TdfEV7": {
     "message": "Archived",
@@ -1196,6 +1584,50 @@
       ]
     ],
     "translation": "Archived"
+  },
+  "3nnnfe": {
+    "translation": "archived {0}",
+    "message": "archived {0}",
+    "placeholders": {
+      "0": [
+        "formatDistanceToNow(row.archivedAt, { addSuffix: true })"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/ArchivedItemsModal.tsx",
+        122
+      ]
+    ]
+  },
+  "rICucf": {
+    "translation": "Archived items",
+    "message": "Archived items",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/ArchivedItemsModal.tsx",
+        80
+      ],
+      [
+        "src/views/board/components/BoardDropdown.tsx",
+        175
+      ]
+    ]
+  },
+  "vx/87p": {
+    "translation": "archived the card",
+    "message": "archived the card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        153
+      ]
+    ]
   },
   "lo8xBK": {
     "message": "Are you sure want to remove {entityLabel}?",
@@ -1332,7 +1764,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        172
+        182
       ]
     ],
     "translation": "assigned <0>{0}</0> to the card"
@@ -1349,6 +1781,18 @@
     ],
     "translation": "Assignees"
   },
+  "usys0y": {
+    "translation": "At time of due date",
+    "message": "At time of due date",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DueDateDetails.tsx",
+        10
+      ]
+    ]
+  },
   "N7m8E+": {
     "message": "Attach files",
     "placeholders": {},
@@ -1356,11 +1800,11 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        626
+        630
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        627
+        631
       ]
     ],
     "translation": "Attach files"
@@ -1376,6 +1820,18 @@
       ]
     ],
     "translation": "Attachment uploaded"
+  },
+  "w/Sphq": {
+    "translation": "Attachments",
+    "message": "Attachments",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CoverSelector.tsx",
+        143
+      ]
+    ]
   },
   "1rWxEw": {
     "message": "Awaiting Customer",
@@ -1559,7 +2015,7 @@
     "origin": [
       [
         "src/components/SettingsLayout.tsx",
-        58
+        60
       ],
       [
         "src/views/boards/components/TemplateBoards.tsx",
@@ -1603,15 +2059,19 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        859
+        923
       ],
       [
         "src/views/card/index.tsx",
-        326
+        361
       ],
       [
         "src/views/public/board/index.tsx",
         125
+      ],
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        227
       ]
     ],
     "translation": "Board"
@@ -1636,7 +2096,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        49
+        53
       ]
     ],
     "translation": "Board archived"
@@ -1660,7 +2120,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        877
+        941
       ]
     ],
     "translation": "Board name"
@@ -1708,7 +2168,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        167
+        213
       ]
     ],
     "translation": "Board options"
@@ -1732,7 +2192,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        50
+        54
       ]
     ],
     "translation": "Board unarchived"
@@ -1820,7 +2280,7 @@
     "origin": [
       [
         "src/components/SideNavigation.tsx",
-        98
+        99
       ],
       [
         "src/views/boards/index.tsx",
@@ -1896,6 +2356,18 @@
       ]
     ],
     "translation": "Calendar"
+  },
+  "0Y87GI": {
+    "translation": "Calendar access wasn't granted. Reconnect to allow it.",
+    "message": "Calendar access wasn't granted. Reconnect to allow it.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        165
+      ]
+    ]
   },
   "t6FvJH": {
     "message": "Can add comments",
@@ -2299,6 +2771,10 @@
         267
       ],
       [
+        "src/views/board/components/CopyListModal.tsx",
+        53
+      ],
+      [
         "src/views/board/components/DeleteBoardConfirmation.tsx",
         44
       ],
@@ -2347,6 +2823,10 @@
         88
       ],
       [
+        "src/views/settings/components/DeleteGoogleChatSpaceConfirmation.tsx",
+        63
+      ],
+      [
         "src/views/settings/components/DeleteWebhookConfirmation.tsx",
         75
       ],
@@ -2364,10 +2844,42 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        326
+        361
       ]
     ],
     "translation": "Card"
+  },
+  "rPhHN7": {
+    "translation": "Card added",
+    "message": "Card added",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/googleChatEventLabels.ts",
+        9
+      ]
+    ]
+  },
+  "iQzw74": {
+    "translation": "Card archived",
+    "message": "Card archived",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/index.tsx",
+        410
+      ],
+      [
+        "src/views/card/components/Dropdown.tsx",
+        69
+      ],
+      [
+        "src/views/settings/components/googleChatEventLabels.ts",
+        14
+      ]
+    ]
   },
   "sU2uWc": {
     "message": "Card duplicated",
@@ -2380,7 +2892,7 @@
       ],
       [
         "src/views/card/components/Dropdown.tsx",
-        46
+        49
       ]
     ],
     "translation": "Card duplicated"
@@ -2392,10 +2904,22 @@
     "origin": [
       [
         "src/views/card/components/Dropdown.tsx",
-        48
+        51
       ]
     ],
     "translation": "Card duplicated successfully."
+  },
+  "YVkfmo": {
+    "translation": "Card marked complete",
+    "message": "Card marked complete",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/googleChatEventLabels.ts",
+        13
+      ]
+    ]
   },
   "AgE2vR": {
     "message": "Card member assignments will be cleared when moving to a different workspace.",
@@ -2409,6 +2933,18 @@
     ],
     "translation": "Card member assignments will be cleared when moving to a different workspace."
   },
+  "JWJFsx": {
+    "translation": "Card moved to another list",
+    "message": "Card moved to another list",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/googleChatEventLabels.ts",
+        10
+      ]
+    ]
+  },
   "fEY2vP": {
     "message": "Card not found",
     "placeholders": {},
@@ -2416,11 +2952,11 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        389
+        430
       ],
       [
         "src/views/card/index.tsx",
-        426
+        467
       ]
     ],
     "translation": "Card not found"
@@ -2432,7 +2968,7 @@
     "origin": [
       [
         "src/views/card/components/Dropdown.tsx",
-        167
+        205
       ]
     ],
     "translation": "Card options"
@@ -2444,7 +2980,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        429
+        433
       ]
     ],
     "translation": "Card title"
@@ -2456,11 +2992,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        432
+        474
       ],
       [
         "src/views/card/components/Dropdown.tsx",
-        74
+        100
       ],
       [
         "src/views/public/board/CardModal.tsx",
@@ -2469,6 +3005,18 @@
     ],
     "translation": "Card URL copied to clipboard"
   },
+  "Ccpbzh": {
+    "translation": "Cards",
+    "message": "Cards",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/ArchivedItemsModal.tsx",
+        90
+      ]
+    ]
+  },
   "VhMDMg": {
     "message": "Change Password",
     "placeholders": {},
@@ -2476,11 +3024,11 @@
     "origin": [
       [
         "src/views/settings/AccountSettings.tsx",
-        88
+        91
       ],
       [
         "src/views/settings/AccountSettings.tsx",
-        100
+        103
       ],
       [
         "src/views/settings/components/ChangePasswordConfirmation.tsx",
@@ -2500,7 +3048,7 @@
     "origin": [
       [
         "src/views/settings/AccountSettings.tsx",
-        63
+        66
       ]
     ],
     "translation": "Change the application font size."
@@ -2512,7 +3060,7 @@
     "origin": [
       [
         "src/views/settings/AccountSettings.tsx",
-        53
+        56
       ]
     ],
     "translation": "Change your language preferences."
@@ -2528,14 +3076,30 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        303
+        313
       ],
       [
         "src/views/card/components/ActivityList.tsx",
-        317
+        327
       ]
     ],
     "translation": "changed the due date to <0>{formattedDate}</0>"
+  },
+  "L2uRGA": {
+    "translation": "changed the start date to <0>{formattedDate}</0>",
+    "message": "changed the start date to <0>{formattedDate}</0>",
+    "placeholders": {
+      "formattedDate": [
+        "formattedDate"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        349
+      ]
+    ]
   },
   "pFGfsR": {
     "message": "Check out some of our favorite open source projects.",
@@ -2548,6 +3112,18 @@
       ]
     ],
     "translation": "Check out some of our favorite open source projects."
+  },
+  "0AYk/M": {
+    "translation": "Check the space in Google Chat.",
+    "message": "Check the space in Google Chat.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceList.tsx",
+        30
+      ]
+    ]
   },
   "5IXWmO": {
     "message": "Check your inbox",
@@ -2708,7 +3284,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        380
+        421
       ],
       [
         "src/views/members/components/EditMemberPermissionsModal.tsx",
@@ -2757,6 +3333,18 @@
     ],
     "translation": "Collaboration"
   },
+  "xHwgs0": {
+    "translation": "Colours",
+    "message": "Colours",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CoverSelector.tsx",
+        122
+      ]
+    ]
+  },
   "AUYALh": {
     "message": "Coming soon",
     "placeholders": {},
@@ -2768,6 +3356,18 @@
       ]
     ],
     "translation": "Coming soon"
+  },
+  "vNxHdB": {
+    "translation": "Comment added",
+    "message": "Comment added",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/googleChatEventLabels.ts",
+        11
+      ]
+    ]
   },
   "dYbQ1T": {
     "message": "Comment options",
@@ -2840,7 +3440,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        137
+        140
       ]
     ],
     "translation": "completed a checklist item"
@@ -2856,7 +3456,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        249
+        259
       ]
     ],
     "translation": "completed checklist item <0>{0}</0>"
@@ -2947,6 +3547,18 @@
     ],
     "translation": "Connect GitHub"
   },
+  "7OVsRI": {
+    "translation": "Connect Google",
+    "message": "Connect Google",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        131
+      ]
+    ]
+  },
   "nk7caK": {
     "message": "Connect Trello",
     "placeholders": {},
@@ -2994,6 +3606,22 @@
       ]
     ],
     "translation": "Connect your Trello account to import boards."
+  },
+  "wAvqJ1": {
+    "translation": "Connected as {0}.",
+    "message": "Connected as {0}.",
+    "placeholders": {
+      "0": [
+        "status.googleEmail"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        137
+      ]
+    ]
   },
   "jfC/xh": {
     "message": "Contact",
@@ -3143,7 +3771,7 @@
     "origin": [
       [
         "src/views/card/components/Dropdown.tsx",
-        107
+        133
       ]
     ],
     "translation": "Copy card link"
@@ -3179,10 +3807,30 @@
     "origin": [
       [
         "src/views/board/components/CardContextMenu.tsx",
-        62
+        66
       ]
     ],
     "translation": "Copy link to card"
+  },
+  "PSlXm/": {
+    "translation": "Copy list",
+    "message": "Copy list",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/CopyListModal.tsx",
+        40
+      ],
+      [
+        "src/views/board/components/CopyListModal.tsx",
+        60
+      ],
+      [
+        "src/views/board/components/List.tsx",
+        190
+      ]
+    ]
   },
   "uvH2xS": {
     "message": "Copy members",
@@ -3203,7 +3851,7 @@
     "origin": [
       [
         "src/views/card/components/Dropdown.tsx",
-        114
+        140
       ]
     ],
     "translation": "Copy ticket ID"
@@ -3219,6 +3867,58 @@
       ]
     ],
     "translation": "Core features"
+  },
+  "F5wMBI": {
+    "translation": "Couldn't connect Google",
+    "message": "Couldn't connect Google",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        57
+      ],
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        71
+      ]
+    ]
+  },
+  "xMpIkm": {
+    "translation": "Couldn't disconnect Google",
+    "message": "Couldn't disconnect Google",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        100
+      ]
+    ]
+  },
+  "9/NMmH": {
+    "translation": "Couldn't update Google sync",
+    "message": "Couldn't update Google sync",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        82
+      ]
+    ]
+  },
+  "IF7RiR": {
+    "translation": "Cover",
+    "message": "Cover",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/index.tsx",
+        187
+      ]
+    ]
   },
   "b9XOHo": {
     "message": "Create {0}",
@@ -3247,7 +3947,7 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        658
+        662
       ],
       [
         "src/views/board/components/NewListForm.tsx",
@@ -3275,7 +3975,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        668
+        672
       ]
     ],
     "translation": "Create card"
@@ -3367,7 +4067,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        525
+        529
       ],
       [
         "src/views/card/components/LabelSelector.tsx",
@@ -3383,11 +4083,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        138
+        141
       ],
       [
         "src/views/board/index.tsx",
-        1012
+        1077
       ]
     ],
     "translation": "Create new list"
@@ -3451,7 +4151,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        124
+        127
       ]
     ],
     "translation": "created the card"
@@ -3734,6 +4434,10 @@
         52
       ],
       [
+        "src/views/board/components/ArchivedItemsModal.tsx",
+        160
+      ],
+      [
         "src/views/board/components/DeleteBoardConfirmation.tsx",
         47
       ],
@@ -3767,11 +4471,11 @@
     "origin": [
       [
         "src/views/settings/AccountSettings.tsx",
-        70
+        73
       ],
       [
         "src/views/settings/AccountSettings.tsx",
-        80
+        83
       ],
       [
         "src/views/settings/components/DeleteAccountConfirmation.tsx",
@@ -3787,7 +4491,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        149
+        195
       ]
     ],
     "translation": "Delete board"
@@ -3799,11 +4503,11 @@
     "origin": [
       [
         "src/views/board/components/CardContextMenu.tsx",
-        74
+        84
       ],
       [
         "src/views/card/components/Dropdown.tsx",
-        152
+        190
       ]
     ],
     "translation": "Delete card"
@@ -3839,7 +4543,7 @@
     "origin": [
       [
         "src/views/board/components/List.tsx",
-        163
+        222
       ]
     ],
     "translation": "Delete list"
@@ -3851,10 +4555,34 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        149
+        195
       ]
     ],
     "translation": "Delete template"
+  },
+  "oNdl3k": {
+    "translation": "Delete this card for good? It can't be restored afterwards.",
+    "message": "Delete this card for good? It can't be restored afterwards.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/ArchivedItemsModal.tsx",
+        149
+      ]
+    ]
+  },
+  "wP61ay": {
+    "translation": "Delete this list and its cards for good? They can't be restored afterwards.",
+    "message": "Delete this list and its cards for good? They can't be restored afterwards.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/ArchivedItemsModal.tsx",
+        150
+      ]
+    ]
   },
   "snMaH4": {
     "message": "Delete webhook",
@@ -3895,7 +4623,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        134
+        137
       ]
     ],
     "translation": "deleted a checklist"
@@ -3907,7 +4635,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        139
+        142
       ]
     ],
     "translation": "deleted a checklist item"
@@ -3923,7 +4651,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        224
+        234
       ]
     ],
     "translation": "deleted checklist <0>{0}</0>"
@@ -3939,7 +4667,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        267
+        277
       ]
     ],
     "translation": "deleted checklist item <0>{0}</0>"
@@ -3980,6 +4708,18 @@
     ],
     "translation": "Disconnect GitHub"
   },
+  "yzsRge": {
+    "translation": "Disconnect Google",
+    "message": "Disconnect Google",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        200
+      ]
+    ]
+  },
   "YBBifR": {
     "message": "Disconnect Trello",
     "placeholders": {},
@@ -4011,7 +4751,7 @@
     "origin": [
       [
         "src/views/settings/AccountSettings.tsx",
-        36
+        37
       ],
       [
         "src/views/settings/components/UpdateDisplayNameForm.tsx",
@@ -4216,14 +4956,38 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        580
+        584
       ],
       [
         "src/views/card/index.tsx",
-        154
+        167
       ]
     ],
     "translation": "Due date"
+  },
+  "OXttBs": {
+    "translation": "Due date changed",
+    "message": "Due date changed",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/googleChatEventLabels.ts",
+        12
+      ]
+    ]
+  },
+  "pDfLqW": {
+    "translation": "Due date reminder",
+    "message": "Due date reminder",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/googleChatEventLabels.ts",
+        16
+      ]
+    ]
   },
   "ri1hHe": {
     "message": "Due next month",
@@ -4296,11 +5060,11 @@
       ],
       [
         "src/views/board/components/CardContextMenu.tsx",
-        68
+        72
       ],
       [
         "src/views/card/components/Dropdown.tsx",
-        130
+        156
       ]
     ],
     "translation": "Duplicate card"
@@ -4327,6 +5091,10 @@
         42
       ],
       [
+        "src/views/settings/components/GoogleChatSpaceList.tsx",
+        98
+      ],
+      [
         "src/views/settings/components/WebhookList.tsx",
         128
       ]
@@ -4340,7 +5108,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        109
+        133
       ],
       [
         "src/views/board/components/UpdateBoardSlugForm.tsx",
@@ -4360,6 +5128,18 @@
       ]
     ],
     "translation": "Edit comment"
+  },
+  "XTMgcF": {
+    "translation": "Edit Google Chat space",
+    "message": "Edit Google Chat space",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        168
+      ]
+    ]
   },
   "dgr4Kq": {
     "message": "Edit label",
@@ -4460,7 +5240,7 @@
       ],
       [
         "src/views/settings/AccountSettings.tsx",
-        43
+        44
       ]
     ],
     "translation": "Email"
@@ -5254,7 +6034,7 @@
     "origin": [
       [
         "src/views/settings/AccountSettings.tsx",
-        60
+        63
       ]
     ],
     "translation": "Font size"
@@ -5474,7 +6254,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        994
+        1059
       ]
     ],
     "translation": "Get started by creating a new list"
@@ -5602,7 +6382,7 @@
     "origin": [
       [
         "src/components/SideNavigation.tsx",
-        106
+        107
       ],
       [
         "src/pages/404.tsx",
@@ -5630,7 +6410,7 @@
     "origin": [
       [
         "src/components/SideNavigation.tsx",
-        130
+        131
       ]
     ],
     "translation": "Go to members"
@@ -5642,7 +6422,7 @@
     "origin": [
       [
         "src/components/SideNavigation.tsx",
-        142
+        143
       ]
     ],
     "translation": "Go to settings"
@@ -5654,7 +6434,7 @@
     "origin": [
       [
         "src/components/SideNavigation.tsx",
-        118
+        119
       ]
     ],
     "translation": "Go to templates"
@@ -5670,6 +6450,166 @@
       ]
     ],
     "translation": "Good for individuals starting out who just need the essentials."
+  },
+  "ARFVgO": {
+    "translation": "Google access wasn't granted. Allow Calendar or Tasks access to connect.",
+    "message": "Google access wasn't granted. Allow Calendar or Tasks access to connect.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        13
+      ]
+    ]
+  },
+  "zHpfN/": {
+    "translation": "Google Calendar and Tasks",
+    "message": "Google Calendar and Tasks",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        123
+      ]
+    ]
+  },
+  "ce+hz1": {
+    "translation": "Google Calendar: add due dates to a \"Kan\" calendar",
+    "message": "Google Calendar: add due dates to a \"Kan\" calendar",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        162
+      ]
+    ]
+  },
+  "WH23WU": {
+    "translation": "Google Chat",
+    "message": "Google Chat",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/SettingsLayout.tsx",
+        79
+      ],
+      [
+        "src/views/settings/GoogleChatSettings.tsx",
+        24
+      ]
+    ]
+  },
+  "YGT+l4": {
+    "translation": "Google Chat didn't accept the message.",
+    "message": "Google Chat didn't accept the message.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceList.tsx",
+        36
+      ]
+    ]
+  },
+  "VmkNzy": {
+    "translation": "Google Chat space added",
+    "message": "Google Chat space added",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        127
+      ]
+    ]
+  },
+  "7/tsLI": {
+    "translation": "Google Chat space options",
+    "message": "Google Chat space options",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceList.tsx",
+        95
+      ]
+    ]
+  },
+  "FMBk3W": {
+    "translation": "Google Chat space removed",
+    "message": "Google Chat space removed",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/DeleteGoogleChatSpaceConfirmation.tsx",
+        26
+      ]
+    ]
+  },
+  "pkkiLU": {
+    "translation": "Google Chat space updated",
+    "message": "Google Chat space updated",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        134
+      ]
+    ]
+  },
+  "q37KvH": {
+    "translation": "Google connected",
+    "message": "Google connected",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        49
+      ]
+    ]
+  },
+  "V1XLUK": {
+    "translation": "Google didn't allow ongoing access. Please try again.",
+    "message": "Google didn't allow ongoing access. Please try again.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        17
+      ]
+    ]
+  },
+  "JtG0Jy": {
+    "translation": "Google disconnected",
+    "message": "Google disconnected",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        93
+      ]
+    ]
+  },
+  "EbuWkR": {
+    "translation": "Google is connected.",
+    "message": "Google is connected.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        138
+      ]
+    ]
   },
   "cdyS7J": {
     "message": "Google SSO",
@@ -5698,6 +6638,30 @@
       ]
     ],
     "translation": "Google SSO + SAML"
+  },
+  "bfvACf": {
+    "translation": "Google Tasks only keeps the due date, not the time.",
+    "message": "Google Tasks only keeps the due date, not the time.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        184
+      ]
+    ]
+  },
+  "Kbq0p8": {
+    "translation": "Google Tasks: add cards to a \"Kan\" task list",
+    "message": "Google Tasks: add cards to a \"Kan\" task list",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        181
+      ]
+    ]
   },
   "O1wAlQ": {
     "message": "Guest",
@@ -5862,7 +6826,7 @@
     "origin": [
       [
         "src/views/card/components/Dropdown.tsx",
-        91
+        117
       ]
     ],
     "translation": "ID copied"
@@ -6007,6 +6971,34 @@
     ],
     "translation": "in"
   },
+  "Mmu8Qv": {
+    "translation": "in {0}",
+    "message": "in {0}",
+    "placeholders": {
+      "0": [
+        "card.listName"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/ArchivedItemsModal.tsx",
+        64
+      ]
+    ]
+  },
+  "soKt8i": {
+    "translation": "In Google Chat, open the space, then Apps & integrations → Webhooks → Add webhook, and copy its URL.",
+    "message": "In Google Chat, open the space, then Apps & integrations → Webhooks → Add webhook, and copy its URL.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        218
+      ]
+    ]
+  },
   "WbTDwg": {
     "message": "In Progress",
     "placeholders": {},
@@ -6066,7 +7058,7 @@
     "origin": [
       [
         "src/components/SettingsLayout.tsx",
-        77
+        85
       ],
       [
         "src/views/home/components/Features.tsx",
@@ -6281,6 +7273,30 @@
     ],
     "translation": "Junior"
   },
+  "ti2xgJ": {
+    "translation": "Kan lost access to your Google account, so syncing has stopped. Reconnect to resume.",
+    "message": "Kan lost access to your Google account, so syncing has stopped. Reconnect to resume.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        144
+      ]
+    ]
+  },
+  "LhFn3m": {
+    "translation": "Kan will stop posting to this space.",
+    "message": "Kan will stop posting to this space.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/DeleteGoogleChatSpaceConfirmation.tsx",
+        27
+      ]
+    ]
+  },
   "aWDhU5": {
     "message": "Kanban is better with a team. Perfect for small and growing teams looking to collaborate.",
     "placeholders": {},
@@ -6348,7 +7364,7 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        529
+        533
       ],
       [
         "src/views/card/components/LabelSelector.tsx",
@@ -6356,7 +7372,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        134
+        137
       ]
     ],
     "translation": "Labels"
@@ -6392,7 +7408,7 @@
     "origin": [
       [
         "src/views/settings/AccountSettings.tsx",
-        50
+        53
       ]
     ],
     "translation": "Language"
@@ -6470,6 +7486,18 @@
       ]
     ],
     "translation": "Learning"
+  },
+  "9zjEUv": {
+    "translation": "Leave blank to keep the current URL",
+    "message": "Leave blank to keep the current URL",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        211
+      ]
+    ]
   },
   "vifyyw": {
     "message": "Legal",
@@ -6550,11 +7578,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        430
+        472
       ],
       [
         "src/views/card/components/Dropdown.tsx",
-        72
+        98
       ],
       [
         "src/views/public/board/CardModal.tsx",
@@ -6578,10 +7606,34 @@
       ],
       [
         "src/views/card/index.tsx",
-        125
+        128
       ]
     ],
     "translation": "List"
+  },
+  "OMYeEQ": {
+    "translation": "List archived",
+    "message": "List archived",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/List.tsx",
+        75
+      ]
+    ]
+  },
+  "hPziiv": {
+    "translation": "List moved",
+    "message": "List moved",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/MoveListModal.tsx",
+        27
+      ]
+    ]
   },
   "zQX5Dj": {
     "message": "List name",
@@ -6589,8 +7641,12 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/components/CopyListModal.tsx",
+        48
+      ],
+      [
         "src/views/board/components/List.tsx",
-        124
+        151
       ],
       [
         "src/views/board/components/NewListForm.tsx",
@@ -6606,7 +7662,7 @@
     "origin": [
       [
         "src/views/board/components/List.tsx",
-        179
+        238
       ]
     ],
     "translation": "List options"
@@ -6616,6 +7672,10 @@
     "placeholders": {},
     "comments": [],
     "origin": [
+      [
+        "src/views/board/components/ArchivedItemsModal.tsx",
+        90
+      ],
       [
         "src/views/board/components/Filters.tsx",
         169
@@ -6634,7 +7694,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        579
+        616
       ]
     ],
     "translation": "Load more activities"
@@ -6658,7 +7718,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        579
+        616
       ]
     ],
     "translation": "Loading..."
@@ -6742,7 +7802,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        98
+        122
       ]
     ],
     "translation": "Make template"
@@ -6758,10 +7818,34 @@
       ],
       [
         "src/views/board/components/CardContextMenu.tsx",
-        38
+        42
       ]
     ],
     "translation": "Manage members"
+  },
+  "onllUU": {
+    "translation": "Mark all as read",
+    "message": "Mark all as read",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        143
+      ]
+    ]
+  },
+  "SDF1oV": {
+    "translation": "Mark complete",
+    "message": "Mark complete",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DueDateDetails.tsx",
+        82
+      ]
+    ]
   },
   "IDvohQ": {
     "message": "marked a checklist item as incomplete",
@@ -6770,7 +7854,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        138
+        141
       ]
     ],
     "translation": "marked a checklist item as incomplete"
@@ -6786,10 +7870,34 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        258
+        268
       ]
     ],
     "translation": "marked checklist item <0>{0}</0> as incomplete"
+  },
+  "a+ybXY": {
+    "translation": "marked the due date complete",
+    "message": "marked the due date complete",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        148
+      ]
+    ]
+  },
+  "fCeWnE": {
+    "translation": "marked the due date incomplete",
+    "message": "marked the due date incomplete",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        149
+      ]
+    ]
   },
   "vo2a+a": {
     "message": "Marketing",
@@ -6846,11 +7954,11 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        55
+        56
       ],
       [
         "src/views/card/components/ActivityList.tsx",
-        88
+        91
       ],
       [
         "src/views/members/index.tsx",
@@ -6858,6 +7966,18 @@
       ]
     ],
     "translation": "Member"
+  },
+  "UBKXpd": {
+    "translation": "Member added to a card",
+    "message": "Member added to a card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/googleChatEventLabels.ts",
+        15
+      ]
+    ]
   },
   "fTHH1x": {
     "message": "Member options",
@@ -6890,7 +8010,7 @@
     "origin": [
       [
         "src/components/SideNavigation.tsx",
-        122
+        123
       ],
       [
         "src/views/board/components/Filters.tsx",
@@ -6898,7 +8018,7 @@
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        487
+        491
       ],
       [
         "src/views/card/components/MemberSelector.tsx",
@@ -6906,7 +8026,7 @@
       ],
       [
         "src/views/card/index.tsx",
-        144
+        147
       ],
       [
         "src/views/members/index.tsx",
@@ -7015,6 +8135,22 @@
     ],
     "translation": "Move board to another workspace"
   },
+  "4ZG+dS": {
+    "translation": "Move list to board",
+    "message": "Move list to board",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/List.tsx",
+        202
+      ],
+      [
+        "src/views/board/components/MoveListModal.tsx",
+        48
+      ]
+    ]
+  },
   "51UCsN": {
     "message": "Move to another list",
     "placeholders": {},
@@ -7022,7 +8158,7 @@
     "origin": [
       [
         "src/views/board/components/CardContextMenu.tsx",
-        44
+        48
       ]
     ],
     "translation": "Move to another list"
@@ -7046,7 +8182,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        129
+        153
       ]
     ],
     "translation": "Move to workspace"
@@ -7065,7 +8201,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        160
+        170
       ]
     ],
     "translation": "moved the card from <0>{0}</0> to<1>{1}</1>"
@@ -7077,7 +8213,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        127
+        130
       ]
     ],
     "translation": "moved the card to another list"
@@ -7112,6 +8248,10 @@
         134
       ],
       [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        188
+      ],
+      [
         "src/views/settings/components/NewWebhookModal.tsx",
         227
       ],
@@ -7121,6 +8261,30 @@
       ]
     ],
     "translation": "Name"
+  },
+  "MVGER/": {
+    "translation": "Name cannot exceed 255 characters",
+    "message": "Name cannot exceed 255 characters",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        55
+      ]
+    ]
+  },
+  "8/brI5": {
+    "translation": "Name is required",
+    "message": "Name is required",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        54
+      ]
+    ]
   },
   "UxKoFf": {
     "message": "Navigation",
@@ -7190,6 +8354,18 @@
     ],
     "translation": "New {0}"
   },
+  "ln8Qo3": {
+    "translation": "New activity",
+    "message": "New activity",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        54
+      ]
+    ]
+  },
   "TjREUS": {
     "message": "New API key",
     "placeholders": {},
@@ -7209,7 +8385,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        412
+        416
       ]
     ],
     "translation": "New card"
@@ -7261,7 +8437,7 @@
       ],
       [
         "src/views/board/index.tsx",
-        939
+        1003
       ]
     ],
     "translation": "New list"
@@ -7402,6 +8578,30 @@
     ],
     "translation": "No archived boards"
   },
+  "5aI7Zw": {
+    "translation": "No archived cards",
+    "message": "No archived cards",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/ArchivedItemsModal.tsx",
+        105
+      ]
+    ]
+  },
+  "XOV9dc": {
+    "translation": "No archived lists",
+    "message": "No archived lists",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/ArchivedItemsModal.tsx",
+        105
+      ]
+    ]
+  },
   "Eg99Sc": {
     "message": "No authentication methods are currently available",
     "placeholders": {},
@@ -7474,6 +8674,18 @@
     ],
     "translation": "No download URL available for this attachment."
   },
+  "23IVnh": {
+    "translation": "No Google Chat spaces yet. Add one to post card updates to your team.",
+    "message": "No Google Chat spaces yet. Add one to post card updates to your team.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceList.tsx",
+        60
+      ]
+    ]
+  },
   "TXO5TM": {
     "message": "No keyboard shortcuts registered.",
     "placeholders": {},
@@ -7505,7 +8717,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        990
+        1055
       ]
     ],
     "translation": "No lists"
@@ -7517,7 +8729,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        995
+        1060
       ]
     ],
     "translation": "No lists have been created yet"
@@ -7574,6 +8786,38 @@
     ],
     "translation": "No webhooks configured. Add a webhook to receive notifications."
   },
+  "EdQY6l": {
+    "translation": "None",
+    "message": "None",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DueDateDetails.tsx",
+        98
+      ]
+    ]
+  },
+  "iDNBZe": {
+    "translation": "Notifications",
+    "message": "Notifications",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        104
+      ],
+      [
+        "src/components/NotificationsMenu.tsx",
+        118
+      ],
+      [
+        "src/components/NotificationsMenu.tsx",
+        135
+      ]
+    ]
+  },
   "9h7RDh": {
     "message": "Offer",
     "placeholders": {},
@@ -7629,7 +8873,7 @@
     "origin": [
       [
         "src/views/settings/AccountSettings.tsx",
-        73
+        76
       ]
     ],
     "translation": "Once you delete your account, there is no going back. This action cannot be undone."
@@ -7878,6 +9122,22 @@
     ],
     "translation": "Passwords do not match"
   },
+  "rAX3hs": {
+    "translation": "Paste the webhook URL from Google Chat. It starts with {CHAT_WEBHOOK_PREFIX}",
+    "message": "Paste the webhook URL from Google Chat. It starts with {CHAT_WEBHOOK_PREFIX}",
+    "placeholders": {
+      "CHAT_WEBHOOK_PREFIX": [
+        "CHAT_WEBHOOK_PREFIX"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        64
+      ]
+    ]
+  },
   "URAE3q": {
     "message": "Paused",
     "placeholders": {},
@@ -7886,6 +9146,10 @@
       [
         "src/views/members/index.tsx",
         230
+      ],
+      [
+        "src/views/settings/components/GoogleChatSpaceList.tsx",
+        85
       ]
     ],
     "translation": "Paused"
@@ -7985,7 +9249,7 @@
     "origin": [
       [
         "src/components/SettingsLayout.tsx",
-        53
+        55
       ]
     ],
     "translation": "Permissions"
@@ -8200,12 +9464,32 @@
         110
       ],
       [
+        "src/views/board/components/ArchivedItemsModal.tsx",
+        38
+      ],
+      [
         "src/views/board/components/BoardDropdown.tsx",
-        72
+        76
+      ],
+      [
+        "src/views/board/components/BoardDropdown.tsx",
+        96
+      ],
+      [
+        "src/views/board/components/CopyListModal.tsx",
+        24
+      ],
+      [
+        "src/views/board/components/List.tsx",
+        84
+      ],
+      [
+        "src/views/board/components/MoveListModal.tsx",
+        36
       ],
       [
         "src/views/board/components/NewCardForm.tsx",
-        200
+        204
       ],
       [
         "src/views/board/components/NewListForm.tsx",
@@ -8229,15 +9513,19 @@
       ],
       [
         "src/views/board/index.tsx",
-        284
+        287
       ],
       [
         "src/views/board/index.tsx",
-        340
+        343
       ],
       [
         "src/views/board/index.tsx",
-        377
+        380
+      ],
+      [
+        "src/views/board/index.tsx",
+        419
       ],
       [
         "src/views/boards/components/ImportBoardsForm.tsx",
@@ -8272,6 +9560,10 @@
         93
       ],
       [
+        "src/views/card/components/CoverSelector.tsx",
+        71
+      ],
+      [
         "src/views/card/components/DeleteCardConfirmation.tsx",
         52
       ],
@@ -8284,8 +9576,12 @@
         46
       ],
       [
+        "src/views/card/components/DueDateDetails.tsx",
+        57
+      ],
+      [
         "src/views/card/components/DueDateSelector.tsx",
-        64
+        72
       ],
       [
         "src/views/card/components/LabelSelector.tsx",
@@ -8312,12 +9608,16 @@
         38
       ],
       [
-        "src/views/card/index.tsx",
-        241
+        "src/views/card/components/WatchButton.tsx",
+        64
       ],
       [
         "src/views/card/index.tsx",
-        254
+        276
+      ],
+      [
+        "src/views/card/index.tsx",
+        289
       ],
       [
         "src/views/members/components/DeleteMemberConfirmation.tsx",
@@ -8417,19 +9717,23 @@
       ],
       [
         "src/views/board/index.tsx",
-        439
+        481
       ],
       [
         "src/views/card/components/Dropdown.tsx",
-        55
+        58
       ],
       [
         "src/views/card/components/Dropdown.tsx",
-        81
+        84
       ],
       [
         "src/views/card/components/Dropdown.tsx",
-        100
+        107
+      ],
+      [
+        "src/views/card/components/Dropdown.tsx",
+        126
       ],
       [
         "src/views/public/board/CardModal.tsx",
@@ -8453,6 +9757,30 @@
       ]
     ],
     "translation": "Position in list (0 = first, leave empty for end)"
+  },
+  "/+fl4R": {
+    "translation": "Post a message when",
+    "message": "Post a message when",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        245
+      ]
+    ]
+  },
+  "CO4B6q": {
+    "translation": "Post card updates to Google Chat spaces: new cards, moves, comments, completed cards and due date reminders. Messages about the same card are grouped into one thread.",
+    "message": "Post card updates to Google Chat spaces: new cards, moves, comments, completed cards and due date reminders. Messages about the same card are grouped into one thread.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/GoogleChatSettings.tsx",
+        27
+      ]
+    ]
   },
   "1xwZj/": {
     "message": "Previous month",
@@ -8591,6 +9919,18 @@
     ],
     "translation": "Pro Plan ∞"
   },
+  "QSXmqh": {
+    "translation": "Product team",
+    "message": "Product team",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        192
+      ]
+    ]
+  },
   "0rPv1T": {
     "message": "Profile image updated",
     "placeholders": {},
@@ -8610,7 +9950,7 @@
     "origin": [
       [
         "src/views/settings/AccountSettings.tsx",
-        30
+        31
       ]
     ],
     "translation": "Profile picture"
@@ -8675,6 +10015,22 @@
     ],
     "translation": "Quick Win"
   },
+  "AOwsLb": {
+    "translation": "Reconnect Google",
+    "message": "Reconnect Google",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        146
+      ],
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        194
+      ]
+    ]
+  },
   "6EWT6T": {
     "message": "Recruitment",
     "placeholders": {},
@@ -8699,6 +10055,18 @@
     ],
     "translation": "Rejected"
   },
+  "/kpR4w": {
+    "translation": "Reminder",
+    "message": "Reminder",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DueDateDetails.tsx",
+        85
+      ]
+    ]
+  },
   "qlAIQ1": {
     "message": "Remote",
     "placeholders": {},
@@ -8719,9 +10087,29 @@
       [
         "src/views/members/components/DeleteMemberConfirmation.tsx",
         58
+      ],
+      [
+        "src/views/settings/components/DeleteGoogleChatSpaceConfirmation.tsx",
+        73
+      ],
+      [
+        "src/views/settings/components/GoogleChatSpaceList.tsx",
+        124
       ]
     ],
     "translation": "Remove"
+  },
+  "xhcj8E": {
+    "translation": "Remove cover",
+    "message": "Remove cover",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CoverSelector.tsx",
+        178
+      ]
+    ]
   },
   "cILfnJ": {
     "message": "Remove file",
@@ -8730,7 +10118,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        645
+        649
       ]
     ],
     "translation": "Remove file"
@@ -8742,10 +10130,22 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        138
+        184
       ]
     ],
     "translation": "Remove from favorites"
+  },
+  "HFZL9g": {
+    "translation": "Remove Google Chat space",
+    "message": "Remove Google Chat space",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/DeleteGoogleChatSpaceConfirmation.tsx",
+        45
+      ]
+    ]
   },
   "99VIgC": {
     "message": "Remove member",
@@ -8773,7 +10173,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        116
+        119
       ]
     ],
     "translation": "removed {0} labels: <0>{labelList}</0>"
@@ -8785,7 +10185,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        129
+        132
       ]
     ],
     "translation": "removed a label from the card"
@@ -8797,7 +10197,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        131
+        134
       ]
     ],
     "translation": "removed a member from the card"
@@ -8809,7 +10209,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        141
+        144
       ]
     ],
     "translation": "removed an attachment"
@@ -8825,7 +10225,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        288
+        298
       ]
     ],
     "translation": "removed an attachment <0>{0}</0>"
@@ -8837,7 +10237,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        61
+        65
       ]
     ],
     "translation": "Removed from favorites"
@@ -8853,7 +10253,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        200
+        210
       ]
     ],
     "translation": "removed label <0>{0}</0>"
@@ -8865,14 +10265,26 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        144
+        147
       ],
       [
         "src/views/card/components/ActivityList.tsx",
-        324
+        334
       ]
     ],
     "translation": "removed the due date"
+  },
+  "4kgcyZ": {
+    "translation": "removed the start date",
+    "message": "removed the start date",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        152
+      ]
+    ]
   },
   "NypLoL": {
     "message": "renamed a checklist",
@@ -8881,7 +10293,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        133
+        136
       ]
     ],
     "translation": "renamed a checklist"
@@ -8897,7 +10309,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        216
+        226
       ]
     ],
     "translation": "renamed checklist <0>{0}</0>"
@@ -8913,7 +10325,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        240
+        250
       ]
     ],
     "translation": "renamed checklist item to <0>{0}</0>"
@@ -8981,6 +10393,30 @@
       ]
     ],
     "translation": "Resources"
+  },
+  "yKu/3Y": {
+    "translation": "Restore",
+    "message": "Restore",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/ArchivedItemsModal.tsx",
+        139
+      ]
+    ]
+  },
+  "NTE3cf": {
+    "translation": "restored the card",
+    "message": "restored the card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        154
+      ]
+    ]
   },
   "5k0NLb": {
     "message": "Review",
@@ -9116,6 +10552,10 @@
     "placeholders": {},
     "comments": [],
     "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        304
+      ],
       [
         "src/views/settings/components/NewWebhookModal.tsx",
         344
@@ -9305,6 +10745,10 @@
     "comments": [],
     "origin": [
       [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        70
+      ],
+      [
         "src/views/settings/components/NewWebhookModal.tsx",
         32
       ]
@@ -9354,7 +10798,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        169
+        179
       ]
     ],
     "translation": "self-assigned the card"
@@ -9383,6 +10827,18 @@
     ],
     "translation": "Send test"
   },
+  "cD/KjC": {
+    "translation": "Send test message",
+    "message": "Send test message",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceList.tsx",
+        116
+      ]
+    ]
+  },
   "v3YoMA": {
     "message": "Senior",
     "placeholders": {},
@@ -9402,7 +10858,7 @@
     "origin": [
       [
         "src/views/settings/AccountSettings.tsx",
-        93
+        96
       ]
     ],
     "translation": "Set a password to enable password-based login."
@@ -9418,11 +10874,11 @@
       ],
       [
         "src/views/board/components/CardContextMenu.tsx",
-        56
+        60
       ],
       [
         "src/views/card/components/DueDateSelector.tsx",
-        121
+        132
       ]
     ],
     "translation": "Set due date"
@@ -9434,11 +10890,11 @@
     "origin": [
       [
         "src/views/settings/AccountSettings.tsx",
-        88
+        91
       ],
       [
         "src/views/settings/AccountSettings.tsx",
-        100
+        103
       ],
       [
         "src/views/settings/components/ChangePasswordConfirmation.tsx",
@@ -9451,6 +10907,18 @@
     ],
     "translation": "Set Password"
   },
+  "bPoqDk": {
+    "translation": "Set start date",
+    "message": "Set start date",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DueDateSelector.tsx",
+        132
+      ]
+    ]
+  },
   "Eit43O": {
     "message": "set the due date",
     "placeholders": {},
@@ -9458,10 +10926,22 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        142
+        145
       ]
     ],
     "translation": "set the due date"
+  },
+  "9uhBXt": {
+    "translation": "set the start date",
+    "message": "set the start date",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        150
+      ]
+    ]
   },
   "JjEJSy": {
     "message": "Set up your workspace",
@@ -9482,11 +10962,11 @@
     "origin": [
       [
         "src/components/SettingsLayout.tsx",
-        102
+        110
       ],
       [
         "src/components/SideNavigation.tsx",
-        134
+        135
       ]
     ],
     "translation": "Settings"
@@ -9498,7 +10978,7 @@
     "origin": [
       [
         "src/views/settings/AccountSettings.tsx",
-        26
+        27
       ]
     ],
     "translation": "Settings | Account"
@@ -9526,6 +11006,18 @@
       ]
     ],
     "translation": "Settings | Billing"
+  },
+  "jWa2rH": {
+    "translation": "Settings | Google Chat",
+    "message": "Settings | Google Chat",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/GoogleChatSettings.tsx",
+        20
+      ]
+    ]
   },
   "hYzsXr": {
     "message": "Settings | Integrations",
@@ -9586,6 +11078,18 @@
       ]
     ],
     "translation": "Shortcuts"
+  },
+  "mJvdCl": {
+    "translation": "Show the cards you're a member of in your own Google account: a \"Kan\" calendar with an event at each due time (with your card's reminder), and a \"Kan\" list in Google Tasks. Kan can only see the calendar and task list it creates.",
+    "message": "Show the cards you're a member of in your own Google account: a \"Kan\" calendar with an event at each due time (with your card's reminder), and a \"Kan\" list in Google Tasks. Kan can only see the calendar and task list it creates.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        129
+      ]
+    ]
   },
   "5lWFkC": {
     "message": "Sign in",
@@ -9814,10 +11318,22 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        332
+        336
       ]
     ],
     "translation": "Some attachments failed"
+  },
+  "C6+ZRl": {
+    "translation": "Someone",
+    "message": "Someone",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        23
+      ]
+    ]
   },
   "J9+zIR": {
     "message": "Something went wrong during activation. Please try again.",
@@ -9842,6 +11358,18 @@
       ]
     ],
     "translation": "Something went wrong during license activation."
+  },
+  "TSTnPf": {
+    "translation": "Something went wrong while connecting Google. Please try again.",
+    "message": "Something went wrong while connecting Google. Please try again.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        19
+      ]
+    ]
   },
   "vnS6Rf": {
     "message": "SSO",
@@ -9880,6 +11408,18 @@
     "translation": "Start 14 day free trial",
     "obsolete": true
   },
+  "WAjFYI": {
+    "translation": "Start date",
+    "message": "Start date",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/index.tsx",
+        157
+      ]
+    ]
+  },
   "4+JaWo": {
     "message": "Start free trial",
     "placeholders": {},
@@ -9887,15 +11427,15 @@
     "origin": [
       [
         "src/components/SideNavigation.tsx",
-        228
+        230
       ],
       [
         "src/components/SideNavigation.tsx",
-        229
+        231
       ],
       [
         "src/components/SideNavigation.tsx",
-        239
+        241
       ]
     ],
     "translation": "Start free trial"
@@ -9935,6 +11475,46 @@
       ]
     ],
     "translation": "Status"
+  },
+  "EBcnPd": {
+    "translation": "Stop posting card updates to \"{spaceName}\"? Messages already in the space stay there.",
+    "message": "Stop posting card updates to \"{spaceName}\"? Messages already in the space stay there.",
+    "placeholders": {
+      "spaceName": [
+        "spaceName"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/DeleteGoogleChatSpaceConfirmation.tsx",
+        58
+      ]
+    ]
+  },
+  "ou+6P2": {
+    "translation": "Stop watching board",
+    "message": "Stop watching board",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardDropdown.tsx",
+        164
+      ]
+    ]
+  },
+  "8wSJ4o": {
+    "translation": "Stopped watching board",
+    "message": "Stopped watching board",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardDropdown.tsx",
+        86
+      ]
+    ]
   },
   "hQRttt": {
     "message": "Submit",
@@ -10053,6 +11633,18 @@
     ],
     "translation": "System"
   },
+  "WS/9nP": {
+    "translation": "Tasks access wasn't granted. Reconnect to allow it.",
+    "message": "Tasks access wasn't granted. Reconnect to allow it.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        185
+      ]
+    ]
+  },
   "KM6m8p": {
     "message": "Team",
     "placeholders": {},
@@ -10112,11 +11704,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        859
+        923
       ],
       [
         "src/views/board/index.tsx",
-        896
+        960
       ]
     ],
     "translation": "Template"
@@ -10176,7 +11768,7 @@
     "origin": [
       [
         "src/components/SideNavigation.tsx",
-        110
+        111
       ],
       [
         "src/views/boards/index.tsx",
@@ -10223,6 +11815,10 @@
     "comments": [],
     "origin": [
       [
+        "src/views/settings/components/GoogleChatSpaceList.tsx",
+        34
+      ],
+      [
         "src/views/settings/components/NewWebhookModal.tsx",
         154
       ],
@@ -10232,6 +11828,18 @@
       ]
     ],
     "translation": "Test failed"
+  },
+  "ndbfiH": {
+    "translation": "Test message sent",
+    "message": "Test message sent",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceList.tsx",
+        29
+      ]
+    ]
   },
   "zDNL2V": {
     "message": "Test sent",
@@ -10308,7 +11916,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        52
+        56
       ]
     ],
     "translation": "The board has been archived."
@@ -10336,7 +11944,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        53
+        57
       ]
     ],
     "translation": "The board has been unarchived."
@@ -10367,10 +11975,34 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        333
+        337
       ]
     ],
     "translation": "The card was created, but {failedCount} of {0} attachments could not be uploaded."
+  },
+  "JeP3E/": {
+    "translation": "The connection link expired. Please try again.",
+    "message": "The connection link expired. Please try again.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        15
+      ]
+    ]
+  },
+  "HD9AHY": {
+    "translation": "The copy keeps every card with its labels, members and checklists.",
+    "message": "The copy keeps every card with its labels, members and checklists.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/CopyListModal.tsx",
+        43
+      ]
+    ]
   },
   "jlB2RY": {
     "message": "The current password you entered is incorrect.",
@@ -10383,6 +12015,30 @@
       ]
     ],
     "translation": "The current password you entered is incorrect."
+  },
+  "MvNhTK": {
+    "translation": "The Kan calendar and task list were removed from your Google account.",
+    "message": "The Kan calendar and task list were removed from your Google account.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        94
+      ]
+    ]
+  },
+  "kkMCGs": {
+    "translation": "The list and its cards are now at the end of the other board.",
+    "message": "The list and its cards are now at the end of the other board.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/MoveListModal.tsx",
+        28
+      ]
+    ]
   },
   "lkz85l": {
     "message": "The main difference between Kan and Trello is that Kan is open source, allowing anyone to view, modify, and contribute to our code. Our cloud offering also offers no restrictions on features for individual use, whereas Trello locks basic features such as the number of boards you can create behind a paywall.",
@@ -10475,6 +12131,18 @@
       ]
     ],
     "translation": "Theme"
+  },
+  "vMwv3g": {
+    "translation": "There are no other boards in this workspace.",
+    "message": "There are no other boards in this workspace.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/MoveListModal.tsx",
+        61
+      ]
+    ]
   },
   "Yf9FAx": {
     "message": "They won't be able to access this workspace.",
@@ -10691,7 +12359,7 @@
     "origin": [
       [
         "src/views/card/components/Dropdown.tsx",
-        93
+        119
       ]
     ],
     "translation": "Ticket ID copied to clipboard"
@@ -10872,6 +12540,18 @@
     ],
     "translation": "Unable to add comment"
   },
+  "fYRyph": {
+    "translation": "Unable to add Google Chat space",
+    "message": "Unable to add Google Chat space",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        130
+      ]
+    ]
+  },
   "2Q871c": {
     "message": "Unable to add label",
     "placeholders": {},
@@ -10879,10 +12559,38 @@
     "origin": [
       [
         "src/views/card/index.tsx",
-        253
+        288
       ]
     ],
     "translation": "Unable to add label"
+  },
+  "+xPEjx": {
+    "translation": "Unable to archive card",
+    "message": "Unable to archive card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/index.tsx",
+        418
+      ],
+      [
+        "src/views/card/components/Dropdown.tsx",
+        82
+      ]
+    ]
+  },
+  "zkavoA": {
+    "translation": "Unable to archive list",
+    "message": "Unable to archive list",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/List.tsx",
+        83
+      ]
+    ]
   },
   "LeM5RY": {
     "message": "Unable to clear overrides",
@@ -10903,7 +12611,7 @@
     "origin": [
       [
         "src/views/card/components/Dropdown.tsx",
-        98
+        124
       ]
     ],
     "translation": "Unable to copy ID"
@@ -10915,11 +12623,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        437
+        479
       ],
       [
         "src/views/card/components/Dropdown.tsx",
-        79
+        105
       ],
       [
         "src/views/public/board/CardModal.tsx",
@@ -10932,6 +12640,18 @@
     ],
     "translation": "Unable to copy link"
   },
+  "6pGCPU": {
+    "translation": "Unable to copy list",
+    "message": "Unable to copy list",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/CopyListModal.tsx",
+        23
+      ]
+    ]
+  },
   "zl1b97": {
     "message": "Unable to create card",
     "placeholders": {},
@@ -10939,7 +12659,7 @@
     "origin": [
       [
         "src/views/board/components/NewCardForm.tsx",
-        197
+        201
       ]
     ],
     "translation": "Unable to create card"
@@ -11030,6 +12750,10 @@
     "comments": [],
     "origin": [
       [
+        "src/views/board/components/ArchivedItemsModal.tsx",
+        48
+      ],
+      [
         "src/views/card/components/DeleteCardConfirmation.tsx",
         51
       ]
@@ -11072,6 +12796,18 @@
     ],
     "translation": "Unable to delete comment"
   },
+  "BqCTQD": {
+    "translation": "Unable to delete list",
+    "message": "Unable to delete list",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/ArchivedItemsModal.tsx",
+        56
+      ]
+    ]
+  },
   "23nvb2": {
     "message": "Unable to delete webhook",
     "placeholders": {},
@@ -11095,7 +12831,7 @@
       ],
       [
         "src/views/card/components/Dropdown.tsx",
-        53
+        56
       ]
     ],
     "translation": "Unable to duplicate card"
@@ -11123,6 +12859,30 @@
       ]
     ],
     "translation": "Unable to move card"
+  },
+  "HQhwv5": {
+    "translation": "Unable to move list",
+    "message": "Unable to move list",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/MoveListModal.tsx",
+        35
+      ]
+    ]
+  },
+  "nGtCZk": {
+    "translation": "Unable to remove Google Chat space",
+    "message": "Unable to remove Google Chat space",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/DeleteGoogleChatSpaceConfirmation.tsx",
+        34
+      ]
+    ]
   },
   "8yFGGF": {
     "message": "Unable to remove member",
@@ -11160,6 +12920,30 @@
     ],
     "translation": "Unable to reset permissions"
   },
+  "8tfe4t": {
+    "translation": "Unable to restore card",
+    "message": "Unable to restore card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/ArchivedItemsModal.tsx",
+        44
+      ]
+    ]
+  },
+  "8sj46H": {
+    "translation": "Unable to restore list",
+    "message": "Unable to restore list",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/ArchivedItemsModal.tsx",
+        52
+      ]
+    ]
+  },
   "A8jqN7": {
     "message": "Unable to send feedback",
     "placeholders": {},
@@ -11171,6 +12955,18 @@
       ]
     ],
     "translation": "Unable to send feedback"
+  },
+  "ZYGNKk": {
+    "translation": "Unable to send test message",
+    "message": "Unable to send test message",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceList.tsx",
+        43
+      ]
+    ]
   },
   "Q60WUZ": {
     "message": "Unable to start checkout",
@@ -11207,7 +13003,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        71
+        75
       ]
     ],
     "translation": "Unable to update board"
@@ -11243,11 +13039,11 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        339
+        342
       ],
       [
         "src/views/card/index.tsx",
-        240
+        275
       ]
     ],
     "translation": "Unable to update card"
@@ -11288,6 +13084,18 @@
     ],
     "translation": "Unable to update comment"
   },
+  "KLV1M+": {
+    "translation": "Unable to update cover",
+    "message": "Unable to update cover",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CoverSelector.tsx",
+        70
+      ]
+    ]
+  },
   "C56tim": {
     "message": "Unable to update due date",
     "placeholders": {},
@@ -11295,14 +13103,30 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        376
+        379
+      ],
+      [
+        "src/views/card/components/DueDateDetails.tsx",
+        56
       ],
       [
         "src/views/card/components/DueDateSelector.tsx",
-        63
+        71
       ]
     ],
     "translation": "Unable to update due date"
+  },
+  "KxAkvA": {
+    "translation": "Unable to update Google Chat space",
+    "message": "Unable to update Google Chat space",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        135
+      ]
+    ]
   },
   "delOXn": {
     "message": "Unable to update labels",
@@ -11323,7 +13147,7 @@
     "origin": [
       [
         "src/views/board/index.tsx",
-        283
+        286
       ],
       [
         "src/views/card/components/ListSelector.tsx",
@@ -11372,6 +13196,34 @@
     ],
     "translation": "Unable to update role"
   },
+  "k3Zols": {
+    "translation": "Unable to update start date",
+    "message": "Unable to update start date",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DueDateSelector.tsx",
+        70
+      ]
+    ]
+  },
+  "eqC0eM": {
+    "translation": "Unable to update watching",
+    "message": "Unable to update watching",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardDropdown.tsx",
+        95
+      ],
+      [
+        "src/views/card/components/WatchButton.tsx",
+        63
+      ]
+    ]
+  },
   "V1o9Jo": {
     "message": "Unable to update webhook",
     "placeholders": {},
@@ -11391,7 +13243,7 @@
     "origin": [
       [
         "src/views/board/components/BoardDropdown.tsx",
-        118
+        142
       ]
     ],
     "translation": "Unarchive board"
@@ -11407,7 +13259,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        183
+        193
       ]
     ],
     "translation": "unassigned <0>{0}</0> from the card"
@@ -11419,7 +13271,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        180
+        190
       ]
     ],
     "translation": "unassigned themselves from the card"
@@ -11674,7 +13526,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        136
+        139
       ]
     ],
     "translation": "updated a checklist item"
@@ -11686,7 +13538,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        126
+        129
       ]
     ],
     "translation": "updated the description"
@@ -11698,10 +13550,22 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        143
+        146
       ]
     ],
     "translation": "updated the due date"
+  },
+  "pA21lt": {
+    "translation": "updated the start date",
+    "message": "updated the start date",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        151
+      ]
+    ]
   },
   "V3MPSQ": {
     "message": "updated the title",
@@ -11710,7 +13574,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        125
+        128
       ]
     ],
     "translation": "updated the title"
@@ -11726,7 +13590,7 @@
     "origin": [
       [
         "src/views/card/components/ActivityList.tsx",
-        152
+        162
       ]
     ],
     "translation": "updated the title to <0>{0}</0>"
@@ -11893,6 +13757,34 @@
     ],
     "translation": "URL must be at least 3 characters long"
   },
+  "r7uis8": {
+    "translation": "Use attachment as cover",
+    "message": "Use attachment as cover",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CoverSelector.tsx",
+        150
+      ]
+    ]
+  },
+  "Ghbi8Y": {
+    "translation": "Use colour {colour} as cover",
+    "message": "Use colour {colour} as cover",
+    "placeholders": {
+      "colour": [
+        "colour"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CoverSelector.tsx",
+        129
+      ]
+    ]
+  },
   "QNtP5M": {
     "message": "Use template",
     "placeholders": {},
@@ -11904,6 +13796,18 @@
       ]
     ],
     "translation": "Use template"
+  },
+  "d3uEGW": {
+    "translation": "Use Test to check that messages arrive.",
+    "message": "Use Test to check that messages arrive.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        128
+      ]
+    ]
   },
   "n6EWYz": {
     "message": "Used to sign webhook payloads for verification. Leave blank to keep existing secret.",
@@ -12036,6 +13940,78 @@
       ]
     ],
     "translation": "Visibility"
+  },
+  "AlfqgK": {
+    "translation": "Watch",
+    "message": "Watch",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/WatchButton.tsx",
+        36
+      ]
+    ]
+  },
+  "vTNSCL": {
+    "translation": "Watch board",
+    "message": "Watch board",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardDropdown.tsx",
+        164
+      ]
+    ]
+  },
+  "3TAdun": {
+    "translation": "Watch to get notified about activity",
+    "message": "Watch to get notified about activity",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/WatchButton.tsx",
+        27
+      ]
+    ]
+  },
+  "12cc1j": {
+    "translation": "Watching",
+    "message": "Watching",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/WatchButton.tsx",
+        36
+      ]
+    ]
+  },
+  "UkMTuX": {
+    "translation": "Watching board",
+    "message": "Watching board",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardDropdown.tsx",
+        86
+      ]
+    ]
+  },
+  "EYDNIz": {
+    "translation": "Watching: you get notified about activity. Click to stop.",
+    "message": "Watching: you get notified about activity. Click to stop.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/WatchButton.tsx",
+        26
+      ]
+    ]
   },
   "BJbLe4": {
     "message": "We are using the <0>AGPL-3.0 license</0>.",
@@ -12214,6 +14190,18 @@
     ],
     "translation": "Webhook updated successfully"
   },
+  "nuh/Wq": {
+    "translation": "Webhook URL",
+    "message": "Webhook URL",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        203
+      ]
+    ]
+  },
   "Hf1cEZ": {
     "message": "Webhook URL is required",
     "placeholders": {},
@@ -12233,7 +14221,7 @@
     "origin": [
       [
         "src/components/SettingsLayout.tsx",
-        71
+        73
       ],
       [
         "src/views/settings/WebhookSettings.tsx",
@@ -12321,11 +14309,11 @@
     "origin": [
       [
         "src/components/SettingsLayout.tsx",
-        47
+        49
       ],
       [
         "src/views/board/index.tsx",
-        859
+        923
       ],
       [
         "src/views/boards/index.tsx",
@@ -12630,7 +14618,7 @@
     "origin": [
       [
         "src/views/settings/AccountSettings.tsx",
-        92
+        95
       ]
     ],
     "translation": "You are about to change your password."
@@ -12684,6 +14672,26 @@
     ],
     "translation": "You can invite team members by clicking the \"Invite\" button in the top right corner of the <0>members page</0> and entering their email address. They will receive an email with a link to join the workspace."
   },
+  "nvzs2Q": {
+    "translation": "You can restore it from the board's archived items.",
+    "message": "You can restore it from the board's archived items.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/List.tsx",
+        76
+      ],
+      [
+        "src/views/board/index.tsx",
+        411
+      ],
+      [
+        "src/views/card/components/Dropdown.tsx",
+        71
+      ]
+    ]
+  },
   "vAj6xG": {
     "message": "You can self-host by following the instructions in our <0>repo</0>.",
     "placeholders": {},
@@ -12715,7 +14723,7 @@
     "origin": [
       [
         "src/views/board/components/List.tsx",
-        133
+        160
       ],
       [
         "src/views/board/components/VisibilityButton.tsx",
@@ -12723,11 +14731,11 @@
       ],
       [
         "src/views/board/index.tsx",
-        927
+        991
       ],
       [
         "src/views/board/index.tsx",
-        1001
+        1066
       ],
       [
         "src/views/boards/components/BoardsList.tsx",
@@ -12818,6 +14826,66 @@
     ],
     "translation": "You signed in without a password. Set a password to enable password-based login."
   },
+  "EYpSRU": {
+    "translation": "You were added to a workspace",
+    "message": "You were added to a workspace",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        48
+      ]
+    ]
+  },
+  "YdIn4I": {
+    "translation": "You were removed from a workspace",
+    "message": "You were removed from a workspace",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        50
+      ]
+    ]
+  },
+  "RMwsaM": {
+    "translation": "You'll be notified about activity on every card in this board.",
+    "message": "You'll be notified about activity on every card in this board.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardDropdown.tsx",
+        88
+      ]
+    ]
+  },
+  "kdHM9E": {
+    "translation": "You'll no longer be notified about this board.",
+    "message": "You'll no longer be notified about this board.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardDropdown.tsx",
+        89
+      ]
+    ]
+  },
+  "PK3+Q2": {
+    "translation": "You're all caught up",
+    "message": "You're all caught up",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        158
+      ]
+    ]
+  },
   "2SePRT": {
     "message": "You've been invited to join a workspace on kan.bn.",
     "placeholders": {},
@@ -12905,6 +14973,30 @@
       ]
     ],
     "translation": "Your boards have been imported."
+  },
+  "fp7ub5": {
+    "translation": "Your cards will appear in Google Calendar and Tasks shortly.",
+    "message": "Your cards will appear in Google Calendar and Tasks shortly.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        50
+      ]
+    ]
+  },
+  "MeULJG": {
+    "translation": "Your changes are saved.",
+    "message": "Your changes are saved.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleChatSpaceModal.tsx",
+        134
+      ]
+    ]
   },
   "LqWW5F": {
     "message": "Your display name has been updated.",
@@ -13134,6 +15226,18 @@
       ]
     ],
     "translation": "Your workspace name has been updated."
+  },
+  "6VSRqY": {
+    "translation": "Your workspace role changed",
+    "message": "Your workspace role changed",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/NotificationsMenu.tsx",
+        52
+      ]
+    ]
   },
   "Hg1qE9": {
     "message": "Your workspace slug has been updated.",

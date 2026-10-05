@@ -29,6 +29,10 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { mergeActivities } from "../utils/activities";
 import { createAvatarUrlResolver } from "../utils/avatarUrls";
 import { duplicateCard } from "../utils/duplicateCard";
+import {
+  enqueueChatEvent,
+  enqueueGoogleCardSync,
+} from "../utils/integrationJobs";
 import { notifyCardAudience, sendMentionEmails } from "../utils/notifications";
 import {
   assertCanDelete,
@@ -220,6 +224,16 @@ export const cardRouter = createTRPCRouter({
       ).catch((error) => {
         console.error("Webhook delivery failed:", error);
       });
+
+      void enqueueChatEvent(ctx.db, {
+        event: "card.created",
+        cardId: newCard.id,
+        actorUserId: userId,
+      });
+
+      if (input.dueDate && members.length) {
+        void enqueueGoogleCardSync(ctx.db, [newCard.id]);
+      }
 
       return newCard;
     }),
@@ -646,6 +660,8 @@ export const cardRouter = createTRPCRouter({
           createdBy: userId,
         });
 
+        void enqueueGoogleCardSync(ctx.db, [card.id]);
+
         return { newMember: false };
       }
 
@@ -676,6 +692,8 @@ export const cardRouter = createTRPCRouter({
           onlyUserIds: [member.userId],
         });
       }
+
+      void enqueueGoogleCardSync(ctx.db, [card.id]);
 
       return { newMember: true };
     }),
@@ -1221,6 +1239,29 @@ export const cardRouter = createTRPCRouter({
         });
       }
 
+      if (dueDateCompletedChanged && input.dueDateCompleted) {
+        void enqueueChatEvent(ctx.db, {
+          event: "card.completed",
+          cardId: result.id,
+          actorUserId: userId,
+        });
+      }
+
+      // Keep members' Google Calendar events and tasks up to date
+      if (
+        (input.title && existingCard.title !== input.title) ||
+        (input.dueDate !== undefined &&
+          previousDueDate?.getTime() !== input.dueDate?.getTime()) ||
+        (input.startDate !== undefined &&
+          previousStartDate?.getTime() !== input.startDate?.getTime()) ||
+        dueDateCompletedChanged ||
+        (input.dueReminderMinutes !== undefined &&
+          input.dueReminderMinutes !== existingCard.dueReminderMinutes) ||
+        (newListId && existingCard.listId !== newListId)
+      ) {
+        void enqueueGoogleCardSync(ctx.db, [result.id]);
+      }
+
       // Build changes object for webhook
       const webhookChanges: Record<string, { from: unknown; to: unknown }> = {};
       if (input.title && existingCard.title !== input.title) {
@@ -1344,6 +1385,8 @@ export const cardRouter = createTRPCRouter({
         deletedBy: userId,
       });
 
+      void enqueueGoogleCardSync(ctx.db, [card.id]);
+
       await cardActivityRepo.create(ctx.db, {
         type: "card.archived",
         cardId: card.id,
@@ -1445,6 +1488,8 @@ export const cardRouter = createTRPCRouter({
         metadata: { boardName: card.boardName },
       });
 
+      void enqueueGoogleCardSync(ctx.db, [card.id]);
+
       return { success: true };
     }),
   restore: protectedProcedure
@@ -1510,6 +1555,8 @@ export const cardRouter = createTRPCRouter({
         cardId: card.id,
         createdBy: userId,
       });
+
+      void enqueueGoogleCardSync(ctx.db, [card.id]);
 
       return { success: true };
     }),
@@ -1741,6 +1788,10 @@ export const cardRouter = createTRPCRouter({
         copyMembers: input.copyMembers,
         copyChecklists: input.copyChecklists,
       });
+
+      if (sourceCard.dueDate && input.copyMembers) {
+        void enqueueGoogleCardSync(ctx.db, [newCard.id]);
+      }
 
       return { publicId: newCard.publicId };
     }),

@@ -41,6 +41,12 @@ vi.mock("@kan/shared/utils", () => ({
   generateAvatarUrl: vi.fn(),
   generateUID: vi.fn(),
 }));
+vi.mock("../utils/integrationJobs", () => ({
+  enqueueChatEvent: vi.fn(),
+  enqueueGoogleBoardSync: vi.fn(),
+  enqueueGoogleCardSync: vi.fn(),
+  enqueueGoogleListSync: vi.fn(),
+}));
 vi.mock("../utils/notifications", () => ({
   sendMentionEmails: vi.fn(),
 }));

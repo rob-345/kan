@@ -3,14 +3,15 @@ export async function register() {
   // Keep the import inside this exact check so the bundler drops it from the
   // edge build (nodemailer and pg need Node built-ins)
   if (process.env.NEXT_RUNTIME === "nodejs") {
-    const disabled =
-      process.env.DUE_REMINDERS_DISABLED?.toLowerCase() === "true";
     // The embedded PGLite fallback can't be shared with a second connection
-    if (disabled || !process.env.POSTGRES_URL) return;
+    if (!process.env.POSTGRES_URL) return;
+
+    const remindersEnabled =
+      process.env.DUE_REMINDERS_DISABLED?.toLowerCase() !== "true";
 
     const { startDueReminderScheduler } = await import(
       "./server/dueReminderScheduler"
     );
-    startDueReminderScheduler();
+    startDueReminderScheduler({ remindersEnabled });
   }
 }

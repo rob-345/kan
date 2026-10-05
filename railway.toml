@@ -1,0 +1,15 @@
+# Railway deploy settings for the web service. Railway reads this from the
+# repo root; values here override the service settings in the dashboard.
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "apps/web/Dockerfile.railway"
+watchPatterns = ["apps/web/**", "packages/**", "pnpm-lock.yaml", "railway.toml"]
+
+[deploy]
+# Applies new database migrations before the new release takes traffic.
+# POSTGRES_URL here should be Neon's direct (non-pooler) connection string,
+# or set MIGRATE_POSTGRES_URL to it and keep the pooled URL for the app.
+preDeployCommand = ["sh", "-c", "cd /db && POSTGRES_URL=${MIGRATE_POSTGRES_URL:-$POSTGRES_URL} npx --no-install drizzle-kit migrate"]
+healthcheckPath = "/api/v1/health"
+healthcheckTimeout = 120
+restartPolicyType = "ON_FAILURE"

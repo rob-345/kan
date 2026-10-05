@@ -1,7 +1,9 @@
+import type { AnyPgColumn } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import {
   bigint,
   bigserial,
+  boolean,
   index,
   integer,
   pgEnum,
@@ -49,6 +51,12 @@ export const activityTypes = [
   "card.updated.dueDate.updated",
   "card.updated.dueDate.removed",
   "card.archived",
+  "card.restored",
+  "card.updated.startDate.added",
+  "card.updated.startDate.updated",
+  "card.updated.startDate.removed",
+  "card.updated.dueDate.completed",
+  "card.updated.dueDate.uncompleted",
 ] as const;
 
 export type ActivityType = (typeof activityTypes)[number];
@@ -80,9 +88,27 @@ export const cards = pgTable(
       () => imports.id,
     ),
     dueDate: timestamp("dueDate"),
+    startDate: timestamp("startDate"),
+    dueDateCompleted: boolean("dueDateCompleted").notNull().default(false),
+    // Minutes before the due date to send a reminder; null means no reminder
+    dueReminderMinutes: integer("dueReminderMinutes"),
+    dueReminderSentAt: timestamp("dueReminderSentAt"),
+    coverColour: varchar("coverColour", { length: 12 }),
+    coverAttachmentId: bigint("coverAttachmentId", {
+      mode: "number",
+    }).references((): AnyPgColumn => cardAttachments.id, {
+      onDelete: "set null",
+    }),
+    // An archived card is also soft deleted (deletedAt is set) so it drops out
+    // of every board query and list index; archivedAt marks it as restorable.
+    archivedAt: timestamp("archivedAt"),
+    archivedBy: uuid("archivedBy").references(() => users.id, {
+      onDelete: "set null",
+    }),
   },
   (table) => [
     index("card_list_number_idx").on(table.listId, table.cardNumber),
+    index("card_due_reminder_idx").on(table.dueDate, table.dueReminderSentAt),
   ],
 ).enableRLS();
 
@@ -113,6 +139,42 @@ export const cardsRelations = relations(cards, ({ one, many }) => ({
   activities: many(cardActivities),
   checklists: many(checklists),
   attachments: many(cardAttachments),
+  coverAttachment: one(cardAttachments, {
+    fields: [cards.coverAttachmentId],
+    references: [cardAttachments.id],
+    relationName: "cardsCoverAttachment",
+  }),
+  watchers: many(cardWatchers),
+}));
+
+export const cardWatchers = pgTable(
+  "card_watcher",
+  {
+    cardId: bigint("cardId", { mode: "number" })
+      .notNull()
+      .references(() => cards.id, { onDelete: "cascade" }),
+    userId: uuid("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.cardId, t.userId] }),
+    index("card_watcher_user_idx").on(t.userId),
+  ],
+).enableRLS();
+
+export const cardWatchersRelations = relations(cardWatchers, ({ one }) => ({
+  card: one(cards, {
+    fields: [cardWatchers.cardId],
+    references: [cards.id],
+    relationName: "cardWatchersCard",
+  }),
+  user: one(users, {
+    fields: [cardWatchers.userId],
+    references: [users.id],
+    relationName: "cardWatchersUser",
+  }),
 }));
 
 export const cardActivities = pgTable("card_activity", {
@@ -153,6 +215,8 @@ export const cardActivities = pgTable("card_activity", {
   toComment: text("toComment"),
   fromDueDate: timestamp("fromDueDate"),
   toDueDate: timestamp("toDueDate"),
+  fromStartDate: timestamp("fromStartDate"),
+  toStartDate: timestamp("toStartDate"),
   sourceBoardId: bigint("sourceBoardId", { mode: "number" }).references(
     () => boards.id,
     { onDelete: "set null" },

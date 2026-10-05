@@ -6,10 +6,12 @@ import * as cardRepo from "@kan/db/repository/card.repo";
 import * as activityRepo from "@kan/db/repository/cardActivity.repo";
 import * as labelRepo from "@kan/db/repository/label.repo";
 import * as listRepo from "@kan/db/repository/list.repo";
+import * as watcherRepo from "@kan/db/repository/watcher.repo";
 import * as workspaceRepo from "@kan/db/repository/workspace.repo";
 import { colours } from "@kan/shared/constants";
 import {
   convertDueDateFiltersToRanges,
+  generateAttachmentUrl,
   generateSlug,
   generateUID,
 } from "@kan/shared/utils";
@@ -189,8 +191,12 @@ export const boardRouter = createTRPCRouter({
         result.lists.map(async (list) => ({
           ...list,
           cards: await Promise.all(
-            list.cards.map(async (card) => ({
+            list.cards.map(async ({ coverAttachment, ...card }) => ({
               ...card,
+              coverImageUrl:
+                coverAttachment && !coverAttachment.deletedAt
+                  ? await generateAttachmentUrl(coverAttachment.s3Key)
+                  : null,
               members: await Promise.all(
                 card.members.map(async (member) => {
                   if (!member.user?.image) return member;
@@ -206,11 +212,63 @@ export const boardRouter = createTRPCRouter({
         })),
       );
 
+      const isWatching = await watcherRepo.isWatchingBoard(ctx.db, {
+        boardId: board.id,
+        userId,
+      });
+
       return {
         ...result,
+        isWatching,
         lists: listsWithAvatarUrls,
         workspace: workspaceWithAvatarUrls,
       };
+    }),
+  setWatching: protectedProcedure
+    .meta({
+      openapi: {
+        summary: "Watch or unwatch a board",
+        method: "PUT",
+        path: "/boards/{boardPublicId}/watching",
+        description:
+          "Starts or stops notifications to the current user for activity on every card in a board",
+        tags: ["Boards"],
+        protect: true,
+      },
+    })
+    .input(
+      z.object({ boardPublicId: z.string().min(12), watching: z.boolean() }),
+    )
+    .output(z.object({ watching: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.user?.id;
+
+      if (!userId)
+        throw new TRPCError({
+          message: `User not authenticated`,
+          code: "UNAUTHORIZED",
+        });
+
+      const board = await boardRepo.getWorkspaceAndBoardIdByBoardPublicId(
+        ctx.db,
+        input.boardPublicId,
+      );
+
+      if (!board)
+        throw new TRPCError({
+          message: `Board with public ID ${input.boardPublicId} not found`,
+          code: "NOT_FOUND",
+        });
+
+      await assertPermission(ctx.db, userId, board.workspaceId, "board:view");
+
+      if (input.watching) {
+        await watcherRepo.watchBoard(ctx.db, { boardId: board.id, userId });
+      } else {
+        await watcherRepo.unwatchBoard(ctx.db, { boardId: board.id, userId });
+      }
+
+      return { watching: input.watching };
     }),
   bySlug: publicProcedure
     .meta({

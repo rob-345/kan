@@ -1,4 +1,4 @@
-import { and, count, eq, isNull } from "drizzle-orm";
+import { and, count, desc, eq, inArray, isNull } from "drizzle-orm";
 
 import type { dbClient } from "@kan/db/client";
 import type { NotificationType } from "@kan/db/schema";
@@ -96,3 +96,80 @@ export const getUnreadCount = async (
   return result[0]?.count ?? 0;
 };
 
+export const bulkCreate = async (
+  db: dbClient,
+  notificationInputs: {
+    type: NotificationType;
+    userId: string;
+    cardId?: number;
+    commentId?: number;
+    workspaceId?: number;
+    metadata?: string;
+  }[],
+) => {
+  if (notificationInputs.length === 0) return [];
+
+  return db
+    .insert(notifications)
+    .values(
+      notificationInputs.map((input) => ({
+        ...input,
+        publicId: generateUID(),
+      })),
+    )
+    .returning({ id: notifications.id });
+};
+
+export const getRecentByUserId = async (
+  db: dbClient,
+  args: { userId: string; limit: number },
+) => {
+  return db.query.notifications.findMany({
+    columns: {
+      publicId: true,
+      type: true,
+      metadata: true,
+      readAt: true,
+      createdAt: true,
+    },
+    with: {
+      card: {
+        columns: { publicId: true, title: true, deletedAt: true },
+      },
+      comment: {
+        columns: { comment: true },
+      },
+    },
+    where: and(
+      eq(notifications.userId, args.userId),
+      isNull(notifications.deletedAt),
+    ),
+    orderBy: [desc(notifications.createdAt)],
+    limit: args.limit,
+  });
+};
+
+export const markAsReadByPublicIds = async (
+  db: dbClient,
+  args: { userId: string; publicIds: string[] },
+) => {
+  if (args.publicIds.length === 0) return;
+
+  await db
+    .update(notifications)
+    .set({ readAt: new Date() })
+    .where(
+      and(
+        eq(notifications.userId, args.userId),
+        inArray(notifications.publicId, args.publicIds),
+        isNull(notifications.readAt),
+      ),
+    );
+};
+
+export const markAllAsRead = async (db: dbClient, userId: string) => {
+  await db
+    .update(notifications)
+    .set({ readAt: new Date() })
+    .where(and(eq(notifications.userId, userId), isNull(notifications.readAt)));
+};

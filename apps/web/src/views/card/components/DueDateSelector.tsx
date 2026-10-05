@@ -3,6 +3,8 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { HiMiniPlus } from "react-icons/hi2";
 
+import { defaultDueReminderMinutes } from "@kan/shared/constants";
+
 import DateSelector from "~/components/DateSelector";
 import { usePopup } from "~/providers/popup";
 import { useWorkspace } from "~/providers/workspace";
@@ -14,6 +16,8 @@ interface DueDateSelectorProps {
   dueDate: Date | null | undefined;
   isLoading?: boolean;
   disabled?: boolean;
+  /** Which card date this selector edits; defaults to the due date. */
+  field?: "dueDate" | "startDate";
 }
 
 export function DueDateSelector({
@@ -21,6 +25,7 @@ export function DueDateSelector({
   dueDate,
   isLoading = false,
   disabled = false,
+  field = "dueDate",
 }: DueDateSelectorProps) {
   const { showPopup } = usePopup();
   const { workspace } = useWorkspace();
@@ -48,10 +53,10 @@ export function DueDateSelector({
 
         return {
           ...oldCard,
-          dueDate:
-            update.dueDate !== undefined
-              ? (update.dueDate as Date | null)
-              : oldCard.dueDate,
+          [field]:
+            update[field] !== undefined
+              ? (update[field] as Date | null)
+              : oldCard[field],
         };
       });
 
@@ -60,7 +65,10 @@ export function DueDateSelector({
     onError: (_error, _update, context) => {
       utils.card.byId.setData({ cardPublicId }, context?.previousCard);
       showPopup({
-        header: t`Unable to update due date`,
+        header:
+          field === "startDate"
+            ? t`Unable to update start date`
+            : t`Unable to update due date`,
         message: t`Please try again later, or contact customer support.`,
         icon: "error",
       });
@@ -100,7 +108,10 @@ export function DueDateSelector({
     if (dateChanged) {
       updateDueDate.mutate({
         cardPublicId,
-        dueDate: pendingDate ?? null,
+        [field]: pendingDate ?? null,
+        // Remind members a day ahead when a due date is first added
+        ...(field === "dueDate" &&
+          dueIsNull && { dueReminderMinutes: defaultDueReminderMinutes }),
       });
     }
   };
@@ -118,7 +129,7 @@ export function DueDateSelector({
         ) : (
           <>
             <HiMiniPlus size={22} className="pr-2" />
-            {t`Set due date`}
+            {field === "startDate" ? t`Set start date` : t`Set due date`}
           </>
         )}
       </button>

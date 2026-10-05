@@ -4,11 +4,14 @@ import { CSS } from "@dnd-kit/utilities";
 import { t } from "@lingui/core/macro";
 import { useForm } from "react-hook-form";
 import {
+  HiArrowRightOnRectangle,
   HiEllipsisHorizontal,
+  HiOutlineDocumentDuplicate,
   HiOutlinePlusSmall,
   HiOutlineSquaresPlus,
   HiOutlineTrash,
 } from "react-icons/hi2";
+import { IoArchiveOutline } from "react-icons/io5";
 
 import { authClient } from "@kan/auth/client";
 
@@ -17,6 +20,7 @@ import Dropdown from "~/components/Dropdown";
 import { Tooltip } from "~/components/Tooltip";
 import { usePermissions } from "~/hooks/usePermissions";
 import { useModal } from "~/providers/modal";
+import { usePopup } from "~/providers/popup";
 import { api } from "~/utils/api";
 import { isPlaceholderPublicId } from "~/utils/helpers";
 
@@ -24,6 +28,7 @@ interface ListProps {
   children: ReactNode;
   list: List;
   setSelectedPublicListId: (publicListId: PublicListId) => void;
+  isTemplate?: boolean;
 }
 
 interface List {
@@ -43,9 +48,13 @@ export default function List({
   children,
   list,
   setSelectedPublicListId,
+  isTemplate = false,
 }: ListProps) {
   const { openModal } = useModal();
-  const { canCreateCard, canEditList, canDeleteList } = usePermissions();
+  const { showPopup } = usePopup();
+  const utils = api.useUtils();
+  const { canCreateCard, canCreateList, canEditList, canDeleteList } =
+    usePermissions();
   const { data: session } = authClient.useSession();
   const isCreator = list.createdBy && session?.user.id === list.createdBy;
   const isOptimistic = isPlaceholderPublicId(list.publicId);
@@ -59,6 +68,24 @@ export default function List({
   };
 
   const updateList = api.list.update.useMutation();
+
+  const archiveList = api.list.archive.useMutation({
+    onSuccess: async () => {
+      showPopup({
+        header: t`List archived`,
+        message: t`You can restore it from the board's archived items.`,
+        icon: "success",
+      });
+      await utils.board.byId.invalidate();
+    },
+    onError: () => {
+      showPopup({
+        header: t`Unable to archive list`,
+        message: t`Please try again later, or contact customer support.`,
+        icon: "error",
+      });
+    },
+  });
 
   const { register, handleSubmit } = useForm<FormValues>({
     defaultValues: {
@@ -154,6 +181,38 @@ export default function List({
                       icon: (
                         <HiOutlineSquaresPlus className="h-[18px] w-[18px] text-dark-900" />
                       ),
+                    },
+                  ]
+                : []),
+              ...(!isOptimistic && canCreateList && canCreateCard
+                ? [
+                    {
+                      label: t`Copy list`,
+                      action: () =>
+                        openModal("COPY_LIST", list.publicId, list.name),
+                      icon: (
+                        <HiOutlineDocumentDuplicate className="h-[18px] w-[18px] text-dark-900" />
+                      ),
+                    },
+                  ]
+                : []),
+              ...(!isOptimistic && !isTemplate && canEdit
+                ? [
+                    {
+                      label: t`Move list to board`,
+                      action: () => openModal("MOVE_LIST", list.publicId),
+                      icon: (
+                        <HiArrowRightOnRectangle className="h-[18px] w-[18px] text-dark-900" />
+                      ),
+                    },
+                    {
+                      label: t`Archive list`,
+                      action: () =>
+                        archiveList.mutate({ listPublicId: list.publicId }),
+                      icon: (
+                        <IoArchiveOutline className="h-[18px] w-[18px] text-dark-900" />
+                      ),
+                      disabled: archiveList.isPending,
                     },
                   ]
                 : []),

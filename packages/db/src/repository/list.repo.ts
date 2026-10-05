@@ -1,7 +1,19 @@
-import { and, count, desc, eq, gt, isNull, sql } from "drizzle-orm";
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  gt,
+  inArray,
+  isNotNull,
+  isNull,
+  ne,
+  sql,
+} from "drizzle-orm";
 
 import type { dbClient } from "@kan/db/client";
-import { lists } from "@kan/db/schema";
+import { cards, cardsToLabels, labels, lists } from "@kan/db/schema";
 import { generateUID } from "@kan/shared/utils";
 
 export const getCount = async (db: dbClient) => {
@@ -370,12 +382,20 @@ export const softDeleteById = async (
     listId: number;
     deletedAt: Date;
     deletedBy: string;
+    archive?: boolean;
   },
 ) => {
   return db.transaction(async (tx) => {
     const [result] = await tx
       .update(lists)
-      .set({ deletedAt: args.deletedAt, deletedBy: args.deletedBy })
+      .set({
+        deletedAt: args.deletedAt,
+        deletedBy: args.deletedBy,
+        ...(args.archive && {
+          archivedAt: args.deletedAt,
+          archivedBy: args.deletedBy,
+        }),
+      })
       .where(and(eq(lists.id, args.listId), isNull(lists.deletedAt)))
       .returning({
         id: lists.id,
@@ -417,13 +437,20 @@ export const softDeleteById = async (
 export const getWorkspaceAndListIdByListPublicId = async (
   db: dbClient,
   listPublicId: string,
+  options?: { archived?: boolean },
 ) => {
   const result = await db.query.lists.findFirst({
-    columns: { id: true, name: true, createdBy: true },
-    where: and(eq(lists.publicId, listPublicId), isNull(lists.deletedAt)),
+    columns: { id: true, name: true, createdBy: true, index: true },
+    where: and(
+      eq(lists.publicId, listPublicId),
+      options?.archived
+        ? and(isNotNull(lists.deletedAt), isNotNull(lists.archivedAt))
+        : isNull(lists.deletedAt),
+    ),
     with: {
       board: {
         columns: {
+          id: true,
           publicId: true,
           workspaceId: true,
           name: true,
@@ -435,6 +462,8 @@ export const getWorkspaceAndListIdByListPublicId = async (
   return result
     ? {
         id: result.id,
+        index: result.index,
+        boardId: result.board.id,
         publicId: listPublicId,
         name: result.name,
         createdBy: result.createdBy,
@@ -443,4 +472,222 @@ export const getWorkspaceAndListIdByListPublicId = async (
         boardName: result.board.name,
       }
     : null;
+};
+
+export const getArchivedByBoardId = async (db: dbClient, boardId: number) => {
+  return db.query.lists.findMany({
+    columns: { publicId: true, name: true, archivedAt: true },
+    where: and(
+      eq(lists.boardId, boardId),
+      isNotNull(lists.archivedAt),
+      isNotNull(lists.deletedAt),
+    ),
+    orderBy: [desc(lists.archivedAt)],
+  });
+};
+
+/** Brings an archived list back as the last list on its board. */
+export const restore = async (db: dbClient, listId: number) => {
+  return db.transaction(async (tx) => {
+    const list = await tx.query.lists.findFirst({
+      columns: { id: true, boardId: true },
+      where: and(eq(lists.id, listId), isNotNull(lists.archivedAt)),
+    });
+
+    if (!list) return null;
+
+    const lastList = await tx.query.lists.findFirst({
+      columns: { index: true },
+      where: and(eq(lists.boardId, list.boardId), isNull(lists.deletedAt)),
+      orderBy: [desc(lists.index)],
+    });
+
+    const [result] = await tx
+      .update(lists)
+      .set({
+        index: lastList ? lastList.index + 1 : 0,
+        deletedAt: null,
+        deletedBy: null,
+        archivedAt: null,
+        archivedBy: null,
+        updatedAt: new Date(),
+      })
+      .where(eq(lists.id, list.id))
+      .returning({ publicId: lists.publicId, name: lists.name });
+
+    return result ?? null;
+  });
+};
+
+/** Removes an archived list from the archive (it stays soft deleted). */
+export const discardArchived = async (db: dbClient, listId: number) => {
+  const [result] = await db
+    .update(lists)
+    .set({ archivedAt: null, archivedBy: null })
+    .where(and(eq(lists.id, listId), isNotNull(lists.archivedAt)))
+    .returning({ id: lists.id });
+
+  return result;
+};
+
+/** Creates an empty list directly after the given index, shifting later lists. */
+export const createAt = async (
+  db: dbClient,
+  args: { name: string; boardId: number; index: number; createdBy: string },
+) => {
+  return db.transaction(async (tx) => {
+    await tx.execute(sql`
+      UPDATE list
+      SET index = index + 1
+      WHERE "boardId" = ${args.boardId} AND index >= ${args.index} AND "deletedAt" IS NULL;
+    `);
+
+    const [result] = await tx
+      .insert(lists)
+      .values({
+        publicId: generateUID(),
+        name: args.name,
+        createdBy: args.createdBy,
+        boardId: args.boardId,
+        index: args.index,
+      })
+      .returning({
+        id: lists.id,
+        publicId: lists.publicId,
+        name: lists.name,
+      });
+
+    if (!result) throw new Error(`Failed to create list on ${args.boardId}`);
+
+    return result;
+  });
+};
+
+/**
+ * Moves a list (with its cards) to the end of another board. Card labels are
+ * board specific, so each one is swapped for the target board's label with the
+ * same name and colour, which is created when the target board lacks it.
+ */
+export const moveToBoard = async (
+  db: dbClient,
+  args: { listId: number; targetBoardId: number; userId: string },
+) => {
+  return db.transaction(async (tx) => {
+    const list = await tx.query.lists.findFirst({
+      columns: { id: true, boardId: true, index: true },
+      where: and(eq(lists.id, args.listId), isNull(lists.deletedAt)),
+    });
+
+    if (!list) throw new Error(`List ${args.listId} not found`);
+    if (list.boardId === args.targetBoardId) return list;
+
+    await tx.execute(sql`
+      UPDATE list
+      SET index = index - 1
+      WHERE "boardId" = ${list.boardId} AND index > ${list.index} AND "deletedAt" IS NULL;
+    `);
+
+    const lastList = await tx.query.lists.findFirst({
+      columns: { index: true },
+      where: and(
+        eq(lists.boardId, args.targetBoardId),
+        isNull(lists.deletedAt),
+      ),
+      orderBy: [desc(lists.index)],
+    });
+
+    await tx
+      .update(lists)
+      .set({
+        boardId: args.targetBoardId,
+        index: lastList ? lastList.index + 1 : 0,
+        updatedAt: new Date(),
+      })
+      .where(eq(lists.id, list.id));
+
+    const cardLabels = await tx
+      .select({
+        cardId: cardsToLabels.cardId,
+        labelId: labels.id,
+        name: labels.name,
+        colourCode: labels.colourCode,
+      })
+      .from(cardsToLabels)
+      .innerJoin(cards, eq(cardsToLabels.cardId, cards.id))
+      .innerJoin(labels, eq(cardsToLabels.labelId, labels.id))
+      .where(
+        and(eq(cards.listId, list.id), ne(labels.boardId, args.targetBoardId)),
+      );
+
+    if (cardLabels.length > 0) {
+      const targetLabels = await tx.query.labels.findMany({
+        columns: { id: true, name: true, colourCode: true },
+        where: and(
+          eq(labels.boardId, args.targetBoardId),
+          isNull(labels.deletedAt),
+        ),
+        orderBy: [asc(labels.id)],
+      });
+
+      const keyOf = (label: { name: string; colourCode: string | null }) =>
+        `${label.name}\u0000${label.colourCode ?? ""}`;
+      const targetByKey = new Map(
+        targetLabels.map((label) => [keyOf(label), label.id]),
+      );
+
+      for (const cardLabel of cardLabels) {
+        const key = keyOf(cardLabel);
+        let targetLabelId = targetByKey.get(key);
+
+        if (!targetLabelId) {
+          const [created] = await tx
+            .insert(labels)
+            .values({
+              publicId: generateUID(),
+              name: cardLabel.name,
+              colourCode: cardLabel.colourCode,
+              boardId: args.targetBoardId,
+              createdBy: args.userId,
+            })
+            .returning({ id: labels.id });
+          if (!created) continue;
+          targetLabelId = created.id;
+          targetByKey.set(key, targetLabelId);
+        }
+
+        await tx
+          .delete(cardsToLabels)
+          .where(
+            and(
+              eq(cardsToLabels.cardId, cardLabel.cardId),
+              eq(cardsToLabels.labelId, cardLabel.labelId),
+            ),
+          );
+        await tx
+          .insert(cardsToLabels)
+          .values({ cardId: cardLabel.cardId, labelId: targetLabelId })
+          .onConflictDoNothing();
+      }
+    }
+
+    return list;
+  });
+};
+
+export const getOpenCardIds = async (db: dbClient, listId: number) => {
+  const result = await db
+    .select({ id: cards.id })
+    .from(cards)
+    .where(and(eq(cards.listId, listId), isNull(cards.deletedAt)))
+    .orderBy(asc(cards.index));
+
+  return result.map((card) => card.id);
+};
+
+export const getBoardIdsByIds = async (db: dbClient, listIds: number[]) => {
+  if (listIds.length === 0) return [];
+  return db
+    .select({ id: lists.id, boardId: lists.boardId })
+    .from(lists)
+    .where(inArray(lists.id, listIds));
 };

@@ -32,6 +32,11 @@ export const lists = pgTable("list", {
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   importId: bigint("importId", { mode: "number" }).references(() => imports.id),
+  // An archived list is also soft deleted; archivedAt marks it as restorable.
+  archivedAt: timestamp("archivedAt"),
+  archivedBy: uuid("archivedBy").references(() => users.id, {
+    onDelete: "set null",
+  }),
 }).enableRLS();
 
 export const listsRelations = relations(lists, ({ one, many }) => ({

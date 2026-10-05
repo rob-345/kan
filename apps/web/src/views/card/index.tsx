@@ -30,16 +30,19 @@ import ActivityList from "./components/ActivityList";
 import { AttachmentThumbnails } from "./components/AttachmentThumbnails";
 import { AttachmentUpload } from "./components/AttachmentUpload";
 import Checklists from "./components/Checklists";
+import { CoverSelector } from "./components/CoverSelector";
 import { DeleteCardConfirmation } from "./components/DeleteCardConfirmation";
 import { DeleteChecklistConfirmation } from "./components/DeleteChecklistConfirmation";
 import { DeleteCommentConfirmation } from "./components/DeleteCommentConfirmation";
 import Dropdown from "./components/Dropdown";
+import { DueDateDetails } from "./components/DueDateDetails";
 import { DueDateSelector } from "./components/DueDateSelector";
 import LabelSelector from "./components/LabelSelector";
 import ListSelector from "./components/ListSelector";
 import MemberSelector from "./components/MemberSelector";
 import { NewChecklistForm } from "./components/NewChecklistForm";
 import NewCommentForm from "./components/NewCommentForm";
+import { CardWatchButton } from "./components/WatchButton";
 
 interface FormValues {
   cardId: string;
@@ -151,10 +154,42 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
         </div>
       )}
       <div className="mb-4 flex w-full flex-row">
+        <p className="my-2 mb-2 w-[100px] text-sm font-medium">{t`Start date`}</p>
+        <DueDateSelector
+          cardPublicId={cardId ?? ""}
+          dueDate={card?.startDate}
+          isLoading={!card}
+          disabled={!canEdit}
+          field="startDate"
+        />
+      </div>
+      <div className="mb-4 flex w-full flex-row">
         <p className="my-2 mb-2 w-[100px] text-sm font-medium">{t`Due date`}</p>
         <DueDateSelector
           cardPublicId={cardId ?? ""}
           dueDate={card?.dueDate}
+          isLoading={!card}
+          disabled={!canEdit}
+        />
+      </div>
+      {card?.dueDate && !isTemplate && (
+        <div className="mb-4 flex w-full flex-row">
+          <div className="w-[100px] shrink-0" />
+          <DueDateDetails
+            cardPublicId={cardId ?? ""}
+            dueDateCompleted={card.dueDateCompleted}
+            dueReminderMinutes={card.dueReminderMinutes}
+            disabled={!canEdit}
+          />
+        </div>
+      )}
+      <div className="mb-4 flex w-full flex-row">
+        <p className="my-2 mb-2 w-[100px] text-sm font-medium">{t`Cover`}</p>
+        <CoverSelector
+          cardPublicId={cardId ?? ""}
+          coverColour={card?.coverColour}
+          coverAttachmentPublicId={card?.coverAttachmentPublicId}
+          attachments={card?.attachments ?? []}
           isLoading={!card}
           disabled={!canEdit}
         />
@@ -360,6 +395,12 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                   )}
               </div>
               <div className="flex items-center gap-2">
+                {!isTemplate && session?.user && (
+                  <CardWatchButton
+                    cardPublicId={cardId}
+                    isWatching={card.isWatching}
+                  />
+                )}
                 <Dropdown
                   cardPublicId={cardId}
                   isTemplate={isTemplate}

@@ -3,13 +3,15 @@ import { t } from "@lingui/core/macro";
 import {
   HiArrowRightOnRectangle,
   HiEllipsisHorizontal,
+  HiEye,
   HiLink,
   HiOutlineDocumentDuplicate,
+  HiOutlineEye,
   HiOutlineStar,
   HiOutlineTrash,
   HiStar,
 } from "react-icons/hi2";
-import { IoArchiveOutline } from "react-icons/io5";
+import { IoArchiveOutline, IoFileTrayFullOutline } from "react-icons/io5";
 
 import Dropdown from "~/components/Dropdown";
 import { usePermissions } from "~/hooks/usePermissions";
@@ -23,6 +25,7 @@ export default function BoardDropdown({
   isArchived,
   boardPublicId,
   isFavorite,
+  isWatching,
   boardName,
 }: {
   isTemplate: boolean;
@@ -30,6 +33,7 @@ export default function BoardDropdown({
   boardPublicId: string;
   isArchived?: boolean;
   isFavorite?: boolean;
+  isWatching?: boolean;
   boardName?: string;
 }) {
   const router = useRouter();
@@ -69,6 +73,26 @@ export default function BoardDropdown({
     onError: () => {
       showPopup({
         header: t`Unable to update board`,
+        message: t`Please try again later, or contact customer support.`,
+        icon: "error",
+      });
+    },
+  });
+
+  const setWatching = api.board.setWatching.useMutation({
+    onSuccess: ({ watching }) => {
+      void utils.board.byId.invalidate();
+      showPopup({
+        header: watching ? t`Watching board` : t`Stopped watching board`,
+        message: watching
+          ? t`You'll be notified about activity on every card in this board.`
+          : t`You'll no longer be notified about this board.`,
+        icon: "success",
+      });
+    },
+    onError: () => {
+      showPopup({
+        header: t`Unable to update watching`,
         message: t`Please try again later, or contact customer support.`,
         icon: "error",
       });
@@ -130,6 +154,28 @@ export default function BoardDropdown({
             action: () => openModal("MOVE_BOARD"),
             icon: (
               <HiArrowRightOnRectangle className="h-[16px] w-[16px] text-dark-900" />
+            ),
+          },
+        ]
+      : []),
+    ...(!isTemplate
+      ? [
+          {
+            label: isWatching ? t`Stop watching board` : t`Watch board`,
+            action: () =>
+              setWatching.mutate({ boardPublicId, watching: !isWatching }),
+            icon: isWatching ? (
+              <HiEye className="h-[16px] w-[16px] text-dark-900" />
+            ) : (
+              <HiOutlineEye className="h-[16px] w-[16px] text-dark-900" />
+            ),
+            disabled: setWatching.isPending,
+          },
+          {
+            label: t`Archived items`,
+            action: () => openModal("ARCHIVED_ITEMS"),
+            icon: (
+              <IoFileTrayFullOutline className="h-[16px] w-[16px] text-dark-900" />
             ),
           },
         ]

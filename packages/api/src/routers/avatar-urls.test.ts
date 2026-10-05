@@ -7,6 +7,13 @@ import { generateAvatarUrl } from "@kan/shared/utils";
 
 import { assertPermission } from "../utils/permissions";
 
+vi.mock("@kan/db/repository/board.repo", () => ({}));
+vi.mock("@kan/db/repository/cardAttachment.repo", () => ({}));
+vi.mock("@kan/db/repository/watcher.repo", () => ({
+  isWatchingBoard: vi.fn().mockResolvedValue(false),
+  isWatchingCard: vi.fn().mockResolvedValue(false),
+  getCardAudienceUserIds: vi.fn().mockResolvedValue([]),
+}));
 vi.mock("@kan/db/repository/card.repo", () => ({
   getWorkspaceAndCardIdByCardPublicId: vi.fn(),
   getWithListAndMembersByPublicId: vi.fn(),
@@ -94,6 +101,8 @@ const createActivity = (publicId: string, withMember: boolean) => ({
   toDescription: null,
   fromDueDate: null,
   toDueDate: null,
+  fromStartDate: null,
+  toStartDate: null,
   fromList: null,
   toList: null,
   label: null,
@@ -165,6 +174,11 @@ describe("avatar URL resolution in routers", () => {
       cardNumber: 1,
       index: 1,
       dueDate: null,
+      startDate: null,
+      dueDateCompleted: false,
+      dueReminderMinutes: null,
+      coverColour: null,
+      coverAttachment: null,
       createdBy: "user-1",
       labels: [],
       attachments: [],

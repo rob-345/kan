@@ -4,6 +4,7 @@ import { Trans } from "@lingui/react/macro";
 import { format, formatDistanceToNow, isSameYear } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import {
+  HiOutlineArchiveBox,
   HiOutlineArrowLeft,
   HiOutlineArrowRight,
   HiOutlineCheckCircle,
@@ -66,6 +67,7 @@ const getActivityText = ({
   label,
   fromTitle,
   toDueDate,
+  toStartDate,
   dateLocale,
   mergedLabels,
   attachmentName,
@@ -81,6 +83,7 @@ const getActivityText = ({
   fromTitle?: string | null;
   fromDueDate?: Date | null;
   toDueDate?: Date | null;
+  toStartDate?: Date | null;
   dateLocale: DateFnsLocale;
   mergedLabels?: string[];
   attachmentName?: string | null;
@@ -142,6 +145,13 @@ const getActivityText = ({
     "card.updated.dueDate.added": t`set the due date`,
     "card.updated.dueDate.updated": t`updated the due date`,
     "card.updated.dueDate.removed": t`removed the due date`,
+    "card.updated.dueDate.completed": t`marked the due date complete`,
+    "card.updated.dueDate.uncompleted": t`marked the due date incomplete`,
+    "card.updated.startDate.added": t`set the start date`,
+    "card.updated.startDate.updated": t`updated the start date`,
+    "card.updated.startDate.removed": t`removed the start date`,
+    "card.archived": t`archived the card`,
+    "card.restored": t`restored the card`,
   } as const;
 
   if (!(type in ACTIVITY_TYPE_MAP)) return null;
@@ -324,6 +334,24 @@ const getActivityText = ({
     return <Trans>removed the due date</Trans>;
   }
 
+  if (
+    (type === "card.updated.startDate.added" ||
+      type === "card.updated.startDate.updated") &&
+    toStartDate
+  ) {
+    const showYear = !isSameYear(toStartDate, new Date());
+    const formattedDate = format(
+      toStartDate,
+      showYear ? "do MMM yyyy" : "do MMM",
+      { locale: dateLocale },
+    );
+    return (
+      <Trans>
+        changed the start date to <TextHighlight>{formattedDate}</TextHighlight>
+      </Trans>
+    );
+  }
+
   return baseText;
 };
 
@@ -349,6 +377,13 @@ const ACTIVITY_ICON_MAP: Partial<Record<ActivityType, React.ReactNode | null>> =
     "card.updated.dueDate.added": <HiOutlineClock />,
     "card.updated.dueDate.updated": <HiOutlineClock />,
     "card.updated.dueDate.removed": <HiOutlineClock />,
+    "card.updated.dueDate.completed": <HiOutlineCheckCircle />,
+    "card.updated.dueDate.uncompleted": <HiOutlineCheckCircle />,
+    "card.updated.startDate.added": <HiOutlineClock />,
+    "card.updated.startDate.updated": <HiOutlineClock />,
+    "card.updated.startDate.removed": <HiOutlineClock />,
+    "card.archived": <HiOutlineArchiveBox />,
+    "card.restored": <HiOutlineArchiveBox />,
   } as const;
 
 const getActivityIcon = (
@@ -504,6 +539,8 @@ const ActivityList = ({
           fromTitle: activity.fromTitle ?? null,
           fromDueDate: activity.fromDueDate ?? null,
           toDueDate: activity.toDueDate ?? null,
+          toStartDate:
+            "toStartDate" in activity ? (activity.toStartDate ?? null) : null,
           dateLocale: dateLocale,
           mergedLabels: (activity as ActivityWithMergedLabels).mergedLabels,
           attachmentName:

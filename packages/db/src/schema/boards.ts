@@ -71,6 +71,7 @@ export const boards = pgTable(
 
 export const boardsRelations = relations(boards, ({ one, many }) => ({
   userFavorites: many(userBoardFavorites),
+  watchers: many(boardWatchers),
   createdBy: one(users, {
     fields: [boards.createdBy],
     references: [users.id],
@@ -113,3 +114,33 @@ export const userBoardFavorites = pgTable(
     boardIdx: index("user_board_favorite_board_idx").on(table.boardId),
   }),
 );
+
+export const boardWatchers = pgTable(
+  "board_watcher",
+  {
+    boardId: bigint("boardId", { mode: "number" })
+      .notNull()
+      .references(() => boards.id, { onDelete: "cascade" }),
+    userId: uuid("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.boardId, t.userId] }),
+    index("board_watcher_user_idx").on(t.userId),
+  ],
+).enableRLS();
+
+export const boardWatchersRelations = relations(boardWatchers, ({ one }) => ({
+  board: one(boards, {
+    fields: [boardWatchers.boardId],
+    references: [boards.id],
+    relationName: "boardWatchersBoard",
+  }),
+  user: one(users, {
+    fields: [boardWatchers.userId],
+    references: [users.id],
+    relationName: "boardWatchersUser",
+  }),
+}));

@@ -1,13 +1,16 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import * as boardRepo from "@kan/db/repository/board.repo";
 import * as cardRepo from "@kan/db/repository/card.repo";
 import * as cardActivityRepo from "@kan/db/repository/cardActivity.repo";
+import * as cardAttachmentRepo from "@kan/db/repository/cardAttachment.repo";
 import * as cardCommentRepo from "@kan/db/repository/cardComment.repo";
-import * as checklistRepo from "@kan/db/repository/checklist.repo";
 import * as labelRepo from "@kan/db/repository/label.repo";
 import * as listRepo from "@kan/db/repository/list.repo";
+import * as watcherRepo from "@kan/db/repository/watcher.repo";
 import * as workspaceRepo from "@kan/db/repository/workspace.repo";
+import { cardCoverColours, dueReminderOptions } from "@kan/shared/constants";
 import {
   generateAttachmentUrl,
   normalizeDescription,
@@ -15,6 +18,7 @@ import {
 
 import {
   activityItemSchema,
+  archivedItemsSchema,
   cardCreateResponseSchema,
   cardDetailSchema,
   cardUpdateResponseSchema,
@@ -24,7 +28,8 @@ import {
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { mergeActivities } from "../utils/activities";
 import { createAvatarUrlResolver } from "../utils/avatarUrls";
-import { sendMentionEmails } from "../utils/notifications";
+import { duplicateCard } from "../utils/duplicateCard";
+import { notifyCardAudience, sendMentionEmails } from "../utils/notifications";
 import {
   assertCanDelete,
   assertCanEdit,
@@ -290,6 +295,16 @@ export const cardRouter = createTRPCRouter({
         nextHtml: input.comment,
         commenterUserId: userId,
         commentId: newComment.id,
+      });
+
+      void notifyCardAudience({
+        db: ctx.db,
+        cardId: card.id,
+        workspaceId: card.workspaceId,
+        actorUserId: userId,
+        type: "card.comment.added",
+        commentId: newComment.id,
+        metadata: { boardName: card.boardName },
       });
 
       return newComment;
@@ -650,6 +665,18 @@ export const cardRouter = createTRPCRouter({
         createdBy: userId,
       });
 
+      if (member.userId) {
+        void notifyCardAudience({
+          db: ctx.db,
+          cardId: card.id,
+          workspaceId: card.workspaceId,
+          actorUserId: userId,
+          type: "card.member.added",
+          metadata: { boardName: card.boardName },
+          onlyUserIds: [member.userId],
+        });
+      }
+
       return { newMember: true };
     }),
   byId: publicProcedure
@@ -738,8 +765,22 @@ export const cardRouter = createTRPCRouter({
           }
         : result.list.board.workspace;
 
+      const isWatching = ctx.user?.id
+        ? await watcherRepo.isWatchingCard(ctx.db, {
+            cardId: card.id,
+            userId: ctx.user.id,
+          })
+        : false;
+
+      const { coverAttachment, ...cardFields } = result;
+
       return {
-        ...result,
+        ...cardFields,
+        coverAttachmentPublicId:
+          coverAttachment && !coverAttachment.deletedAt
+            ? coverAttachment.publicId
+            : null,
+        isWatching,
         attachments: attachmentsWithUrls,
         list: {
           ...result.list,
@@ -869,6 +910,18 @@ export const cardRouter = createTRPCRouter({
         index: z.number().optional(),
         listPublicId: z.string().min(12).optional(),
         dueDate: z.date().nullable().optional(),
+        startDate: z.date().nullable().optional(),
+        dueDateCompleted: z.boolean().optional(),
+        dueReminderMinutes: z
+          .number()
+          .int()
+          .refine((value) =>
+            (dueReminderOptions as readonly number[]).includes(value),
+          )
+          .nullable()
+          .optional(),
+        coverColour: z.enum(cardCoverColours).nullable().optional(),
+        coverAttachmentPublicId: z.string().min(12).nullable().optional(),
       }),
     )
     .output(cardUpdateResponseSchema)
@@ -954,10 +1007,43 @@ export const cardRouter = createTRPCRouter({
         normalizedDescription !== undefined &&
         existingCard.description !== normalizedDescription;
 
+      let coverAttachmentId: number | null | undefined;
+      if (input.coverAttachmentPublicId !== undefined) {
+        if (input.coverAttachmentPublicId === null) {
+          coverAttachmentId = null;
+        } else {
+          const attachment = await cardAttachmentRepo.getByPublicId(
+            ctx.db,
+            input.coverAttachmentPublicId,
+          );
+          if (
+            !attachment ||
+            attachment.deletedAt ||
+            attachment.cardId !== existingCard.id ||
+            !attachment.contentType.startsWith("image/")
+          )
+            throw new TRPCError({
+              message: `Cover must be an image attached to this card`,
+              code: "BAD_REQUEST",
+            });
+          coverAttachmentId = attachment.id;
+        }
+      }
+
+      const previousStartDate = existingCard.startDate;
+      const dueDateCompletedChanged =
+        input.dueDateCompleted !== undefined &&
+        input.dueDateCompleted !== existingCard.dueDateCompleted;
+
       if (
         input.title ||
         normalizedDescription !== undefined ||
-        input.dueDate !== undefined
+        input.dueDate !== undefined ||
+        input.startDate !== undefined ||
+        input.dueDateCompleted !== undefined ||
+        input.dueReminderMinutes !== undefined ||
+        input.coverColour !== undefined ||
+        coverAttachmentId !== undefined
       ) {
         result = await cardRepo.update(
           ctx.db,
@@ -967,6 +1053,24 @@ export const cardRouter = createTRPCRouter({
               description: normalizedDescription,
             }),
             ...(input.dueDate !== undefined && { dueDate: input.dueDate }),
+            ...(input.startDate !== undefined && {
+              startDate: input.startDate,
+            }),
+            ...(input.dueDateCompleted !== undefined && {
+              dueDateCompleted: input.dueDateCompleted,
+            }),
+            ...(input.dueReminderMinutes !== undefined && {
+              dueReminderMinutes: input.dueReminderMinutes,
+            }),
+            // Colour and image covers are mutually exclusive
+            ...(input.coverColour !== undefined && {
+              coverColour: input.coverColour,
+              ...(input.coverColour && { coverAttachmentId: null }),
+            }),
+            ...(coverAttachmentId !== undefined && {
+              coverAttachmentId,
+              ...(coverAttachmentId && { coverColour: null }),
+            }),
           },
           { cardPublicId: input.cardPublicId },
         );
@@ -1044,6 +1148,33 @@ export const cardRouter = createTRPCRouter({
         });
       }
 
+      if (
+        input.startDate !== undefined &&
+        previousStartDate?.getTime() !== input.startDate?.getTime()
+      ) {
+        activities.push({
+          type: !previousStartDate
+            ? ("card.updated.startDate.added" as const)
+            : !input.startDate
+              ? ("card.updated.startDate.removed" as const)
+              : ("card.updated.startDate.updated" as const),
+          cardId: result.id,
+          createdBy: userId,
+          fromStartDate: previousStartDate ?? undefined,
+          toStartDate: input.startDate ?? undefined,
+        });
+      }
+
+      if (dueDateCompletedChanged) {
+        activities.push({
+          type: input.dueDateCompleted
+            ? ("card.updated.dueDate.completed" as const)
+            : ("card.updated.dueDate.uncompleted" as const),
+          cardId: result.id,
+          createdBy: userId,
+        });
+      }
+
       if (newListId && existingCard.listId !== newListId) {
         activities.push({
           type: "card.updated.list" as const,
@@ -1056,6 +1187,38 @@ export const cardRouter = createTRPCRouter({
 
       if (activities.length > 0) {
         await cardActivityRepo.bulkCreate(ctx.db, activities);
+      }
+
+      if (newListId && existingCard.listId !== newListId) {
+        void notifyCardAudience({
+          db: ctx.db,
+          cardId: result.id,
+          workspaceId: card.workspaceId,
+          actorUserId: userId,
+          type: "card.moved",
+          metadata: {
+            boardName: card.boardName,
+            fromListName: existingCard.list.name,
+            toListName: newList?.name,
+          },
+        });
+      }
+
+      if (
+        input.dueDate !== undefined &&
+        previousDueDate?.getTime() !== input.dueDate?.getTime()
+      ) {
+        void notifyCardAudience({
+          db: ctx.db,
+          cardId: result.id,
+          workspaceId: card.workspaceId,
+          actorUserId: userId,
+          type: "card.dueDate.changed",
+          metadata: {
+            boardName: card.boardName,
+            dueDate: input.dueDate?.toISOString() ?? null,
+          },
+        });
       }
 
       // Build changes object for webhook
@@ -1218,6 +1381,273 @@ export const cardRouter = createTRPCRouter({
 
       return { success: true };
     }),
+  archive: protectedProcedure
+    .meta({
+      openapi: {
+        summary: "Archive a card",
+        method: "POST",
+        path: "/cards/{cardPublicId}/archive",
+        description:
+          "Archives a card. Archived cards are hidden from the board and can be restored",
+        tags: ["Cards"],
+        protect: true,
+      },
+    })
+    .input(z.object({ cardPublicId: z.string().min(12) }))
+    .output(z.object({ success: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.user?.id;
+
+      if (!userId)
+        throw new TRPCError({
+          message: `User not authenticated`,
+          code: "UNAUTHORIZED",
+        });
+
+      const card = await cardRepo.getWorkspaceAndCardIdByCardPublicId(
+        ctx.db,
+        input.cardPublicId,
+      );
+
+      if (!card)
+        throw new TRPCError({
+          message: `Card with public ID ${input.cardPublicId} not found`,
+          code: "NOT_FOUND",
+        });
+
+      await assertCanEdit(
+        ctx.db,
+        userId,
+        card.workspaceId,
+        "card:edit",
+        card.createdBy,
+      );
+
+      await cardRepo.softDelete(ctx.db, {
+        cardId: card.id,
+        deletedAt: new Date(),
+        deletedBy: userId,
+        archive: true,
+      });
+
+      await cardActivityRepo.create(ctx.db, {
+        type: "card.archived",
+        cardId: card.id,
+        createdBy: userId,
+      });
+
+      void notifyCardAudience({
+        db: ctx.db,
+        cardId: card.id,
+        workspaceId: card.workspaceId,
+        actorUserId: userId,
+        type: "card.archived",
+        metadata: { boardName: card.boardName },
+      });
+
+      return { success: true };
+    }),
+  restore: protectedProcedure
+    .meta({
+      openapi: {
+        summary: "Restore an archived card",
+        method: "POST",
+        path: "/cards/{cardPublicId}/restore",
+        description:
+          "Restores an archived card to the end of its list, or to the board's first list if its list is gone",
+        tags: ["Cards"],
+        protect: true,
+      },
+    })
+    .input(z.object({ cardPublicId: z.string().min(12) }))
+    .output(z.object({ success: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.user?.id;
+
+      if (!userId)
+        throw new TRPCError({
+          message: `User not authenticated`,
+          code: "UNAUTHORIZED",
+        });
+
+      const card = await cardRepo.getWorkspaceAndCardIdByCardPublicId(
+        ctx.db,
+        input.cardPublicId,
+        { archived: true },
+      );
+
+      if (!card)
+        throw new TRPCError({
+          message: `Archived card with public ID ${input.cardPublicId} not found`,
+          code: "NOT_FOUND",
+        });
+
+      await assertCanEdit(
+        ctx.db,
+        userId,
+        card.workspaceId,
+        "card:edit",
+        card.createdBy,
+      );
+
+      const board = await boardRepo.getWorkspaceAndBoardIdByBoardPublicId(
+        ctx.db,
+        card.boardPublicId,
+      );
+
+      const restored = board
+        ? await cardRepo.restore(ctx.db, { cardId: card.id, boardId: board.id })
+        : null;
+
+      if (!restored)
+        throw new TRPCError({
+          message: `Add a list to the board before restoring this card`,
+          code: "BAD_REQUEST",
+        });
+
+      await cardActivityRepo.create(ctx.db, {
+        type: "card.restored",
+        cardId: card.id,
+        createdBy: userId,
+      });
+
+      return { success: true };
+    }),
+  deleteArchived: protectedProcedure
+    .meta({
+      openapi: {
+        summary: "Delete an archived card",
+        method: "DELETE",
+        path: "/cards/{cardPublicId}/archive",
+        description:
+          "Permanently removes an archived card so it can no longer be restored",
+        tags: ["Cards"],
+        protect: true,
+      },
+    })
+    .input(z.object({ cardPublicId: z.string().min(12) }))
+    .output(z.object({ success: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.user?.id;
+
+      if (!userId)
+        throw new TRPCError({
+          message: `User not authenticated`,
+          code: "UNAUTHORIZED",
+        });
+
+      const card = await cardRepo.getWorkspaceAndCardIdByCardPublicId(
+        ctx.db,
+        input.cardPublicId,
+        { archived: true },
+      );
+
+      if (!card)
+        throw new TRPCError({
+          message: `Archived card with public ID ${input.cardPublicId} not found`,
+          code: "NOT_FOUND",
+        });
+
+      await assertCanDelete(
+        ctx.db,
+        userId,
+        card.workspaceId,
+        "card:delete",
+        card.createdBy,
+      );
+
+      await cardRepo.discardArchived(ctx.db, card.id);
+
+      return { success: true };
+    }),
+  archived: protectedProcedure
+    .meta({
+      openapi: {
+        summary: "List a board's archived cards and lists",
+        method: "GET",
+        path: "/boards/{boardPublicId}/archived",
+        description: "Returns the archived cards and lists of a board",
+        tags: ["Boards"],
+        protect: true,
+      },
+    })
+    .input(z.object({ boardPublicId: z.string().min(12) }))
+    .output(archivedItemsSchema)
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.user?.id;
+
+      if (!userId)
+        throw new TRPCError({
+          message: `User not authenticated`,
+          code: "UNAUTHORIZED",
+        });
+
+      const board = await boardRepo.getWorkspaceAndBoardIdByBoardPublicId(
+        ctx.db,
+        input.boardPublicId,
+      );
+
+      if (!board)
+        throw new TRPCError({
+          message: `Board with public ID ${input.boardPublicId} not found`,
+          code: "NOT_FOUND",
+        });
+
+      await assertPermission(ctx.db, userId, board.workspaceId, "card:view");
+
+      const [archivedCards, archivedLists] = await Promise.all([
+        cardRepo.getArchivedByBoardId(ctx.db, board.id),
+        listRepo.getArchivedByBoardId(ctx.db, board.id),
+      ]);
+
+      return { cards: archivedCards, lists: archivedLists };
+    }),
+  setWatching: protectedProcedure
+    .meta({
+      openapi: {
+        summary: "Watch or unwatch a card",
+        method: "PUT",
+        path: "/cards/{cardPublicId}/watching",
+        description:
+          "Starts or stops notifications to the current user for activity on a card",
+        tags: ["Cards"],
+        protect: true,
+      },
+    })
+    .input(
+      z.object({ cardPublicId: z.string().min(12), watching: z.boolean() }),
+    )
+    .output(z.object({ watching: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.user?.id;
+
+      if (!userId)
+        throw new TRPCError({
+          message: `User not authenticated`,
+          code: "UNAUTHORIZED",
+        });
+
+      const card = await cardRepo.getWorkspaceAndCardIdByCardPublicId(
+        ctx.db,
+        input.cardPublicId,
+      );
+
+      if (!card)
+        throw new TRPCError({
+          message: `Card with public ID ${input.cardPublicId} not found`,
+          code: "NOT_FOUND",
+        });
+
+      await assertPermission(ctx.db, userId, card.workspaceId, "card:view");
+
+      if (input.watching) {
+        await watcherRepo.watchCard(ctx.db, { cardId: card.id, userId });
+      } else {
+        await watcherRepo.unwatchCard(ctx.db, { cardId: card.id, userId });
+      }
+
+      return { watching: input.watching };
+    }),
   duplicate: protectedProcedure
     .meta({
       openapi: {
@@ -1300,98 +1730,17 @@ export const cardRouter = createTRPCRouter({
           code: "NOT_FOUND",
         });
 
-      const newCard = await cardRepo.create(ctx.db, {
-        title: input.title ?? sourceCard.title,
-        description: normalizeDescription(sourceCard.description),
-        createdBy: userId,
-        listId: targetList.id,
-        workspaceId: targetList.workspaceId,
-        position: "end",
-        dueDate: sourceCard.dueDate ?? null,
+      const newCard = await duplicateCard({
+        db: ctx.db,
+        sourceCard,
+        targetList: { id: targetList.id, workspaceId: targetList.workspaceId },
+        userId,
+        index: input.index,
+        title: input.title,
+        copyLabels: input.copyLabels,
+        copyMembers: input.copyMembers,
+        copyChecklists: input.copyChecklists,
       });
-
-      if (input.index !== undefined && input.index >= 0) {
-        await cardRepo.reorder(ctx.db, {
-          cardId: newCard.id,
-          newIndex: input.index,
-          newListId: targetList.id,
-        });
-      }
-
-      if (input.copyLabels && sourceCard.labels?.length) {
-        const labelPublicIds = sourceCard.labels.map((l) => l.publicId);
-        const labels = await labelRepo.getAllByPublicIds(
-          ctx.db,
-          labelPublicIds,
-        );
-        if (labels.length) {
-          const labelsInsert = labels.map((label) => ({
-            cardId: newCard.id,
-            labelId: label.id,
-          }));
-          await cardRepo.bulkCreateCardLabelRelationships(ctx.db, labelsInsert);
-          const cardActivitesInsert = labels.map((cardLabel) => ({
-            type: "card.updated.label.added" as const,
-            cardId: newCard.id,
-            labelId: cardLabel.id,
-            createdBy: userId,
-          }));
-          await cardActivityRepo.bulkCreate(ctx.db, cardActivitesInsert);
-        }
-      }
-
-      if (input.copyMembers && sourceCard.members?.length) {
-        const memberPublicIds = sourceCard.members.map((m) => m.publicId);
-        const members = await workspaceRepo.getAllMembersByPublicIds(
-          ctx.db,
-          memberPublicIds,
-          sourceCardMeta.workspaceId,
-        );
-        if (members.length) {
-          const membersInsert = members.map((member) => ({
-            cardId: newCard.id,
-            workspaceMemberId: member.id,
-          }));
-          await cardRepo.bulkCreateCardWorkspaceMemberRelationships(
-            ctx.db,
-            membersInsert,
-          );
-          const cardActivitesInsert = members.map((member) => ({
-            type: "card.updated.member.added" as const,
-            cardId: newCard.id,
-            workspaceMemberId: member.id,
-            createdBy: userId,
-          }));
-          await cardActivityRepo.bulkCreate(ctx.db, cardActivitesInsert);
-        }
-      }
-
-      if (input.copyChecklists && sourceCard.checklists?.length) {
-        for (const checklist of sourceCard.checklists) {
-          const newChecklist = await checklistRepo.create(ctx.db, {
-            cardId: newCard.id,
-            name: checklist.name,
-            createdBy: userId,
-          });
-          if (!newChecklist?.id) continue;
-          if (checklist.items?.length) {
-            for (const item of checklist.items) {
-              await checklistRepo.createItem(ctx.db, {
-                checklistId: newChecklist.id,
-                title: item.title,
-                createdBy: userId,
-                completed: false,
-              });
-            }
-          }
-          await cardActivityRepo.create(ctx.db, {
-            type: "card.updated.checklist.added",
-            cardId: newCard.id,
-            toTitle: newChecklist.name,
-            createdBy: userId,
-          });
-        }
-      }
 
       return { publicId: newCard.publicId };
     }),

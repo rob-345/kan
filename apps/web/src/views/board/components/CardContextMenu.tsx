@@ -9,6 +9,7 @@ import {
   HiOutlineUserGroup,
   HiOutlineArrowRightCircle,
 } from "react-icons/hi2";
+import { IoArchiveOutline } from "react-icons/io5";
 
 export type CardContextMenuAction =
   | "members"
@@ -17,6 +18,7 @@ export type CardContextMenuAction =
   | "dueDate"
   | "copyLink"
   | "duplicate"
+  | "archive"
   | "delete";
 
 interface CardContextMenuProps {
@@ -25,6 +27,8 @@ interface CardContextMenuProps {
   onClose: () => void;
   onAction: (action: CardContextMenuAction) => void;
   canEdit: boolean;
+  /** Hide actions that don't apply, such as archiving on templates. */
+  hiddenActions?: CardContextMenuAction[];
 }
 
 const MENU_ITEMS: {
@@ -70,6 +74,12 @@ const MENU_ITEMS: {
     requiresEdit: true,
   },
   {
+    action: "archive",
+    label: t`Archive card`,
+    icon: <IoArchiveOutline className="h-4 w-4 shrink-0" />,
+    requiresEdit: true,
+  },
+  {
     action: "delete",
     label: t`Delete card`,
     icon: <HiOutlineTrash className="h-4 w-4 shrink-0" />,
@@ -83,6 +93,7 @@ export function CardContextMenu({
   onClose,
   onAction,
   canEdit,
+  hiddenActions = [],
 }: CardContextMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -103,7 +114,10 @@ export function CardContextMenu({
     };
   }, [onClose]);
 
-  const items = MENU_ITEMS.filter((item) => !item.requiresEdit || canEdit);
+  const items = MENU_ITEMS.filter(
+    (item) =>
+      (!item.requiresEdit || canEdit) && !hiddenActions.includes(item.action),
+  );
 
   return (
     <div

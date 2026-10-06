@@ -258,9 +258,15 @@ export const getByPublicId = async (
               listId: true,
               index: true,
               dueDate: true,
+              startDate: true,
+              dueDateCompleted: true,
+              coverColour: true,
               cardNumber: true,
             },
             with: {
+              coverAttachment: {
+                columns: { s3Key: true, deletedAt: true },
+              },
               labels: {
                 with: {
                   label: {
@@ -455,9 +461,15 @@ export const getBySlug = async (
               listId: true,
               index: true,
               dueDate: true,
+              startDate: true,
+              dueDateCompleted: true,
+              coverColour: true,
               cardNumber: true,
             },
             with: {
+              coverAttachment: {
+                columns: { s3Key: true, deletedAt: true },
+              },
               labels: {
                 with: {
                   label: {

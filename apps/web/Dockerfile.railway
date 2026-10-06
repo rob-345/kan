@@ -1,0 +1,60 @@
+# Railway build of the web app. Same stages as ./Dockerfile, minus BuildKit
+# cache mounts (Railway rejects mount ids without its service prefix), and with
+# an Alpine runtime that also carries the migrations, so Railway's pre-deploy
+# command can run them before each release goes live.
+
+ARG NODE_VERSION=20
+
+FROM node:${NODE_VERSION}-alpine AS alpine
+RUN apk add --no-cache libc6-compat && \
+    corepack enable && \
+    corepack prepare pnpm@9.14.2 --activate && \
+    npm install turbo@2.3.1 --global
+
+FROM alpine AS pruner
+WORKDIR /app
+COPY . .
+RUN turbo prune --scope=@kan/web --scope=@kan/db --docker
+
+FROM alpine AS deps
+WORKDIR /app
+COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+COPY --from=pruner /app/out/json/ .
+ENV CI=true
+RUN pnpm install --frozen-lockfile
+
+FROM alpine AS builder
+ARG APP_VERSION=""
+WORKDIR /app
+COPY --from=deps /app/ ./
+COPY --from=pruner /app/out/full/ .
+ENV NEXT_PUBLIC_USE_STANDALONE_OUTPUT=true
+ENV CI=true
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN NEXT_PUBLIC_APP_VERSION="$APP_VERSION" pnpm build --filter=@kan/web
+
+FROM node:${NODE_VERSION}-alpine AS migrate
+WORKDIR /db
+COPY packages/db/drizzle.config.ts ./drizzle.config.ts
+COPY packages/db/migrations/ ./migrations/
+RUN npm init -y >/dev/null && \
+    npm install drizzle-kit drizzle-orm pg --save-exact && \
+    npm cache clean --force
+
+FROM node:${NODE_VERSION}-alpine AS web
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+
+COPY --chown=node:node --from=builder /app/apps/web/.next/standalone/ ./
+COPY --chown=node:node --from=builder /app/apps/web/.next/static/ ./apps/web/.next/static/
+COPY --chown=node:node --from=builder /app/apps/web/public/ ./apps/web/public/
+COPY --chown=node:node apps/web/bootstrap.cjs ./bootstrap.cjs
+# Run with: cd /db && npx drizzle-kit migrate (railway.toml preDeployCommand)
+COPY --chown=node:node --from=migrate /db/ /db/
+
+USER node
+EXPOSE 3000
+CMD ["node", "bootstrap.cjs"]

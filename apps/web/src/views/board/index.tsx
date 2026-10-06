@@ -57,6 +57,7 @@ import { useWorkspace } from "~/providers/workspace";
 import { api } from "~/utils/api";
 import { formatToArray, isPlaceholderPublicId } from "~/utils/helpers";
 import { DeleteCardConfirmation } from "~/views/card/components/DeleteCardConfirmation";
+import { ArchivedItemsModal } from "./components/ArchivedItemsModal";
 import BoardDropdown from "./components/BoardDropdown";
 import CalendarView from "./components/CalendarView";
 import { CardContextDueDateModal } from "./components/CardContextDueDateModal";
@@ -67,11 +68,13 @@ import { CardContextMenu } from "./components/CardContextMenu";
 import { CardContextMoveListModal } from "./components/CardContextMoveListModal";
 import CardList from "./components/CardList";
 import CardPreview from "./components/CardPreview";
+import { CopyListModal } from "./components/CopyListModal";
 import { DeleteBoardConfirmation } from "./components/DeleteBoardConfirmation";
 import { DeleteListConfirmation } from "./components/DeleteListConfirmation";
 import Filters from "./components/Filters";
 import List from "./components/List";
 import { MoveBoardForm } from "./components/MoveBoardForm";
+import { MoveListModal } from "./components/MoveListModal";
 import { NewCardForm } from "./components/NewCardForm";
 import { NewListForm } from "./components/NewListForm";
 import { NewTemplateForm } from "./components/NewTemplateForm";
@@ -383,6 +386,45 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     },
   });
 
+  const archiveCardMutation = api.card.archive.useMutation({
+    onMutate: async ({ cardPublicId }) => {
+      await utils.board.byId.cancel();
+      const previousState = utils.board.byId.getData(queryParams);
+      utils.board.byId.setData(queryParams, (oldBoard) =>
+        oldBoard
+          ? {
+              ...oldBoard,
+              lists: oldBoard.lists.map((list) => ({
+                ...list,
+                cards: list.cards.filter(
+                  (card) => card.publicId !== cardPublicId,
+                ),
+              })),
+            }
+          : oldBoard,
+      );
+      return { previousState };
+    },
+    onSuccess: () => {
+      showPopup({
+        header: t`Card archived`,
+        message: t`You can restore it from the board's archived items.`,
+        icon: "success",
+      });
+    },
+    onError: (_error, _args, context) => {
+      utils.board.byId.setData(queryParams, context?.previousState);
+      showPopup({
+        header: t`Unable to archive card`,
+        message: t`Please try again later, or contact customer support.`,
+        icon: "error",
+      });
+    },
+    onSettled: async () => {
+      await utils.board.byId.invalidate(queryParams);
+    },
+  });
+
   useEffect(() => {
     if (isSuccess && boardData) {
       setValue("name", boardData.name || "");
@@ -452,6 +494,10 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     }
     if (action === "delete") {
       openModal("DELETE_CARD", cardPublicId);
+      return;
+    }
+    if (action === "archive") {
+      archiveCardMutation.mutate({ cardPublicId });
       return;
     }
     const modalType =
@@ -841,6 +887,24 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
           />
         </Modal>
         <Modal
+          modalSize="md"
+          isVisible={isOpen && modalContentType === "ARCHIVED_ITEMS"}
+        >
+          <ArchivedItemsModal boardPublicId={boardId ?? ""} />
+        </Modal>
+        <Modal
+          modalSize="sm"
+          isVisible={isOpen && modalContentType === "COPY_LIST"}
+        >
+          <CopyListModal />
+        </Modal>
+        <Modal
+          modalSize="sm"
+          isVisible={isOpen && modalContentType === "MOVE_LIST"}
+        >
+          <MoveListModal currentBoardPublicId={boardId ?? ""} />
+        </Modal>
+        <Modal
           modalSize="sm"
           isVisible={isOpen && modalContentType === "DELETE_CARD"}
         >
@@ -946,6 +1010,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
               boardPublicId={boardId ?? ""}
               isArchived={boardData?.isArchived ?? false}
               isFavorite={boardData?.favorite}
+              isWatching={boardData?.isWatching}
               boardName={boardData?.name}
             />
           </div>
@@ -1032,6 +1097,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                           <List
                             key={`list.${list.publicId}`}
                             list={list}
+                            isTemplate={!!isTemplate}
                             setSelectedPublicListId={(publicListId) => {
                               setNewCardInitialDueDate(null);
                               setSelectedPublicListId(publicListId);
@@ -1088,6 +1154,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
             onClose={() => setContextMenu(null)}
             onAction={handleCardContextMenuAction}
             canEdit={!!canEditCard}
+            hiddenActions={isTemplate ? ["archive"] : []}
           />
         )}
         {renderModalContent()}

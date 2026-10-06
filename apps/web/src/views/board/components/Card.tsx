@@ -3,6 +3,7 @@ import { HiOutlinePaperClip } from "react-icons/hi";
 import {
   HiBars3BottomLeft,
   HiChatBubbleLeft,
+  HiCheckCircle,
   HiOutlineClock,
 } from "react-icons/hi2";
 import { twMerge } from "tailwind-merge";
@@ -24,6 +25,10 @@ const Card = ({
   comments,
   attachments,
   dueDate,
+  startDate,
+  dueDateCompleted,
+  coverColour,
+  coverImageUrl,
 }: {
   title: string;
   ticketNumber?: string | null;
@@ -47,10 +52,21 @@ const Card = ({
   comments: { publicId: string }[];
   attachments?: { publicId: string }[];
   dueDate?: Date | null;
+  startDate?: Date | null;
+  dueDateCompleted?: boolean;
+  coverColour?: string | null;
+  coverImageUrl?: string | null;
 }) => {
   const { dateLocale } = useLocalisation();
-  const showYear = dueDate ? !isSameYear(dueDate, new Date()) : false;
-  const isOverdue = dueDate ? isBefore(dueDate, startOfDay(new Date())) : false;
+  const showYear = [startDate, dueDate].some(
+    (date) => date && !isSameYear(date, new Date()),
+  );
+  const isOverdue =
+    dueDate && !dueDateCompleted
+      ? isBefore(dueDate, startOfDay(new Date()))
+      : false;
+  const formatCardDate = (date: Date) =>
+    format(date, showYear ? "do MMM yyyy" : "do MMM", { locale: dateLocale });
   const completedItems = checklists.reduce((acc, checklist) => {
     return acc + checklist.items.filter((item) => item.completed).length;
   }, 0);
@@ -65,10 +81,22 @@ const Card = ({
   const hasDescription =
     description && description.replace(/<[^>]*>/g, "").trim().length > 0;
   const hasAttachments = attachments && attachments.length > 0;
-  const hasDueDate = !!dueDate;
+  const hasDueDate = !!dueDate || !!startDate;
 
   return (
     <div className="flex flex-col overflow-hidden rounded-md border border-light-200 bg-light-50 px-3 py-2 text-sm text-neutral-900 dark:border-dark-200 dark:bg-dark-200 dark:text-dark-1000 dark:hover:bg-dark-300">
+      {coverImageUrl ? (
+        <img
+          src={coverImageUrl}
+          alt=""
+          className="-mx-3 -mt-2 mb-2 max-h-[160px] w-[calc(100%+1.5rem)] max-w-none object-cover"
+        />
+      ) : coverColour ? (
+        <div
+          className="-mx-3 -mt-2 mb-2 h-8"
+          style={{ backgroundColor: coverColour }}
+        />
+      ) : null}
       {ticketNumber && (
         <span className="mb-1 text-xs text-light-700 dark:text-dark-800">
           {ticketNumber}
@@ -98,20 +126,28 @@ const Card = ({
                   <HiBars3BottomLeft className="h-4 w-4" />
                 </div>
               )}
-              {hasDueDate && dueDate && (
+              {hasDueDate && (
                 <div
                   className={twMerge(
                     "flex items-center gap-1",
-                    isOverdue
-                      ? "text-red-600 dark:text-red-400"
-                      : "text-light-800 dark:text-dark-800",
+                    dueDateCompleted
+                      ? "rounded-sm bg-green-600 px-1 text-white dark:bg-green-700"
+                      : isOverdue
+                        ? "text-red-600 dark:text-red-400"
+                        : "text-light-800 dark:text-dark-800",
                   )}
                 >
-                  <HiOutlineClock className="h-4 w-4" />
+                  {dueDateCompleted ? (
+                    <HiCheckCircle className="h-4 w-4" />
+                  ) : (
+                    <HiOutlineClock className="h-4 w-4" />
+                  )}
                   <span className="text-[11px]">
-                    {format(dueDate, showYear ? "do MMM yyyy" : "do MMM", {
-                      locale: dateLocale,
-                    })}
+                    {startDate && dueDate
+                      ? `${formatCardDate(startDate)} - ${formatCardDate(dueDate)}`
+                      : startDate
+                        ? formatCardDate(startDate)
+                        : dueDate && formatCardDate(dueDate)}
                   </span>
                 </div>
               )}

@@ -132,6 +132,7 @@ describe("sendMentionEmails", () => {
       userId: "mentioned-user-id",
       cardId: 42,
       commentId: 21,
+      metadata: JSON.stringify({ actorName: "Author", boardName: "A board" }),
     });
     expect(mocks.sendEmail.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.createNotification.mock.invocationCallOrder[0] ?? 0,

@@ -19,6 +19,24 @@ export const cardUpdateResponseSchema = z.object({
   dueDate: z.date().nullable(),
 });
 
+export const archivedItemsSchema = z.object({
+  cards: z.array(
+    z.object({
+      publicId: z.string(),
+      title: z.string(),
+      listName: z.string(),
+      archivedAt: z.date().nullable(),
+    }),
+  ),
+  lists: z.array(
+    z.object({
+      publicId: z.string(),
+      name: z.string(),
+      archivedAt: z.date().nullable(),
+    }),
+  ),
+});
+
 // ─── Comment responses ───────────────────────────────────────
 export const commentResponseSchema = z.object({
   publicId: z.string(),
@@ -49,6 +67,12 @@ export const cardDetailSchema = z.object({
   cardNumber: z.number().nullable(),
   index: z.number(),
   dueDate: z.date().nullable(),
+  startDate: z.date().nullable(),
+  dueDateCompleted: z.boolean(),
+  dueReminderMinutes: z.number().nullable(),
+  coverColour: z.string().nullable(),
+  coverAttachmentPublicId: z.string().nullable(),
+  isWatching: z.boolean(),
   createdBy: z.string().nullable(),
   labels: z.array(labelSchema),
   attachments: z.array(
@@ -159,6 +183,8 @@ export const activityItemSchema = z.object({
   toDescription: z.string().nullable(),
   fromDueDate: z.date().nullable(),
   toDueDate: z.date().nullable(),
+  fromStartDate: z.date().nullable(),
+  toStartDate: z.date().nullable(),
   fromList: z
     .object({
       publicId: z.string(),

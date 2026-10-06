@@ -2,6 +2,11 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { TRPCError } from "@trpc/server";
 
 // Mock all imports used by board.ts before importing the router
+vi.mock("@kan/db/repository/watcher.repo", () => ({
+  isWatchingBoard: vi.fn().mockResolvedValue(false),
+  isWatchingCard: vi.fn().mockResolvedValue(false),
+  getCardAudienceUserIds: vi.fn().mockResolvedValue([]),
+}));
 vi.mock("@kan/db/repository/board.repo", () => ({
   getBoardForMove: vi.fn(),
   isBoardSlugAvailable: vi.fn(),

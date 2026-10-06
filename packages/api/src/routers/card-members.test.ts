@@ -8,6 +8,13 @@ import * as workspaceRepo from "@kan/db/repository/workspace.repo";
 
 import { assertPermission } from "../utils/permissions";
 
+vi.mock("@kan/db/repository/watcher.repo", () => ({
+  isWatchingBoard: vi.fn().mockResolvedValue(false),
+  isWatchingCard: vi.fn().mockResolvedValue(false),
+  getCardAudienceUserIds: vi.fn().mockResolvedValue([]),
+}));
+vi.mock("@kan/db/repository/board.repo", () => ({}));
+vi.mock("@kan/db/repository/cardAttachment.repo", () => ({}));
 vi.mock("@kan/db/repository/card.repo", () => ({
   create: vi.fn(),
   bulkCreateCardWorkspaceMemberRelationships: vi.fn(),

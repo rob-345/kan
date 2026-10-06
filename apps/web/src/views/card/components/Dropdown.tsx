@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { t } from "@lingui/core/macro";
 import {
   HiEllipsisHorizontal,
@@ -7,6 +8,7 @@ import {
   HiOutlineDocumentDuplicate,
   HiOutlineTrash,
 } from "react-icons/hi2";
+import { IoArchiveOutline } from "react-icons/io5";
 
 import { authClient } from "@kan/auth/client";
 
@@ -33,6 +35,7 @@ export default function CardDropdown({
   listPublicId?: string;
   cardIndex?: number;
 }) {
+  const router = useRouter();
   const { openModal } = useModal();
   const { showPopup } = usePopup();
   const { canEditCard, canDeleteCard } = usePermissions();
@@ -57,6 +60,29 @@ export default function CardDropdown({
     },
     onSettled: async () => {
       await utils.board.byId.invalidate();
+    },
+  });
+
+  const archiveCard = api.card.archive.useMutation({
+    onSuccess: async () => {
+      showPopup({
+        header: t`Card archived`,
+        icon: "success",
+        message: t`You can restore it from the board's archived items.`,
+      });
+      await utils.board.byId.invalidate();
+      if (boardPublicId) {
+        void router.push(
+          `${isTemplate ? "/templates" : "/boards"}/${boardPublicId}`,
+        );
+      }
+    },
+    onError: () => {
+      showPopup({
+        header: t`Unable to archive card`,
+        icon: "error",
+        message: t`Please try again.`,
+      });
     },
   });
 
@@ -143,6 +169,18 @@ export default function CardDropdown({
               <HiOutlineDocumentDuplicate className="h-[16px] w-[16px] text-dark-900" />
             ),
             disabled: duplicateCard.isPending || !listPublicId,
+          },
+        ]
+      : []),
+    ...(!isTemplate && (canEditCard || isCreator)
+      ? [
+          {
+            label: t`Archive card`,
+            action: () => archiveCard.mutate({ cardPublicId }),
+            icon: (
+              <IoArchiveOutline className="h-[16px] w-[16px] text-dark-900" />
+            ),
+            disabled: archiveCard.isPending,
           },
         ]
       : []),

@@ -84,6 +84,8 @@ export const bulkCreate = async (
     createdBy: string;
     fromDueDate?: Date;
     toDueDate?: Date;
+    fromStartDate?: Date;
+    toStartDate?: Date;
     sourceBoardId?: number;
     attachmentId?: number;
   }[],
@@ -132,6 +134,8 @@ export const getPaginatedActivities = async (
       toDescription: true,
       fromDueDate: true,
       toDueDate: true,
+      fromStartDate: true,
+      toStartDate: true,
     },
     where: and(
       eq(cardActivities.cardId, cardId),

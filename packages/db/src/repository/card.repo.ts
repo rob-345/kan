@@ -6,6 +6,7 @@ import {
   eq,
   gt,
   inArray,
+  isNotNull,
   isNull,
   sql,
 } from "drizzle-orm";
@@ -204,17 +205,33 @@ export const update = async (
     title?: string;
     description?: string | null;
     dueDate?: Date | null;
+    startDate?: Date | null;
+    dueDateCompleted?: boolean;
+    dueReminderMinutes?: number | null;
+    coverColour?: string | null;
+    coverAttachmentId?: number | null;
   },
   args: {
     cardPublicId: string;
   },
 ) => {
+  // A new due date or reminder offset means any reminder already sent is stale
+  const resetReminder =
+    cardInput.dueDate !== undefined ||
+    cardInput.dueReminderMinutes !== undefined;
+
   const [result] = await db
     .update(cards)
     .set({
       title: cardInput.title,
       description: cardInput.description,
       dueDate: cardInput.dueDate !== undefined ? cardInput.dueDate : undefined,
+      startDate: cardInput.startDate,
+      dueDateCompleted: cardInput.dueDateCompleted,
+      dueReminderMinutes: cardInput.dueReminderMinutes,
+      ...(resetReminder && { dueReminderSentAt: null }),
+      coverColour: cardInput.coverColour,
+      coverAttachmentId: cardInput.coverAttachmentId,
       updatedAt: new Date(),
     })
     .where(and(eq(cards.publicId, args.cardPublicId), isNull(cards.deletedAt)))
@@ -259,6 +276,11 @@ export const getByPublicId = (db: dbClient, cardPublicId: string) => {
       description: true,
       listId: true,
       dueDate: true,
+      startDate: true,
+      dueDateCompleted: true,
+      dueReminderMinutes: true,
+      coverColour: true,
+      coverAttachmentId: true,
     },
     with: {
       list: {
@@ -477,6 +499,18 @@ export const createCardMemberRelationship = async (
   return { success: !!result };
 };
 
+export const getWithListAndMembersById = async (
+  db: dbClient,
+  cardId: number,
+) => {
+  const card = await db.query.cards.findFirst({
+    columns: { publicId: true },
+    where: and(eq(cards.id, cardId), isNull(cards.deletedAt)),
+  });
+
+  return card ? getWithListAndMembersByPublicId(db, card.publicId) : undefined;
+};
+
 export const getWithListAndMembersByPublicId = async (
   db: dbClient,
   cardPublicId: string,
@@ -488,11 +522,18 @@ export const getWithListAndMembersByPublicId = async (
       title: true,
       description: true,
       dueDate: true,
+      startDate: true,
+      dueDateCompleted: true,
+      dueReminderMinutes: true,
+      coverColour: true,
       createdBy: true,
       cardNumber: true,
       index: true,
     },
     with: {
+      coverAttachment: {
+        columns: { publicId: true, deletedAt: true },
+      },
       labels: {
         with: {
           label: {
@@ -893,12 +934,20 @@ export const softDelete = async (
     cardId: number;
     deletedAt: Date;
     deletedBy: string;
+    archive?: boolean;
   },
 ) => {
   return db.transaction(async (tx) => {
     const [result] = await tx
       .update(cards)
-      .set({ deletedAt: args.deletedAt, deletedBy: args.deletedBy })
+      .set({
+        deletedAt: args.deletedAt,
+        deletedBy: args.deletedBy,
+        ...(args.archive && {
+          archivedAt: args.deletedAt,
+          archivedBy: args.deletedBy,
+        }),
+      })
       .where(eq(cards.id, args.cardId))
       .returning({
         id: cards.id,
@@ -1005,10 +1054,16 @@ export const hardDeleteAllCardLabelRelationships = async (
 export const getWorkspaceAndCardIdByCardPublicId = async (
   db: dbClient,
   cardPublicId: string,
+  options?: { archived?: boolean },
 ) => {
   const result = await db.query.cards.findFirst({
     columns: { id: true, createdBy: true },
-    where: and(eq(cards.publicId, cardPublicId), isNull(cards.deletedAt)),
+    where: and(
+      eq(cards.publicId, cardPublicId),
+      options?.archived
+        ? and(isNotNull(cards.deletedAt), isNotNull(cards.archivedAt))
+        : isNull(cards.deletedAt),
+    ),
     with: {
       list: {
         columns: { name: true, publicId: true },
@@ -1038,4 +1093,139 @@ export const getWorkspaceAndCardIdByCardPublicId = async (
         boardName: result.list.board.name,
       }
     : null;
+};
+
+export const getArchivedByBoardId = async (db: dbClient, boardId: number) => {
+  return db
+    .select({
+      publicId: cards.publicId,
+      title: cards.title,
+      archivedAt: cards.archivedAt,
+      listName: lists.name,
+    })
+    .from(cards)
+    .innerJoin(lists, eq(cards.listId, lists.id))
+    .where(
+      and(
+        eq(lists.boardId, boardId),
+        isNotNull(cards.archivedAt),
+        isNotNull(cards.deletedAt),
+      ),
+    )
+    .orderBy(desc(cards.archivedAt));
+};
+
+/**
+ * Brings an archived card back to the end of its list. If that list has since
+ * been archived or deleted, the card goes to the board's first open list.
+ */
+export const restore = async (
+  db: dbClient,
+  args: { cardId: number; boardId: number },
+) => {
+  return db.transaction(async (tx) => {
+    const card = await tx.query.cards.findFirst({
+      columns: { id: true, listId: true },
+      with: { list: { columns: { id: true, deletedAt: true } } },
+      where: and(eq(cards.id, args.cardId), isNotNull(cards.archivedAt)),
+    });
+
+    if (!card) throw new Error(`Archived card ${args.cardId} not found`);
+
+    let targetListId = card.list.deletedAt ? undefined : card.listId;
+
+    if (!targetListId) {
+      const firstList = await tx.query.lists.findFirst({
+        columns: { id: true },
+        where: and(eq(lists.boardId, args.boardId), isNull(lists.deletedAt)),
+        orderBy: [asc(lists.index)],
+      });
+      targetListId = firstList?.id;
+    }
+
+    if (!targetListId) return null;
+
+    const lastCard = await tx.query.cards.findFirst({
+      columns: { index: true },
+      where: and(eq(cards.listId, targetListId), isNull(cards.deletedAt)),
+      orderBy: [desc(cards.index)],
+    });
+
+    const [result] = await tx
+      .update(cards)
+      .set({
+        listId: targetListId,
+        index: lastCard ? lastCard.index + 1 : 0,
+        deletedAt: null,
+        deletedBy: null,
+        archivedAt: null,
+        archivedBy: null,
+        updatedAt: new Date(),
+      })
+      .where(eq(cards.id, card.id))
+      .returning({
+        id: cards.id,
+        publicId: cards.publicId,
+        listId: cards.listId,
+      });
+
+    return result ?? null;
+  });
+};
+
+/** Permanently removes an archived card from the archive (it stays soft deleted). */
+export const discardArchived = async (db: dbClient, cardId: number) => {
+  const [result] = await db
+    .update(cards)
+    .set({ archivedAt: null, archivedBy: null })
+    .where(and(eq(cards.id, cardId), isNotNull(cards.archivedAt)))
+    .returning({ id: cards.id });
+
+  return result;
+};
+
+/**
+ * Claims cards whose due date reminder is now due and marks them as sent, so
+ * concurrent workers never send the same reminder twice.
+ */
+export const claimDueReminders = async (
+  db: dbClient,
+  args: { now: Date; limit?: number },
+) => {
+  // Timestamps are stored as UTC without a time zone, matching Drizzle
+  const now = sql`(${args.now.toISOString()}::timestamptz AT TIME ZONE 'UTC')`;
+
+  const claimed = await db.execute<{ id: number }>(sql`
+    UPDATE "card" SET "dueReminderSentAt" = ${now}
+    WHERE id IN (
+      SELECT id FROM "card"
+      WHERE "dueDate" IS NOT NULL
+        AND "dueReminderMinutes" IS NOT NULL
+        AND "dueReminderSentAt" IS NULL
+        AND "dueDateCompleted" = false
+        AND "deletedAt" IS NULL
+        AND "dueDate" - make_interval(mins => "dueReminderMinutes") <= ${now}
+        AND "dueDate" > ${now} - interval '1 hour'
+      ORDER BY "dueDate"
+      LIMIT ${args.limit ?? 100}
+      FOR UPDATE SKIP LOCKED
+    )
+    RETURNING id
+  `);
+
+  const ids = claimed.rows.map((row) => Number(row.id));
+  if (ids.length === 0) return [];
+
+  return db.query.cards.findMany({
+    columns: { id: true, publicId: true, title: true, dueDate: true },
+    where: inArray(cards.id, ids),
+    with: {
+      list: {
+        columns: { name: true },
+        with: {
+          board: { columns: { id: true, name: true, workspaceId: true } },
+        },
+      },
+    },
+  });
 };

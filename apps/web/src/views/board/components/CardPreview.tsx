@@ -20,6 +20,10 @@ export default function CardPreview({ card, cardPrefix }: CardPreviewProps) {
       comments={card.comments ?? []}
       attachments={card.attachments}
       dueDate={card.dueDate ?? null}
+      startDate={card.startDate ?? null}
+      dueDateCompleted={card.dueDateCompleted}
+      coverColour={card.coverColour}
+      coverImageUrl={card.coverImageUrl}
     />
   );
 }

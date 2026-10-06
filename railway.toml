@@ -7,8 +7,8 @@ watchPatterns = ["apps/web/**", "packages/**", "pnpm-lock.yaml", "railway.toml"]
 
 [deploy]
 # Applies new database migrations before the new release takes traffic.
-# POSTGRES_URL here should be Neon's direct (non-pooler) connection string,
-# or set MIGRATE_POSTGRES_URL to it and keep the pooled URL for the app.
+# Uses POSTGRES_URL; set MIGRATE_POSTGRES_URL only if migrations need a
+# different connection (e.g. a direct URL when the app goes through a pooler).
 preDeployCommand = ["sh", "-c", "cd /db && POSTGRES_URL=${MIGRATE_POSTGRES_URL:-$POSTGRES_URL} npx --no-install drizzle-kit migrate"]
 healthcheckPath = "/api/v1/health"
 healthcheckTimeout = 120

@@ -16203,5 +16203,253 @@
         139
       ]
     ]
+  },
+  "V8euYO": {
+    "message": "Add attachment",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/AttachmentUpload.tsx",
+        163
+      ]
+    ],
+    "translation": "Add attachment"
+  },
+  "VzGJRl": {
+    "message": "Add link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/AttachmentUpload.tsx",
+        144
+      ],
+      [
+        "src/views/card/components/CardLinks.tsx",
+        70
+      ],
+      [
+        "src/views/card/components/CardLinks.tsx",
+        242
+      ]
+    ],
+    "translation": "Add link"
+  },
+  "9W7mjh": {
+    "message": "added a link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        146
+      ]
+    ],
+    "translation": "added a link"
+  },
+  "hJoB0L": {
+    "message": "added a link <0>{0}</0>",
+    "placeholders": {
+      "0": [
+        "truncate(toTitle)"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        310
+      ]
+    ],
+    "translation": "added a link <0>{0}</0>"
+  },
+  "8RycaY": {
+    "message": "Display text (optional)",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CardLinks.tsx",
+        229
+      ]
+    ],
+    "translation": "Display text (optional)"
+  },
+  "stqxKS": {
+    "message": "Enter a valid web address, like https://example.com.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CardLinks.tsx",
+        190
+      ]
+    ],
+    "translation": "Enter a valid web address, like https://example.com."
+  },
+  "8Ntmm5": {
+    "message": "Link address",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/Editor.tsx",
+        400
+      ],
+      [
+        "src/views/card/components/CardLinks.tsx",
+        222
+      ]
+    ],
+    "translation": "Link address"
+  },
+  "smMkWC": {
+    "message": "Link display text",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CardLinks.tsx",
+        230
+      ]
+    ],
+    "translation": "Link display text"
+  },
+  "pUbcSv": {
+    "message": "Link options",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CardLinks.tsx",
+        135
+      ]
+    ],
+    "translation": "Link options"
+  },
+  "gh27t1": {
+    "message": "Link previews",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/components/LinkPreview.tsx",
+        224
+      ]
+    ],
+    "translation": "Link previews"
+  },
+  "Rj01Fz": {
+    "message": "Links",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CardLinks.tsx",
+        43
+      ]
+    ],
+    "translation": "Links"
+  },
+  "Ev/cxT": {
+    "message": "Paste a link, e.g. https://example.com",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CardLinks.tsx",
+        221
+      ]
+    ],
+    "translation": "Paste a link, e.g. https://example.com"
+  },
+  "vVkJqG": {
+    "message": "Refresh preview",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CardLinks.tsx",
+        138
+      ]
+    ],
+    "translation": "Refresh preview"
+  },
+  "484LKL": {
+    "message": "Remove link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CardLinks.tsx",
+        144
+      ]
+    ],
+    "translation": "Remove link"
+  },
+  "Dxwllt": {
+    "message": "removed a link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        147
+      ]
+    ],
+    "translation": "removed a link"
+  },
+  "Gm1g6e": {
+    "message": "removed a link <0>{0}</0>",
+    "placeholders": {
+      "0": [
+        "truncate(fromTitle)"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        318
+      ]
+    ],
+    "translation": "removed a link <0>{0}</0>"
+  },
+  "/WFEfd": {
+    "message": "Unable to add link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CardLinks.tsx",
+        187
+      ]
+    ],
+    "translation": "Unable to add link"
+  },
+  "jy3eRU": {
+    "message": "Unable to refresh preview",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CardLinks.tsx",
+        125
+      ]
+    ],
+    "translation": "Unable to refresh preview"
+  },
+  "TP6KDu": {
+    "message": "Unable to remove link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/CardLinks.tsx",
+        109
+      ]
+    ],
+    "translation": "Unable to remove link"
   }
 }

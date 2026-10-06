@@ -2,7 +2,7 @@ import { t } from "@lingui/core/macro";
 import { env } from "next-runtime-env";
 import { useRef, useState } from "react";
 import { HiOutlinePaperClip } from "react-icons/hi";
-import { HiCheckBadge } from "react-icons/hi2";
+import { HiCheckBadge, HiOutlineLink } from "react-icons/hi2";
 import { twMerge } from "tailwind-merge";
 
 import Button from "~/components/Button";
@@ -12,7 +12,13 @@ import { api } from "~/utils/api";
 import { invalidateCard } from "~/utils/cardInvalidation";
 import { GoogleDriveButton } from "./DriveFiles";
 
-export function AttachmentUpload({ cardPublicId }: { cardPublicId: string }) {
+export function AttachmentUpload({
+  cardPublicId,
+  onAddLink,
+}: {
+  cardPublicId: string;
+  onAddLink?: () => void;
+}) {
   const { openModal } = useModal();
   const { showPopup } = usePopup();
   const utils = api.useUtils();
@@ -133,6 +139,19 @@ export function AttachmentUpload({ cardPublicId }: { cardPublicId: string }) {
           />
           <div className="flex items-center gap-1">
             <GoogleDriveButton cardPublicId={cardPublicId} />
+            {onAddLink && (
+              <Button
+                type="button"
+                variant="ghost"
+                aria-label={t`Add link`}
+                iconLeft={
+                  <HiOutlineLink className="h-4 w-4 text-light-950 dark:text-dark-950" />
+                }
+                iconOnly
+                size="sm"
+                onClick={onAddLink}
+              />
+            )}
             <Button
               type="button"
               variant="ghost"

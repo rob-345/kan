@@ -36,6 +36,7 @@ import {
   HiOutlineCodeBracket,
   HiOutlineCodeBracketSquare,
   HiOutlineItalic,
+  HiOutlineLink,
   HiOutlineListBullet,
   HiOutlineNumberedList,
   HiOutlineStrikethrough,
@@ -45,6 +46,7 @@ import tippy from "tippy.js";
 import { Markdown } from "tiptap-markdown";
 
 import { getAvatarUrl } from "~/utils/helpers";
+import { linkifyHtml } from "~/utils/linkify";
 import Avatar from "./Avatar";
 import { YouTubeNode } from "./YouTubeEmbed/YouTubeNode";
 
@@ -387,6 +389,42 @@ export interface SlashNodeAttrs {
   label?: string | null;
 }
 
+/**
+ * Asks for a web address and links the selected text to it (or inserts the
+ * address as a link when nothing is selected). An empty answer removes the
+ * link under the cursor.
+ */
+const promptForLink = (editor: TiptapEditor) => {
+  const previous =
+    (editor.getAttributes("link").href as string | undefined) ?? "";
+  const answer = window.prompt(t`Link address`, previous || "https://");
+  if (answer === null) return;
+
+  const value = answer.trim();
+  if (!value || value === "https://") {
+    editor.chain().focus().extendMarkRange("link").unsetLink().run();
+    return;
+  }
+
+  const href = /^[a-z][a-z0-9+.-]*:/i.test(value) ? value : `https://${value}`;
+  if (!/^https?:\/\//i.test(href)) return;
+
+  if (editor.state.selection.empty && !editor.isActive("link")) {
+    editor
+      .chain()
+      .focus()
+      .insertContent({
+        type: "text",
+        text: href,
+        marks: [{ type: "link", attrs: { href } }],
+      })
+      .run();
+    return;
+  }
+
+  editor.chain().focus().extendMarkRange("link").setLink({ href }).run();
+};
+
 const getCommandItems = (disableHeadings: boolean): SlashCommandItem[] => {
   const headingCommands: SlashCommandItem[] = disableHeadings
     ? []
@@ -432,6 +470,11 @@ const getCommandItems = (disableHeadings: boolean): SlashCommandItem[] => {
       title: "Code Block",
       icon: <HiOutlineCodeBracketSquare />,
       command: ({ editor }) => editor.chain().focus().toggleCodeBlock().run(),
+    },
+    {
+      title: "Link",
+      icon: <HiOutlineLink />,
+      command: ({ editor }) => promptForLink(editor),
     },
   ];
 };
@@ -480,7 +523,16 @@ export default function Editor({
         StarterKit.configure({
           heading: disableHeadings ? false : undefined,
         }),
-        Link.configure({
+        Link.extend({
+          addKeyboardShortcuts() {
+            return {
+              "Mod-k": () => {
+                promptForLink(this.editor);
+                return true;
+              },
+            };
+          },
+        }).configure({
           openOnClick: true,
           HTMLAttributes: {
             class: "text-blue-600 hover:text-blue-800 underline cursor-pointer",
@@ -491,7 +543,7 @@ export default function Editor({
           autolink: true,
           linkOnPaste: true,
         }),
-        Markdown.configure({ transformPastedText: true }),
+        Markdown.configure({ transformPastedText: true, linkify: true }),
         Placeholder.configure({
           placeholder: readOnly
             ? ""
@@ -571,7 +623,7 @@ export default function Editor({
         }),
         ...(enableYouTubeEmbed ? [YouTubeNode] : []),
       ],
-      content,
+      content: content ? linkifyHtml(content) : content,
       onUpdate: ({ editor }) => onChangeRef.current?.(editor.getHTML()),
       onBlur: ({ event }) => {
         if (
@@ -609,7 +661,12 @@ export default function Editor({
     const currentHTML = editor.getHTML();
     const safeContent = content ?? "";
     if (safeContent !== currentHTML) {
-      editor.commands.setContent(safeContent, false);
+      // Turn bare addresses into links, except while the user is typing
+      // (wrapping a half-typed address would reset the cursor).
+      editor.commands.setContent(
+        editor.isFocused ? safeContent : linkifyHtml(safeContent),
+        false,
+      );
     }
   }, [content, editor]);
 
@@ -687,6 +744,13 @@ function EditorBubbleMenu({ editor }: { editor: TiptapEditor | null }) {
       keys: ["meta", "e"],
       onClick: () => editor?.chain().focus().toggleCode().run(),
       active: editor?.isActive("code"),
+    },
+    {
+      title: "Link",
+      icon: <HiOutlineLink />,
+      keys: ["meta", "k"],
+      onClick: () => editor && promptForLink(editor),
+      active: editor?.isActive("link"),
     },
   ];
   return (

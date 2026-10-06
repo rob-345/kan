@@ -19,6 +19,7 @@ import { boards } from "./boards";
 import { checklists } from "./checklists";
 import { imports } from "./imports";
 import { labels } from "./labels";
+import { cardLinks } from "./links";
 import { lists } from "./lists";
 import { users } from "./users";
 import { workspaceMembers } from "./workspaces";
@@ -62,6 +63,8 @@ export const activityTypes = [
   "card.updated.dueDate.uncompleted",
   "card.updated.driveFile.added",
   "card.updated.driveFile.removed",
+  "card.updated.link.added",
+  "card.updated.link.removed",
 ] as const;
 
 export type ActivityType = (typeof activityTypes)[number];
@@ -148,6 +151,7 @@ export const cardsRelations = relations(cards, ({ one, many }) => ({
   checklists: many(checklists),
   attachments: many(cardAttachments),
   driveFiles: many(cardDriveFiles),
+  links: many(cardLinks),
   coverAttachment: one(cardAttachments, {
     fields: [cards.coverAttachmentId],
     references: [cardAttachments.id],

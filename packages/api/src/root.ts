@@ -10,6 +10,7 @@ import { healthRouter } from "./routers/health";
 import { importRouter } from "./routers/import";
 import { integrationRouter } from "./routers/integration";
 import { labelRouter } from "./routers/label";
+import { linkRouter } from "./routers/link";
 import { listRouter } from "./routers/list";
 import { memberRouter } from "./routers/member";
 import { notificationRouter } from "./routers/notification";
@@ -30,6 +31,7 @@ export const appRouter = createTRPCRouter({
   googleIntegration: googleIntegrationRouter,
   health: healthRouter,
   label: labelRouter,
+  link: linkRouter,
   list: listRouter,
   member: memberRouter,
   notification: notificationRouter,

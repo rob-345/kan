@@ -9,6 +9,7 @@ import {
   HiOutlineArrowRight,
   HiOutlineCheckCircle,
   HiOutlineClock,
+  HiOutlineLink,
   HiOutlinePaperClip,
   HiOutlinePencil,
   HiOutlinePlus,
@@ -147,6 +148,8 @@ const getActivityText = ({
     "card.updated.attachment.removed": t`removed an attachment`,
     "card.updated.driveFile.added": t`linked a Google Drive file`,
     "card.updated.driveFile.removed": t`removed a Google Drive file`,
+    "card.updated.link.added": t`added a link`,
+    "card.updated.link.removed": t`removed a link`,
     "card.updated.dueDate.added": t`set the due date`,
     "card.updated.dueDate.updated": t`updated the due date`,
     "card.updated.dueDate.removed": t`removed the due date`,
@@ -363,11 +366,27 @@ const getActivityText = ({
     );
   }
 
+  if (type === "card.updated.link.added" && toTitle) {
+    return (
+      <Trans>
+        added a link <TextHighlight>{truncate(toTitle)}</TextHighlight>
+      </Trans>
+    );
+  }
+
   if (type === "card.updated.driveFile.removed" && fromTitle) {
     return (
       <Trans>
         removed a Google Drive file{" "}
         <TextHighlight>{truncate(fromTitle)}</TextHighlight>
+      </Trans>
+    );
+  }
+
+  if (type === "card.updated.link.removed" && fromTitle) {
+    return (
+      <Trans>
+        removed a link <TextHighlight>{truncate(fromTitle)}</TextHighlight>
       </Trans>
     );
   }
@@ -449,6 +468,8 @@ const ACTIVITY_ICON_MAP: Partial<Record<ActivityType, React.ReactNode | null>> =
     "card.updated.attachment.removed": <HiOutlinePaperClip />,
     "card.updated.driveFile.added": <HiOutlinePaperClip />,
     "card.updated.driveFile.removed": <HiOutlinePaperClip />,
+    "card.updated.link.added": <HiOutlineLink />,
+    "card.updated.link.removed": <HiOutlineLink />,
     "card.updated.dueDate.added": <HiOutlineClock />,
     "card.updated.dueDate.updated": <HiOutlineClock />,
     "card.updated.dueDate.removed": <HiOutlineClock />,

@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import * as boardRepo from "@kan/db/repository/board.repo";
 import * as cardRepo from "@kan/db/repository/card.repo";
+import * as checklistRepo from "@kan/db/repository/checklist.repo";
 import * as listRepo from "@kan/db/repository/list.repo";
 import * as watcherRepo from "@kan/db/repository/watcher.repo";
 import * as schema from "@kan/db/schema";
@@ -296,19 +297,23 @@ describe("trello feature repositories", () => {
 
       await set(dueSoon.publicId, {
         dueDate: new Date("2026-10-06T09:00:00.000Z"),
+        dueDateHasTime: true,
         dueReminderMinutes: 1440,
       });
       await set(dueLater.publicId, {
         dueDate: new Date("2026-10-08T09:00:00.000Z"),
+        dueDateHasTime: true,
         dueReminderMinutes: 1440,
       });
       await set(done.publicId, {
         dueDate: new Date("2026-10-05T12:30:00.000Z"),
+        dueDateHasTime: true,
         dueReminderMinutes: 60,
         dueDateCompleted: true,
       });
       await set(longPast.publicId, {
         dueDate: new Date("2026-10-04T09:00:00.000Z"),
+        dueDateHasTime: true,
         dueReminderMinutes: 0,
       });
 
@@ -324,6 +329,61 @@ describe("trello feature repositories", () => {
       });
       const reclaimed = await cardRepo.claimDueReminders(db, { now });
       expect(reclaimed.map((card) => card.title)).toEqual(["Due soon"]);
+    });
+
+    it("reminds about a date without a time at 09:00 that day", async () => {
+      const card = await createCard("All day");
+      await cardRepo.update(
+        db,
+        {
+          dueDate: new Date("2026-10-06T00:00:00.000Z"),
+          dueDateHasTime: false,
+          dueReminderMinutes: 0,
+        },
+        { cardPublicId: card.publicId },
+      );
+
+      expect(
+        await cardRepo.claimDueReminders(db, {
+          now: new Date("2026-10-06T08:59:00.000Z"),
+        }),
+      ).toEqual([]);
+      const claimed = await cardRepo.claimDueReminders(db, {
+        now: new Date("2026-10-06T09:00:00.000Z"),
+      });
+      expect(claimed.map((c) => c.title)).toEqual(["All day"]);
+    });
+
+    it("claims checklist item reminders once, skipping ticked items", async () => {
+      const now = new Date("2026-10-05T12:00:00.000Z");
+      const card = await createCard("Sub-tasks");
+      const checklist = await checklistRepo.create(db, {
+        cardId: card.id,
+        name: "Steps",
+        createdBy: userId,
+      });
+      const add = async (title: string, completed = false) => {
+        const item = await checklistRepo.createItem(db, {
+          checklistId: checklist!.id,
+          title,
+          createdBy: userId,
+        });
+        await checklistRepo.updateItemById(db, {
+          id: item!.id,
+          completed,
+          dueDate: new Date("2026-10-05T12:30:00.000Z"),
+          dueDateHasTime: true,
+          dueReminderMinutes: 60,
+        });
+        return item!;
+      };
+      await add("Open");
+      await add("Ticked", true);
+
+      const claimed = await checklistRepo.claimDueReminders(db, { now });
+      expect(claimed.map((item) => item.title)).toEqual(["Open"]);
+      expect(claimed[0]?.checklist.card.publicId).toBe(card.publicId);
+      expect(await checklistRepo.claimDueReminders(db, { now })).toEqual([]);
     });
   });
 });

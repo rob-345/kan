@@ -41,9 +41,13 @@ export interface ChatCardContext {
   fromListName?: string | null;
   toListName?: string | null;
   dueDate?: string | null;
+  /** false when dueDate is a whole day, stored as its first moment */
+  dueDateHasTime?: boolean;
   dueText?: string;
   commentHtml?: string | null;
   memberName?: string | null;
+  /** Set when the event is about a checklist item (sub-task) of the card */
+  itemTitle?: string | null;
 }
 
 // Chat treats these as formatting characters in plain text messages
@@ -66,16 +70,24 @@ const stripHtml = (html: string) =>
 const truncate = (value: string, max: number) =>
   value.length > max ? `${value.slice(0, max - 1)}…` : value;
 
-export const formatChatDate = (iso: string) =>
-  new Intl.DateTimeFormat("en-GB", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: "UTC",
-    timeZoneName: "short",
-  }).format(new Date(iso));
+export const formatChatDate = (iso: string, hasTime = true) =>
+  hasTime
+    ? new Intl.DateTimeFormat("en-GB", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "UTC",
+        timeZoneName: "short",
+      }).format(new Date(iso))
+    : // The middle of the day lands on the right date in any nearby zone
+      new Intl.DateTimeFormat("en-GB", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        timeZone: "UTC",
+      }).format(new Date(new Date(iso).getTime() + 12 * 3_600_000));
 
 /**
  * The text of the Chat message posted for a card event.
@@ -112,7 +124,7 @@ export const buildChatMessageText = (
     }
     case "card.dueDate.changed":
       headline = context.dueDate
-        ? `📅 ${actor} set ${card} due ${formatChatDate(context.dueDate)}`
+        ? `📅 ${actor} set ${card} due ${formatChatDate(context.dueDate, context.dueDateHasTime ?? true)}`
         : `📅 ${actor} removed the due date from ${card}`;
       break;
     case "card.completed":
@@ -127,7 +139,9 @@ export const buildChatMessageText = (
       )} to ${card}`;
       break;
     case "card.due.reminder":
-      headline = `⏰ ${card} is due ${context.dueText ?? "soon"}`;
+      headline = context.itemTitle
+        ? `⏰ ${escapeChat(context.itemTitle)} on ${card} is due ${context.dueText ?? "soon"}`
+        : `⏰ ${card} is due ${context.dueText ?? "soon"}`;
       break;
   }
 

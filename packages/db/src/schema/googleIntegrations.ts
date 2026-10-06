@@ -17,6 +17,7 @@ import {
 
 import { boards } from "./boards";
 import { cards } from "./cards";
+import { checklistItems } from "./checklists";
 import { users } from "./users";
 import { workspaces } from "./workspaces";
 
@@ -129,8 +130,8 @@ export type GoogleSyncKind = (typeof googleSyncKinds)[number];
 export const googleSyncKindEnum = pgEnum("google_sync_kind", googleSyncKinds);
 
 /**
- * Maps a card to the calendar event or task created for it in one user's
- * Google account.
+ * Maps a card, or one of its checklist items, to the calendar event or task
+ * created for it in one user's Google account.
  */
 export const googleSyncItems = pgTable(
   "google_sync_item",
@@ -142,17 +143,22 @@ export const googleSyncItems = pgTable(
     cardId: bigint("cardId", { mode: "number" })
       .notNull()
       .references(() => cards.id, { onDelete: "cascade" }),
+    // Set when the event or task is for a checklist item of the card
+    checklistItemId: bigint("checklistItemId", {
+      mode: "number",
+    }).references(() => checklistItems.id, { onDelete: "cascade" }),
     kind: googleSyncKindEnum("kind").notNull(),
     externalId: varchar("externalId", { length: 255 }).notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt"),
   },
   (table) => [
-    uniqueIndex("google_sync_item_unique_idx").on(
-      table.connectionId,
-      table.cardId,
-      table.kind,
-    ),
+    uniqueIndex("google_sync_item_card_unique_idx")
+      .on(table.connectionId, table.cardId, table.kind)
+      .where(sql`${table.checklistItemId} IS NULL`),
+    uniqueIndex("google_sync_item_checklist_item_unique_idx")
+      .on(table.connectionId, table.checklistItemId, table.kind)
+      .where(sql`${table.checklistItemId} IS NOT NULL`),
     index("google_sync_item_card_idx").on(table.cardId),
   ],
 ).enableRLS();

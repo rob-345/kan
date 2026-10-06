@@ -11,10 +11,7 @@ import * as listRepo from "@kan/db/repository/list.repo";
 import * as watcherRepo from "@kan/db/repository/watcher.repo";
 import * as workspaceRepo from "@kan/db/repository/workspace.repo";
 import { cardCoverColours, dueReminderOptions } from "@kan/shared/constants";
-import {
-  generateAttachmentUrl,
-  normalizeDescription,
-} from "@kan/shared/utils";
+import { generateAttachmentUrl, normalizeDescription } from "@kan/shared/utils";
 
 import {
   activityItemSchema,
@@ -65,6 +62,8 @@ export const cardRouter = createTRPCRouter({
         memberPublicIds: z.array(z.string().min(12)),
         position: z.enum(["start", "end"]),
         dueDate: z.date().nullable().optional(),
+        // Whether dueDate carries a time of day; false means a whole day
+        dueDateHasTime: z.boolean().optional(),
       }),
     )
     .output(cardCreateResponseSchema)
@@ -112,6 +111,7 @@ export const cardRouter = createTRPCRouter({
         workspaceId: list.workspaceId,
         position: input.position,
         dueDate: input.dueDate ?? null,
+        dueDateHasTime: input.dueDateHasTime,
       });
 
       const newCardId = newCard.id;
@@ -928,7 +928,10 @@ export const cardRouter = createTRPCRouter({
         index: z.number().optional(),
         listPublicId: z.string().min(12).optional(),
         dueDate: z.date().nullable().optional(),
+        // Whether dueDate carries a time of day; false means a whole day
+        dueDateHasTime: z.boolean().optional(),
         startDate: z.date().nullable().optional(),
+        startDateHasTime: z.boolean().optional(),
         dueDateCompleted: z.boolean().optional(),
         dueReminderMinutes: z
           .number()
@@ -1049,6 +1052,12 @@ export const cardRouter = createTRPCRouter({
       }
 
       const previousStartDate = existingCard.startDate;
+      const dueDateHasTimeChanged =
+        input.dueDateHasTime !== undefined &&
+        input.dueDateHasTime !== existingCard.dueDateHasTime;
+      const startDateHasTimeChanged =
+        input.startDateHasTime !== undefined &&
+        input.startDateHasTime !== existingCard.startDateHasTime;
       const dueDateCompletedChanged =
         input.dueDateCompleted !== undefined &&
         input.dueDateCompleted !== existingCard.dueDateCompleted;
@@ -1057,7 +1066,9 @@ export const cardRouter = createTRPCRouter({
         input.title ||
         normalizedDescription !== undefined ||
         input.dueDate !== undefined ||
+        input.dueDateHasTime !== undefined ||
         input.startDate !== undefined ||
+        input.startDateHasTime !== undefined ||
         input.dueDateCompleted !== undefined ||
         input.dueReminderMinutes !== undefined ||
         input.coverColour !== undefined ||
@@ -1071,8 +1082,14 @@ export const cardRouter = createTRPCRouter({
               description: normalizedDescription,
             }),
             ...(input.dueDate !== undefined && { dueDate: input.dueDate }),
+            ...(dueDateHasTimeChanged && {
+              dueDateHasTime: input.dueDateHasTime,
+            }),
             ...(input.startDate !== undefined && {
               startDate: input.startDate,
+            }),
+            ...(startDateHasTimeChanged && {
+              startDateHasTime: input.startDateHasTime,
             }),
             ...(input.dueDateCompleted !== undefined && {
               dueDateCompleted: input.dueDateCompleted,
@@ -1235,6 +1252,7 @@ export const cardRouter = createTRPCRouter({
           metadata: {
             boardName: card.boardName,
             dueDate: input.dueDate?.toISOString() ?? null,
+            dueDateHasTime: input.dueDateHasTime ?? existingCard.dueDateHasTime,
           },
         });
       }
@@ -1254,6 +1272,8 @@ export const cardRouter = createTRPCRouter({
           previousDueDate?.getTime() !== input.dueDate?.getTime()) ||
         (input.startDate !== undefined &&
           previousStartDate?.getTime() !== input.startDate?.getTime()) ||
+        dueDateHasTimeChanged ||
+        startDateHasTimeChanged ||
         dueDateCompletedChanged ||
         (input.dueReminderMinutes !== undefined &&
           input.dueReminderMinutes !== existingCard.dueReminderMinutes) ||

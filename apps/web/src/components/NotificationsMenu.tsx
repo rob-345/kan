@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { Popover, Transition } from "@headlessui/react";
 import { t } from "@lingui/core/macro";
-import { format, formatDistanceToNow } from "date-fns";
+import { format, formatDistanceToNow, isToday, isTomorrow } from "date-fns";
 import { Fragment } from "react";
 import { HiOutlineBell } from "react-icons/hi2";
 import { twMerge } from "tailwind-merge";
@@ -18,6 +18,15 @@ const stripHtml = (html: string) =>
     .replace(/<[^>]*>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+
+/** "in 2 hours" for a due time; "today", "tomorrow" or a date for a day. */
+const formatDue = (iso: string, hasTime: boolean) => {
+  const date = new Date(iso);
+  if (hasTime) return formatDistanceToNow(date, { addSuffix: true });
+  if (isToday(date)) return t`today`;
+  if (isTomorrow(date)) return t`tomorrow`;
+  return t`on ${format(date, "MMM d")}`;
+};
 
 const describe = (notification: Notification) => {
   const actor = notification.actorName ?? t`Someone`;
@@ -42,8 +51,20 @@ const describe = (notification: Notification) => {
       return t`${actor} added you to ${card}`;
     case "card.due.reminder":
       return notification.dueDate
-        ? t`${card} is due ${formatDistanceToNow(new Date(notification.dueDate), { addSuffix: true })}`
+        ? t`${card} is due ${formatDue(notification.dueDate, notification.dueDateHasTime)}`
         : t`${card} is due soon`;
+    case "checklist.item.due.reminder": {
+      const item = notification.itemTitle ?? t`A checklist item`;
+      return notification.dueDate
+        ? t`${item} on ${card} is due ${formatDue(notification.dueDate, notification.dueDateHasTime)}`
+        : t`${item} on ${card} is due soon`;
+    }
+    case "checklist.item.assigned": {
+      const item = notification.itemTitle ?? t`a checklist item`;
+      return notification.dueDate
+        ? t`${actor} assigned you ${item} on ${card}, due ${formatDue(notification.dueDate, notification.dueDateHasTime)}`
+        : t`${actor} assigned you ${item} on ${card}`;
+    }
     case "workspace.member.added":
       return t`You were added to a workspace`;
     case "workspace.member.removed":

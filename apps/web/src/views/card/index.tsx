@@ -158,6 +158,7 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
         <DueDateSelector
           cardPublicId={cardId ?? ""}
           dueDate={card?.startDate}
+          hasTime={card?.startDateHasTime}
           isLoading={!card}
           disabled={!canEdit}
           field="startDate"
@@ -168,6 +169,7 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
         <DueDateSelector
           cardPublicId={cardId ?? ""}
           dueDate={card?.dueDate}
+          hasTime={card?.dueDateHasTime}
           isLoading={!card}
           disabled={!canEdit}
         />
@@ -179,6 +181,7 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
             cardPublicId={cardId ?? ""}
             dueDateCompleted={card.dueDateCompleted}
             dueReminderMinutes={card.dueReminderMinutes}
+            dueDateHasTime={card.dueDateHasTime}
             disabled={!canEdit}
           />
         </div>
@@ -253,6 +256,16 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
     router.query.returnUrl,
     `/${isTemplate ? "templates" : "boards"}/${boardId}`,
   );
+
+  const assignableMembers = (workspaceMembers ?? []).map((member) => ({
+    publicId: member.publicId,
+    name: formatMemberDisplayName(
+      member.user?.name ?? null,
+      member.user?.email ?? member.email,
+    ),
+    email: member.user?.email ?? member.email,
+    imageUrl: member.user?.image ? getAvatarUrl(member.user.image) : undefined,
+  }));
 
   const editorWorkspaceMembers =
     workspaceMembers
@@ -495,6 +508,7 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                   <Checklists
                     checklists={card.checklists}
                     cardPublicId={cardId}
+                    members={assignableMembers}
                     activeChecklistForm={activeChecklistForm}
                     setActiveChecklistForm={setActiveChecklistForm}
                     viewOnly={!canEdit}

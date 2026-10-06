@@ -5,27 +5,20 @@ import { dueReminderOptions } from "@kan/shared/constants";
 import { usePopup } from "~/providers/popup";
 import { api } from "~/utils/api";
 import { invalidateCard } from "~/utils/cardInvalidation";
-
-const reminderLabel = (minutes: number) => {
-  if (minutes === 0) return t`At time of due date`;
-  if (minutes < 60) return t`${minutes} minutes before`;
-  if (minutes < 1440) {
-    const hours = minutes / 60;
-    return hours === 1 ? t`1 hour before` : t`${hours} hours before`;
-  }
-  const days = minutes / 1440;
-  return days === 1 ? t`1 day before` : t`${days} days before`;
-};
+import { reminderLabel } from "~/utils/dueDates";
 
 export function DueDateDetails({
   cardPublicId,
   dueDateCompleted,
   dueReminderMinutes,
+  dueDateHasTime = false,
   disabled = false,
 }: {
   cardPublicId: string;
   dueDateCompleted: boolean;
   dueReminderMinutes: number | null;
+  /** Whole-day due dates remind from 09:00 that day */
+  dueDateHasTime?: boolean;
   disabled?: boolean;
 }) {
   const utils = api.useUtils();
@@ -98,7 +91,7 @@ export function DueDateDetails({
           <option value="">{t`None`}</option>
           {dueReminderOptions.map((minutes) => (
             <option key={minutes} value={minutes}>
-              {reminderLabel(minutes)}
+              {reminderLabel(minutes, dueDateHasTime)}
             </option>
           ))}
         </select>

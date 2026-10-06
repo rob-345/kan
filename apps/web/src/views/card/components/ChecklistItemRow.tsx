@@ -8,18 +8,26 @@ import { HiXMark } from "react-icons/hi2";
 import { RiDraggable } from "react-icons/ri";
 import { twMerge } from "tailwind-merge";
 
+import type {
+  AssignableMember,
+  ChecklistItemScheduleData,
+} from "./ChecklistItemSchedule";
 import PlainTextEditor from "~/components/PlainTextEditor";
 import { usePopup } from "~/providers/popup";
 import { api } from "~/utils/api";
 import { invalidateCard } from "~/utils/cardInvalidation";
+import {
+  ChecklistItemMeta,
+  ChecklistItemScheduleButton,
+} from "./ChecklistItemSchedule";
 
 interface ChecklistItemRowProps {
-  item: {
-    publicId: string;
+  item: ChecklistItemScheduleData & {
     title: string;
-    completed: boolean;
     clientId?: string;
   };
+  /** Board members the item can be assigned to */
+  members: AssignableMember[];
   cardPublicId: string;
   onCreateNewItem?: () => void;
   viewOnly?: boolean;
@@ -30,6 +38,7 @@ interface ChecklistItemRowProps {
 
 export default function ChecklistItemRow({
   item,
+  members,
   cardPublicId,
   onCreateNewItem,
   viewOnly = false,
@@ -40,6 +49,7 @@ export default function ChecklistItemRow({
   const utils = api.useUtils();
   const { showPopup } = usePopup();
   const [completed, setCompleted] = useState(item.completed);
+  const [isScheduleOpen, setIsScheduleOpen] = useState(false);
 
   const updateItem = api.checklist.updateItem.useMutation({
     onMutate: async (vars) => {
@@ -168,7 +178,7 @@ export default function ChecklistItemRow({
         />
       </label>
 
-      <div className="flex-1 pr-7">
+      <div className={twMerge("min-w-0 flex-1", viewOnly ? "pr-2" : "pr-16")}>
         <PlainTextEditor
           key={item.clientId ?? item.publicId}
           content={item.title}
@@ -185,16 +195,34 @@ export default function ChecklistItemRow({
             viewOnly && "cursor-default",
           )}
         />
+        <ChecklistItemMeta item={{ ...item, completed }} members={members} />
       </div>
 
       {!viewOnly && (
-        <button
-          type="button"
-          onClick={handleDelete}
-          className="absolute right-1 top-1/2 hidden -translate-y-1/2 rounded-md p-1 text-light-900 group-hover:block hover:bg-light-200 dark:text-dark-700 dark:hover:bg-dark-200"
+        <div
+          className={twMerge(
+            "absolute right-1 top-1.5 flex items-center opacity-0 focus-within:opacity-100 group-hover:opacity-100",
+            isScheduleOpen && "z-20 opacity-100",
+          )}
         >
-          <HiXMark size={16} />
-        </button>
+          {/* Sub-task settings need the item to be saved first */}
+          {!item.publicId.startsWith("PLACEHOLDER_") && (
+            <ChecklistItemScheduleButton
+              item={item}
+              cardPublicId={cardPublicId}
+              members={members}
+              onOpenChange={setIsScheduleOpen}
+            />
+          )}
+          <button
+            type="button"
+            aria-label={t`Delete checklist item`}
+            onClick={handleDelete}
+            className="rounded-md p-1 text-light-900 hover:bg-light-200 dark:text-dark-700 dark:hover:bg-dark-200"
+          >
+            <HiXMark size={16} />
+          </button>
+        </div>
       )}
     </div>
   );

@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { dbClient } from "@kan/db/client";
 import * as boardRepo from "@kan/db/repository/board.repo";
 import * as cardRepo from "@kan/db/repository/card.repo";
+import * as checklistRepo from "@kan/db/repository/checklist.repo";
 import * as googleChatRepo from "@kan/db/repository/googleChat.repo";
 import * as googleConnectionRepo from "@kan/db/repository/googleConnection.repo";
 import * as integrationJobRepo from "@kan/db/repository/integrationJob.repo";
@@ -79,6 +80,7 @@ describe("Google integrations", () => {
       workspaceId,
       position: "end",
       dueDate,
+      dueDateHasTime: true,
     });
     return card;
   };
@@ -352,6 +354,72 @@ describe("Google integrations", () => {
         "DELETE /calendar/v3/calendars/id1/events/id2",
         "DELETE /tasks/v1/lists/id3/tasks/id4",
       ]);
+      expect(await db.query.googleSyncItems.findMany()).toEqual([]);
+    });
+
+    it("syncs a dated checklist item to its assignee as an all-day event", async () => {
+      await connectGoogle({ tasksEnabled: false });
+      // The card itself has no due date, so only the item is shown
+      const card = await createCard("Launch", null);
+      const checklist = await checklistRepo.create(db, {
+        cardId: card.id,
+        name: "Steps",
+        createdBy: userId,
+      });
+      const item = await checklistRepo.createItem(db, {
+        checklistId: checklist!.id,
+        title: "Draft copy",
+        createdBy: userId,
+      });
+      // Midnight in Accra, set without a time
+      await checklistRepo.updateItemById(db, {
+        id: item!.id,
+        dueDate: new Date("2026-10-21T00:00:00.000Z"),
+        dueDateHasTime: false,
+        dueReminderMinutes: 1440,
+      });
+      const member = await db.query.workspaceMembers.findFirst();
+      await checklistRepo.addItemMember(db, {
+        checklistItemId: item!.id,
+        workspaceMemberId: member!.id,
+      });
+
+      await enqueueGoogleCardSync(db as unknown as dbClient, [card.id]);
+      await run();
+
+      expect(
+        google.calls.map((c) => `${c.method} ${new URL(c.url).pathname}`),
+      ).toEqual([
+        "POST /calendar/v3/calendars",
+        "POST /calendar/v3/calendars/id1/events",
+      ]);
+      expect(google.calls[1]!.body).toMatchObject({
+        summary: "Due: Draft copy (Launch)",
+        start: { date: "2026-10-21" },
+        end: { date: "2026-10-22" },
+        // A day before 09:00
+        reminders: { overrides: [{ method: "popup", minutes: 900 }] },
+        extendedProperties: {
+          private: { kanCard: card.publicId, kanChecklistItem: item!.publicId },
+        },
+      });
+      const [syncItem] = await db.query.googleSyncItems.findMany();
+      expect(syncItem).toMatchObject({
+        cardId: card.id,
+        checklistItemId: item!.id,
+      });
+
+      // Unassigning with no card members left removes the event
+      google.calls.length = 0;
+      await checklistRepo.removeItemMember(db, {
+        checklistItemId: item!.id,
+        workspaceMemberId: member!.id,
+      });
+      await enqueueGoogleCardSync(db as unknown as dbClient, [card.id]);
+      await run();
+      expect(
+        google.calls.map((c) => `${c.method} ${new URL(c.url).pathname}`),
+      ).toEqual(["DELETE /calendar/v3/calendars/id1/events/id2"]);
       expect(await db.query.googleSyncItems.findMany()).toEqual([]);
     });
 

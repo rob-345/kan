@@ -34,6 +34,7 @@ import { CoverSelector } from "./components/CoverSelector";
 import { DeleteCardConfirmation } from "./components/DeleteCardConfirmation";
 import { DeleteChecklistConfirmation } from "./components/DeleteChecklistConfirmation";
 import { DeleteCommentConfirmation } from "./components/DeleteCommentConfirmation";
+import { DriveFileList } from "./components/DriveFiles";
 import Dropdown from "./components/Dropdown";
 import { DueDateDetails } from "./components/DueDateDetails";
 import { DueDateSelector } from "./components/DueDateSelector";
@@ -524,6 +525,10 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                           />
                         </div>
                       )}
+                      <DriveFileList
+                        cardPublicId={cardId ?? ""}
+                        isReadOnly={!canEdit}
+                      />
                       {canEdit && (
                         <div className="mt-6">
                           <AttachmentUpload cardPublicId={cardId} />

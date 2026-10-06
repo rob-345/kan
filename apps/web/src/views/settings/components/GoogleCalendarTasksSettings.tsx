@@ -138,6 +138,12 @@ export default function GoogleCalendarTasksSettings() {
               : t`Google is connected.`}
           </p>
 
+          {status.driveGranted && (
+            <p className="mb-4 text-sm text-neutral-500 dark:text-dark-900">
+              {t`Kan can also open the Google Drive files you link to cards. Disconnecting stops new links; files already linked stay on their cards.`}
+            </p>
+          )}
+
           {status.needsReconnect && (
             <div className="mb-4 rounded-md border border-amber-500/30 bg-amber-500/10 p-3">
               <p className="mb-3 text-sm text-amber-700 dark:text-amber-300">

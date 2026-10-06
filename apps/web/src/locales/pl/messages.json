@@ -15983,5 +15983,225 @@
         56
       ]
     ]
+  },
+  "CZ1vh3": {
+    "translation": "",
+    "message": "{0} of the files you picked couldn't be read from Google Drive.",
+    "placeholders": {
+      "0": [
+        "result.failed"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DriveFiles.tsx",
+        88
+      ]
+    ]
+  },
+  "Od4T/T": {
+    "translation": "",
+    "message": "Added by {0}",
+    "placeholders": {
+      "0": [
+        "file.createdByName"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DriveFiles.tsx",
+        232
+      ]
+    ]
+  },
+  "kVwyuK": {
+    "translation": "",
+    "message": "Couldn't link Google Drive files",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DriveFiles.tsx",
+        45
+      ]
+    ]
+  },
+  "rxCU4m": {
+    "translation": "",
+    "message": "Google Drive access wasn't granted, so Kan can't link files.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DriveFiles.tsx",
+        17
+      ]
+    ]
+  },
+  "XPUbsz": {
+    "translation": "",
+    "message": "Kan can also open the Google Drive files you link to cards. Disconnecting stops new links; files already linked stay on their cards.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/settings/components/GoogleCalendarTasksSettings.tsx",
+        143
+      ]
+    ]
+  },
+  "EbnTQn": {
+    "translation": "",
+    "message": "Link files from Google Drive",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DriveFiles.tsx",
+        139
+      ],
+      [
+        "src/views/card/components/DriveFiles.tsx",
+        140
+      ]
+    ]
+  },
+  "Fh0JRf": {
+    "translation": "",
+    "message": "Link files to this card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DriveFiles.tsx",
+        76
+      ]
+    ]
+  },
+  "zKEEFr": {
+    "translation": "",
+    "message": "linked a Google Drive file",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        145
+      ]
+    ]
+  },
+  "y3jkpn": {
+    "translation": "",
+    "message": "linked a Google Drive file <0>{0}</0>",
+    "placeholders": {
+      "0": [
+        "truncate(toTitle)"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        309
+      ]
+    ]
+  },
+  "NqaG61": {
+    "translation": "",
+    "message": "Open {0} in Google Drive",
+    "placeholders": {
+      "0": [
+        "file.name"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DriveFiles.tsx",
+        240
+      ]
+    ]
+  },
+  "SOL2Iq": {
+    "translation": "",
+    "message": "Remove {0} from this card",
+    "placeholders": {
+      "0": [
+        "file.name"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DriveFiles.tsx",
+        251
+      ]
+    ]
+  },
+  "to01jK": {
+    "translation": "",
+    "message": "removed a Google Drive file",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        146
+      ]
+    ]
+  },
+  "qXRgvB": {
+    "translation": "",
+    "message": "removed a Google Drive file <0>{0}</0>",
+    "placeholders": {
+      "0": [
+        "truncate(fromTitle)"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/ActivityList.tsx",
+        318
+      ]
+    ]
+  },
+  "gWNX0J": {
+    "translation": "",
+    "message": "Something went wrong while connecting Google Drive. Please try again.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DriveFiles.tsx",
+        18
+      ]
+    ]
+  },
+  "Sz7z9h": {
+    "translation": "",
+    "message": "Unable to remove file",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/DriveFiles.tsx",
+        188
+      ]
+    ]
+  },
+  "gFjV1c": {
+    "translation": "",
+    "message": "Upload an attachment",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/card/components/AttachmentUpload.tsx",
+        139
+      ]
+    ]
   }
 }

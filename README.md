@@ -191,6 +191,7 @@ pnpm dev
 | `GOOGLE_CLIENT_SECRET`                    | Google OAuth client secret                                | For Google login, Calendar and Tasks        | `xxx`                                                       |
 | `GOOGLE_CHAT_PROJECT_NUMBER`              | Google Cloud project number of the Kan Chat app           | For the Google Chat app                     | `123456789012`                                              |
 | `GOOGLE_CHAT_SERVICE_ACCOUNT_KEY`         | Service account key (JSON or base64) for Chat reminders   | For Google Chat app reminders               | `{"type":"service_account",...}`                            |
+| `GOOGLE_PICKER_API_KEY`                   | Browser API key for the Google Picker                     | For linking Google Drive files to cards     | `AIza...`                                                   |
 | `DISCORD_CLIENT_ID`                       | Discord OAuth client ID                                   | For Discord login                           | `xxx`                                                       |
 | `DISCORD_CLIENT_SECRET`                   | Discord OAuth client secret                               | For Discord login                           | `xxx`                                                       |
 | `GITHUB_CLIENT_ID`                        | GitHub OAuth client ID                                    | For GitHub login                            | `xxx`                                                       |
@@ -238,6 +239,14 @@ To set it up in Google Cloud:
 1. Enable the **Google Calendar API** and the **Google Tasks API**.
 2. On the OAuth consent screen, choose **Internal** (Google Workspace) and add the scopes `.../auth/calendar.app.created` and `.../auth/tasks`.
 3. On the OAuth client, add `{NEXT_PUBLIC_BASE_URL}/api/integrations/google/callback` as an authorised redirect URI.
+
+**Google Drive.** With `GOOGLE_PICKER_API_KEY` also set, cards get a **Google Drive** button. It opens Google's file picker, and the files someone picks are linked to the card with their name and icon. The first time, Kan asks for access to Drive with the `drive.file` scope, which only covers the files a person picks in Kan, never the rest of their Drive. Files stay in Drive: Kan stores only the link, so who can open a file is still decided by its sharing settings in Drive.
+
+To turn it on, in the same Google Cloud project:
+
+1. Enable the **Google Picker API** and the **Google Drive API**.
+2. Add the scope `.../auth/drive.file` to the OAuth consent screen.
+3. Create an **API key**, restrict it to the Google Picker API, and under website restrictions add your Kan URL (for example `https://kan.example.com/*`). Set it as `GOOGLE_PICKER_API_KEY`.
 
 Google calls run in the background through the same scheduler as due date reminders, and retry if Google is briefly unavailable.
 

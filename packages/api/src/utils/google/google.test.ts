@@ -2,10 +2,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { buildCalendarEvent } from "./calendar";
 import { buildChatMessageText, googleChatWebhookUrlSchema } from "./chat";
+import { isGoogleUrl, isValidDriveFileId } from "./drive";
 import {
   buildAuthorizationUrl,
   createOAuthState,
+  getGoogleProjectNumber,
   getGrantedFeatures,
+  normalizeReturnTo,
   normalizeTimeZone,
   verifyOAuthState,
 } from "./oauth";
@@ -101,7 +104,41 @@ describe("Google helpers", () => {
       const state = createOAuthState("user-1", "Africa/Accra", 1_000);
       expect(verifyOAuthState(state, "user-1", 1_000 + 60_000)).toEqual({
         timeZone: "Africa/Accra",
+        purpose: "sync",
+        returnTo: null,
       });
+    });
+
+    it("carries the Drive purpose and a same-site return path", () => {
+      const state = createOAuthState("user-1", "UTC", 1_000, {
+        purpose: "drive",
+        returnTo: "/cards/abc123def456",
+      });
+      expect(verifyOAuthState(state, "user-1", 2_000)).toEqual({
+        timeZone: "UTC",
+        purpose: "drive",
+        returnTo: "/cards/abc123def456",
+      });
+    });
+
+    it("only returns to paths on this site", () => {
+      expect(normalizeReturnTo("/boards/abc?card=x")).toBe(
+        "/boards/abc?card=x",
+      );
+      expect(normalizeReturnTo("https://evil.example")).toBeNull();
+      expect(normalizeReturnTo("//evil.example")).toBeNull();
+      expect(normalizeReturnTo("/\\evil.example")).toBeNull();
+      expect(normalizeReturnTo(undefined)).toBeNull();
+    });
+
+    it("asks only for drive.file when linking Drive files", () => {
+      const url = new URL(
+        buildAuthorizationUrl("user-1", "UTC", { purpose: "drive" }) ?? "",
+      );
+      const scopes = url.searchParams.get("scope")?.split(" ");
+      expect(scopes).toContain("https://www.googleapis.com/auth/drive.file");
+      expect(scopes).not.toContain("https://www.googleapis.com/auth/tasks");
+      expect(url.searchParams.get("include_granted_scopes")).toBe("true");
     });
 
     it("rejects another user, an expired state and garbage", () => {
@@ -128,12 +165,42 @@ describe("Google helpers", () => {
     it("reports which features were granted", () => {
       expect(
         getGrantedFeatures("openid https://www.googleapis.com/auth/tasks"),
-      ).toEqual({ calendar: false, tasks: true });
+      ).toEqual({ calendar: false, tasks: true, drive: false });
+    });
+
+    it("reads the Cloud project number from the client id", () => {
+      expect(getGoogleProjectNumber()).toBeNull();
+      vi.stubEnv(
+        "GOOGLE_CLIENT_ID",
+        "123456789012-abc.apps.googleusercontent.com",
+      );
+      expect(getGoogleProjectNumber()).toBe("123456789012");
     });
 
     it("falls back to UTC for unknown time zones", () => {
       expect(normalizeTimeZone("Not/AZone")).toBe("UTC");
       expect(normalizeTimeZone("Europe/London")).toBe("Europe/London");
+    });
+  });
+
+  describe("Drive helpers", () => {
+    it("keeps only https links on Google's sites", () => {
+      expect(isGoogleUrl("https://docs.google.com/document/d/abc/edit")).toBe(
+        true,
+      );
+      expect(
+        isGoogleUrl("https://drive-thirdparty.googleusercontent.com/16/type"),
+      ).toBe(true);
+      expect(isGoogleUrl("javascript:alert(1)")).toBe(false);
+      expect(isGoogleUrl("http://drive.google.com/file/d/abc")).toBe(false);
+      expect(isGoogleUrl("https://google.com.evil.example/x")).toBe(false);
+      expect(isGoogleUrl(undefined)).toBe(false);
+    });
+
+    it("accepts Drive file ids only", () => {
+      expect(isValidDriveFileId("1A2b3C4d5E6f7G8h9I0j_-kLmN")).toBe(true);
+      expect(isValidDriveFileId("../../files")).toBe(false);
+      expect(isValidDriveFileId("short")).toBe(false);
     });
   });
 

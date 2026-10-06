@@ -1,5 +1,5 @@
 {
-  "id": "875afaa6-b5b1-438a-8487-b5258800e39c",
+  "id": "14c8f972-6a74-4ac1-81d9-76893f8289e6",
   "prevId": "e5d1131a-4523-44bb-a3a4-69381a52d9c2",
   "version": "7",
   "dialect": "postgresql",
@@ -1296,6 +1296,143 @@
       "checkConstraints": {},
       "isRLSEnabled": true
     },
+    "public.card_drive_file": {
+      "name": "card_drive_file",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "publicId": {
+          "name": "publicId",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cardId": {
+          "name": "cardId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "driveFileId": {
+          "name": "driveFileId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(1024)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mimeType": {
+          "name": "mimeType",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "iconUrl": {
+          "name": "iconUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdBy": {
+          "name": "createdBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "card_drive_file_card_created_at_idx": {
+          "name": "card_drive_file_card_created_at_idx",
+          "columns": [
+            {
+              "expression": "cardId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "createdAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "card_drive_file_cardId_card_id_fk": {
+          "name": "card_drive_file_cardId_card_id_fk",
+          "tableFrom": "card_drive_file",
+          "tableTo": "card",
+          "columnsFrom": [
+            "cardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "card_drive_file_createdBy_user_id_fk": {
+          "name": "card_drive_file_createdBy_user_id_fk",
+          "tableFrom": "card_drive_file",
+          "tableTo": "user",
+          "columnsFrom": [
+            "createdBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "card_drive_file_publicId_unique": {
+          "name": "card_drive_file_publicId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "publicId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
     "public._card_workspace_members": {
       "name": "_card_workspace_members",
       "schema": "",
@@ -1528,11 +1665,25 @@
           "primaryKey": false,
           "notNull": false
         },
+        "dueDateHasTime": {
+          "name": "dueDateHasTime",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
         "startDate": {
           "name": "startDate",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "startDateHasTime": {
+          "name": "startDateHasTime",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "dueDateCompleted": {
           "name": "dueDateCompleted",
@@ -1908,6 +2059,89 @@
       "checkConstraints": {},
       "isRLSEnabled": true
     },
+    "public.card_checklist_item_member": {
+      "name": "card_checklist_item_member",
+      "schema": "",
+      "columns": {
+        "checklistItemId": {
+          "name": "checklistItemId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "workspaceMemberId": {
+          "name": "workspaceMemberId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "card_checklist_item_member_member_idx": {
+          "name": "card_checklist_item_member_member_idx",
+          "columns": [
+            {
+              "expression": "workspaceMemberId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "card_checklist_item_member_checklistItemId_card_checklist_item_id_fk": {
+          "name": "card_checklist_item_member_checklistItemId_card_checklist_item_id_fk",
+          "tableFrom": "card_checklist_item_member",
+          "tableTo": "card_checklist_item",
+          "columnsFrom": [
+            "checklistItemId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "card_checklist_item_member_workspaceMemberId_workspace_members_id_fk": {
+          "name": "card_checklist_item_member_workspaceMemberId_workspace_members_id_fk",
+          "tableFrom": "card_checklist_item_member",
+          "tableTo": "workspace_members",
+          "columnsFrom": [
+            "workspaceMemberId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "card_checklist_item_member_checklistItemId_workspaceMemberId_pk": {
+          "name": "card_checklist_item_member_checklistItemId_workspaceMemberId_pk",
+          "columns": [
+            "checklistItemId",
+            "workspaceMemberId"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
     "public.card_checklist_item": {
       "name": "card_checklist_item",
       "schema": "",
@@ -1942,6 +2176,44 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "startDate": {
+          "name": "startDate",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "startDateHasTime": {
+          "name": "startDateHasTime",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "dueDate": {
+          "name": "dueDate",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dueDateHasTime": {
+          "name": "dueDateHasTime",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "dueReminderMinutes": {
+          "name": "dueReminderMinutes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dueReminderSentAt": {
+          "name": "dueReminderSentAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         },
         "checklistId": {
           "name": "checklistId",
@@ -1993,6 +2265,27 @@
             },
             {
               "expression": "index",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "card_checklist_item_due_reminder_idx": {
+          "name": "card_checklist_item_due_reminder_idx",
+          "columns": [
+            {
+              "expression": "dueDate",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "dueReminderSentAt",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2265,6 +2558,308 @@
             "id"
           ],
           "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.google_chat_app_space": {
+      "name": "google_chat_app_space",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "publicId": {
+          "name": "publicId",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "spaceName": {
+          "name": "spaceName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "spaceType": {
+          "name": "spaceType",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "displayName": {
+          "name": "displayName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "workspaceId": {
+          "name": "workspaceId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "boardId": {
+          "name": "boardId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "listId": {
+          "name": "listId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "remindersEnabled": {
+          "name": "remindersEnabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "linkedBy": {
+          "name": "linkedBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "google_chat_app_space_name_idx": {
+          "name": "google_chat_app_space_name_idx",
+          "columns": [
+            {
+              "expression": "spaceName",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "google_chat_app_space_user_idx": {
+          "name": "google_chat_app_space_user_idx",
+          "columns": [
+            {
+              "expression": "userId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "google_chat_app_space_board_idx": {
+          "name": "google_chat_app_space_board_idx",
+          "columns": [
+            {
+              "expression": "boardId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "google_chat_app_space_userId_user_id_fk": {
+          "name": "google_chat_app_space_userId_user_id_fk",
+          "tableFrom": "google_chat_app_space",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "google_chat_app_space_workspaceId_workspace_id_fk": {
+          "name": "google_chat_app_space_workspaceId_workspace_id_fk",
+          "tableFrom": "google_chat_app_space",
+          "tableTo": "workspace",
+          "columnsFrom": [
+            "workspaceId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "google_chat_app_space_boardId_board_id_fk": {
+          "name": "google_chat_app_space_boardId_board_id_fk",
+          "tableFrom": "google_chat_app_space",
+          "tableTo": "board",
+          "columnsFrom": [
+            "boardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "google_chat_app_space_listId_list_id_fk": {
+          "name": "google_chat_app_space_listId_list_id_fk",
+          "tableFrom": "google_chat_app_space",
+          "tableTo": "list",
+          "columnsFrom": [
+            "listId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "google_chat_app_space_linkedBy_user_id_fk": {
+          "name": "google_chat_app_space_linkedBy_user_id_fk",
+          "tableFrom": "google_chat_app_space",
+          "tableTo": "user",
+          "columnsFrom": [
+            "linkedBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "google_chat_app_space_publicId_unique": {
+          "name": "google_chat_app_space_publicId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "publicId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.google_chat_app_user": {
+      "name": "google_chat_app_user",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "chatUserName": {
+          "name": "chatUserName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "google_chat_app_user_name_idx": {
+          "name": "google_chat_app_user_name_idx",
+          "columns": [
+            {
+              "expression": "chatUserName",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "google_chat_app_user_user_idx": {
+          "name": "google_chat_app_user_user_idx",
+          "columns": [
+            {
+              "expression": "userId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "google_chat_app_user_userId_user_id_fk": {
+          "name": "google_chat_app_user_userId_user_id_fk",
+          "tableFrom": "google_chat_app_user",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -2578,6 +3173,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "checklistItemId": {
+          "name": "checklistItemId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
         "kind": {
           "name": "kind",
           "type": "google_sync_kind",
@@ -2606,8 +3207,8 @@
         }
       },
       "indexes": {
-        "google_sync_item_unique_idx": {
-          "name": "google_sync_item_unique_idx",
+        "google_sync_item_card_unique_idx": {
+          "name": "google_sync_item_card_unique_idx",
           "columns": [
             {
               "expression": "connectionId",
@@ -2629,6 +3230,35 @@
             }
           ],
           "isUnique": true,
+          "where": "\"google_sync_item\".\"checklistItemId\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "google_sync_item_checklist_item_unique_idx": {
+          "name": "google_sync_item_checklist_item_unique_idx",
+          "columns": [
+            {
+              "expression": "connectionId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "checklistItemId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "kind",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"google_sync_item\".\"checklistItemId\" IS NOT NULL",
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -2669,6 +3299,19 @@
           "tableTo": "card",
           "columnsFrom": [
             "cardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "google_sync_item_checklistItemId_card_checklist_item_id_fk": {
+          "name": "google_sync_item_checklistItemId_card_checklist_item_id_fk",
+          "tableFrom": "google_sync_item",
+          "tableTo": "card_checklist_item",
+          "columnsFrom": [
+            "checklistItemId"
           ],
           "columnsTo": [
             "id"
@@ -3007,6 +3650,208 @@
           "nullsNotDistinct": false,
           "columns": [
             "publicId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.card_link": {
+      "name": "card_link",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "publicId": {
+          "name": "publicId",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cardId": {
+          "name": "cardId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdBy": {
+          "name": "createdBy",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "card_link_card_created_at_idx": {
+          "name": "card_link_card_created_at_idx",
+          "columns": [
+            {
+              "expression": "cardId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "createdAt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "card_link_cardId_card_id_fk": {
+          "name": "card_link_cardId_card_id_fk",
+          "tableFrom": "card_link",
+          "tableTo": "card",
+          "columnsFrom": [
+            "cardId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "card_link_createdBy_user_id_fk": {
+          "name": "card_link_createdBy_user_id_fk",
+          "tableFrom": "card_link",
+          "tableTo": "user",
+          "columnsFrom": [
+            "createdBy"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "card_link_publicId_unique": {
+          "name": "card_link_publicId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "publicId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.link_preview": {
+      "name": "link_preview",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigserial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "link_preview_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "finalUrl": {
+          "name": "finalUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "imageUrl": {
+          "name": "imageUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "siteName": {
+          "name": "siteName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "faviconUrl": {
+          "name": "faviconUrl",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fetchedAt": {
+          "name": "fetchedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "link_preview_url_unique": {
+          "name": "link_preview_url_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "url"
           ]
         }
       },
@@ -4785,6 +5630,9 @@
         "card.updated.checklist.item.completed",
         "card.updated.checklist.item.uncompleted",
         "card.updated.checklist.item.deleted",
+        "card.updated.checklist.item.dueDate.updated",
+        "card.updated.checklist.item.member.added",
+        "card.updated.checklist.item.member.removed",
         "card.updated.attachment.added",
         "card.updated.attachment.removed",
         "card.updated.dueDate.added",
@@ -4796,7 +5644,11 @@
         "card.updated.startDate.updated",
         "card.updated.startDate.removed",
         "card.updated.dueDate.completed",
-        "card.updated.dueDate.uncompleted"
+        "card.updated.dueDate.uncompleted",
+        "card.updated.driveFile.added",
+        "card.updated.driveFile.removed",
+        "card.updated.link.added",
+        "card.updated.link.removed"
       ]
     },
     "public.google_connection_status": {
@@ -4838,6 +5690,14 @@
       "values": [
         "started",
         "success",
+        "failed"
+      ]
+    },
+    "public.link_preview_status": {
+      "name": "link_preview_status",
+      "schema": "public",
+      "values": [
+        "ok",
         "failed"
       ]
     },
@@ -4899,7 +5759,9 @@
         "card.dueDate.changed",
         "card.archived",
         "card.member.added",
-        "card.due.reminder"
+        "card.due.reminder",
+        "checklist.item.assigned",
+        "checklist.item.due.reminder"
       ]
     }
   },

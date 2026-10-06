@@ -4,9 +4,9 @@ import { createLogger } from "@kan/logger";
 
 const log = createLogger("due-reminder-scheduler");
 
-// Every minute by default. Hosts that bill for an always-awake database (e.g.
-// Neon scale-to-zero) can poll less often via DUE_REMINDERS_INTERVAL_SECONDS
-// (30 to 1800; reminders more than an hour late are skipped).
+// Every minute by default. Hosts that bill for an always-awake database can
+// poll less often via DUE_REMINDERS_INTERVAL_SECONDS (30 to 1800; reminders
+// more than an hour late are skipped).
 const intervalMs = () => {
   // eslint-disable-next-line no-restricted-properties, turbo/no-undeclared-env-vars
   const seconds = Number(process.env.DUE_REMINDERS_INTERVAL_SECONDS);

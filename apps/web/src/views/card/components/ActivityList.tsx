@@ -9,6 +9,7 @@ import {
   HiOutlineArrowRight,
   HiOutlineCheckCircle,
   HiOutlineClock,
+  HiOutlineLink,
   HiOutlinePaperClip,
   HiOutlinePencil,
   HiOutlinePlus,
@@ -140,8 +141,15 @@ const getActivityText = ({
     "card.updated.checklist.item.completed": t`completed a checklist item`,
     "card.updated.checklist.item.uncompleted": t`marked a checklist item as incomplete`,
     "card.updated.checklist.item.deleted": t`deleted a checklist item`,
+    "card.updated.checklist.item.dueDate.updated": t`changed a checklist item's due date`,
+    "card.updated.checklist.item.member.added": t`assigned a checklist item`,
+    "card.updated.checklist.item.member.removed": t`unassigned a checklist item`,
     "card.updated.attachment.added": t`added an attachment`,
     "card.updated.attachment.removed": t`removed an attachment`,
+    "card.updated.driveFile.added": t`linked a Google Drive file`,
+    "card.updated.driveFile.removed": t`removed a Google Drive file`,
+    "card.updated.link.added": t`added a link`,
+    "card.updated.link.removed": t`removed a link`,
     "card.updated.dueDate.added": t`set the due date`,
     "card.updated.dueDate.updated": t`updated the due date`,
     "card.updated.dueDate.removed": t`removed the due date`,
@@ -281,6 +289,53 @@ const getActivityText = ({
     );
   }
 
+  if (type === "card.updated.checklist.item.dueDate.updated" && toTitle) {
+    if (!toDueDate) {
+      return (
+        <Trans>
+          removed the due date from{" "}
+          <TextHighlight>{truncate(toTitle)}</TextHighlight>
+        </Trans>
+      );
+    }
+    const formattedDate = format(
+      toDueDate,
+      isSameYear(toDueDate, new Date()) ? "do MMM" : "do MMM yyyy",
+      { locale: dateLocale },
+    );
+    return (
+      <Trans>
+        set <TextHighlight>{truncate(toTitle)}</TextHighlight> due{" "}
+        <TextHighlight>{formattedDate}</TextHighlight>
+      </Trans>
+    );
+  }
+
+  if (type === "card.updated.checklist.item.member.added" && toTitle) {
+    if (isSelf) {
+      return (
+        <Trans>
+          took on <TextHighlight>{truncate(toTitle)}</TextHighlight>
+        </Trans>
+      );
+    }
+    return (
+      <Trans>
+        assigned <TextHighlight>{truncate(displayName)}</TextHighlight> to{" "}
+        <TextHighlight>{truncate(toTitle)}</TextHighlight>
+      </Trans>
+    );
+  }
+
+  if (type === "card.updated.checklist.item.member.removed" && toTitle) {
+    return (
+      <Trans>
+        unassigned <TextHighlight>{truncate(displayName)}</TextHighlight> from{" "}
+        <TextHighlight>{truncate(toTitle)}</TextHighlight>
+      </Trans>
+    );
+  }
+
   if (type === "card.updated.attachment.added") {
     const filename = attachmentName ?? toTitle;
     if (!filename) return baseText;
@@ -298,6 +353,40 @@ const getActivityText = ({
       <Trans>
         removed an attachment{" "}
         <TextHighlight>{truncate(filename)}</TextHighlight>
+      </Trans>
+    );
+  }
+
+  if (type === "card.updated.driveFile.added" && toTitle) {
+    return (
+      <Trans>
+        linked a Google Drive file{" "}
+        <TextHighlight>{truncate(toTitle)}</TextHighlight>
+      </Trans>
+    );
+  }
+
+  if (type === "card.updated.link.added" && toTitle) {
+    return (
+      <Trans>
+        added a link <TextHighlight>{truncate(toTitle)}</TextHighlight>
+      </Trans>
+    );
+  }
+
+  if (type === "card.updated.driveFile.removed" && fromTitle) {
+    return (
+      <Trans>
+        removed a Google Drive file{" "}
+        <TextHighlight>{truncate(fromTitle)}</TextHighlight>
+      </Trans>
+    );
+  }
+
+  if (type === "card.updated.link.removed" && fromTitle) {
+    return (
+      <Trans>
+        removed a link <TextHighlight>{truncate(fromTitle)}</TextHighlight>
       </Trans>
     );
   }
@@ -372,8 +461,15 @@ const ACTIVITY_ICON_MAP: Partial<Record<ActivityType, React.ReactNode | null>> =
     "card.updated.checklist.item.completed": <HiOutlineCheckCircle />,
     "card.updated.checklist.item.uncompleted": <HiOutlineCheckCircle />,
     "card.updated.checklist.item.deleted": <HiOutlineTrash />,
+    "card.updated.checklist.item.dueDate.updated": <HiOutlineClock />,
+    "card.updated.checklist.item.member.added": <HiOutlineUserPlus />,
+    "card.updated.checklist.item.member.removed": <HiOutlineUserMinus />,
     "card.updated.attachment.added": <HiOutlinePaperClip />,
     "card.updated.attachment.removed": <HiOutlinePaperClip />,
+    "card.updated.driveFile.added": <HiOutlinePaperClip />,
+    "card.updated.driveFile.removed": <HiOutlinePaperClip />,
+    "card.updated.link.added": <HiOutlineLink />,
+    "card.updated.link.removed": <HiOutlineLink />,
     "card.updated.dueDate.added": <HiOutlineClock />,
     "card.updated.dueDate.updated": <HiOutlineClock />,
     "card.updated.dueDate.removed": <HiOutlineClock />,
@@ -544,8 +640,8 @@ const ActivityList = ({
           dateLocale: dateLocale,
           mergedLabels: (activity as ActivityWithMergedLabels).mergedLabels,
           attachmentName:
-            (activity as ActivityWithMergedLabels).attachment?.originalFilename ??
-            null,
+            (activity as ActivityWithMergedLabels).attachment
+              ?.originalFilename ?? null,
         });
 
         if (activity.type === "card.updated.comment.added")
@@ -578,7 +674,9 @@ const ActivityList = ({
                 size="sm"
                 name={activity.user?.name ?? ""}
                 email={activity.user?.email ?? ""}
-                imageUrl={getAvatarUrl(activity.user?.image ?? null) || undefined}
+                imageUrl={
+                  getAvatarUrl(activity.user?.image ?? null) || undefined
+                }
                 icon={getActivityIcon(
                   activity.type,
                   activity.fromList?.index,

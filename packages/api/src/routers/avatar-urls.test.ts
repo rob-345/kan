@@ -180,7 +180,9 @@ describe("avatar URL resolution in routers", () => {
       cardNumber: 1,
       index: 1,
       dueDate: null,
+      dueDateHasTime: false,
       startDate: null,
+      startDateHasTime: false,
       dueDateCompleted: false,
       dueReminderMinutes: null,
       coverColour: null,
@@ -188,6 +190,7 @@ describe("avatar URL resolution in routers", () => {
       createdBy: "user-1",
       labels: [],
       attachments: [],
+      links: [],
       checklists: [],
       list: {
         publicId: "list-12345678",

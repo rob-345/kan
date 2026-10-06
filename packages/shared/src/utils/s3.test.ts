@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 
-import { createS3Client } from "./s3";
+import { createS3Client, generateBoardBackgroundUrl } from "./s3";
 
 const originalS3Region = process.env.S3_REGION;
 
@@ -38,5 +38,27 @@ describe("createS3Client", () => {
 
     await expect(client.config.region()).resolves.toBe("eu-west-1");
     client.destroy();
+  });
+});
+
+describe("generateBoardBackgroundUrl", () => {
+  it("returns bundled presets and https links unchanged", async () => {
+    await expect(
+      generateBoardBackgroundUrl("/backgrounds/waves.svg"),
+    ).resolves.toBe("/backgrounds/waves.svg");
+    await expect(
+      generateBoardBackgroundUrl("https://example.com/a.jpg"),
+    ).resolves.toBe("https://example.com/a.jpg");
+  });
+
+  it("returns null without a background or storage bucket", async () => {
+    await expect(generateBoardBackgroundUrl(null)).resolves.toBeNull();
+    const originalBucket = process.env.NEXT_PUBLIC_ATTACHMENTS_BUCKET_NAME;
+    delete process.env.NEXT_PUBLIC_ATTACHMENTS_BUCKET_NAME;
+    await expect(
+      generateBoardBackgroundUrl("board-backgrounds/abc/x.png"),
+    ).resolves.toBeNull();
+    if (originalBucket !== undefined)
+      process.env.NEXT_PUBLIC_ATTACHMENTS_BUCKET_NAME = originalBucket;
   });
 });

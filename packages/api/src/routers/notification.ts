@@ -16,6 +16,8 @@ const notificationSchema = z.object({
   fromListName: z.string().nullable(),
   toListName: z.string().nullable(),
   dueDate: z.string().nullable(),
+  dueDateHasTime: z.boolean(),
+  itemTitle: z.string().nullable(),
   comment: z.string().nullable(),
   card: z
     .object({
@@ -79,6 +81,9 @@ export const notificationRouter = createTRPCRouter({
           fromListName: asString(metadata.fromListName),
           toListName: asString(metadata.toListName),
           dueDate: asString(metadata.dueDate),
+          // Reminders sent before dates could carry a time had none
+          dueDateHasTime: metadata.dueDateHasTime === true,
+          itemTitle: asString(metadata.itemTitle),
           comment: notification.comment?.comment ?? null,
           card: notification.card
             ? {

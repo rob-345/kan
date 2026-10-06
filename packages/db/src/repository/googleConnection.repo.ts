@@ -1,15 +1,34 @@
-import { and, eq, gte, inArray, isNotNull, isNull } from "drizzle-orm";
+import {
+  and,
+  eq,
+  exists,
+  gte,
+  inArray,
+  isNotNull,
+  isNull,
+  or,
+  sql,
+} from "drizzle-orm";
 
 import type { dbClient } from "@kan/db/client";
 import type { GoogleConnectionStatus, GoogleSyncKind } from "@kan/db/schema";
 import {
   cards,
   cardToWorkspaceMembers,
+  checklistItemMembers,
+  checklistItems,
+  checklists,
   googleConnections,
   googleSyncItems,
   lists,
   workspaceMembers,
 } from "@kan/db/schema";
+
+/** True for cards with a checklist item (sub-task) that has a due date. */
+const hasDatedChecklistItem = () =>
+  exists(
+    sql`(SELECT 1 FROM ${checklistItems} JOIN ${checklists} ON ${checklists.id} = ${checklistItems.checklistId} WHERE ${checklists.cardId} = ${cards.id} AND ${checklistItems.dueDate} IS NOT NULL)`,
+  );
 
 export const upsert = async (
   db: dbClient,
@@ -98,21 +117,34 @@ export const saveSyncItem = async (
   input: {
     connectionId: number;
     cardId: number;
+    checklistItemId: number | null;
     kind: GoogleSyncKind;
     externalId: string;
   },
 ) => {
-  await db
-    .insert(googleSyncItems)
-    .values(input)
-    .onConflictDoUpdate({
-      target: [
-        googleSyncItems.connectionId,
-        googleSyncItems.cardId,
-        googleSyncItems.kind,
-      ],
-      set: { externalId: input.externalId, updatedAt: new Date() },
-    });
+  const set = { externalId: input.externalId, updatedAt: new Date() };
+  const insert = db.insert(googleSyncItems).values(input);
+
+  // Each target matches one of the two partial unique indexes
+  await (input.checklistItemId === null
+    ? insert.onConflictDoUpdate({
+        target: [
+          googleSyncItems.connectionId,
+          googleSyncItems.cardId,
+          googleSyncItems.kind,
+        ],
+        targetWhere: sql`${googleSyncItems.checklistItemId} IS NULL`,
+        set,
+      })
+    : insert.onConflictDoUpdate({
+        target: [
+          googleSyncItems.connectionId,
+          googleSyncItems.checklistItemId,
+          googleSyncItems.kind,
+        ],
+        targetWhere: sql`${googleSyncItems.checklistItemId} IS NOT NULL`,
+        set,
+      }));
 };
 
 export const deleteSyncItem = async (db: dbClient, id: number) => {
@@ -130,13 +162,42 @@ export const getCardForSync = (db: dbClient, cardId: number) =>
       publicId: true,
       title: true,
       dueDate: true,
+      dueDateHasTime: true,
       startDate: true,
+      startDateHasTime: true,
       dueDateCompleted: true,
       dueReminderMinutes: true,
       deletedAt: true,
     },
     where: eq(cards.id, cardId),
     with: {
+      checklists: {
+        columns: { deletedAt: true },
+        with: {
+          items: {
+            columns: {
+              id: true,
+              publicId: true,
+              title: true,
+              completed: true,
+              startDate: true,
+              startDateHasTime: true,
+              dueDate: true,
+              dueDateHasTime: true,
+              dueReminderMinutes: true,
+              deletedAt: true,
+            },
+            with: {
+              members: {
+                columns: {},
+                with: {
+                  member: { columns: { userId: true, deletedAt: true } },
+                },
+              },
+            },
+          },
+        },
+      },
       list: {
         columns: { name: true, deletedAt: true },
         with: {
@@ -166,13 +227,15 @@ export const getActiveConnectionsForUsers = (
       });
 
 /**
- * Cards a user is a member of that have a due date on or after `since`.
+ * Cards with something dated on or after `since` that a user should see in
+ * Google: cards they're a member of with a due date or a dated checklist
+ * item, and cards with a dated checklist item assigned to them.
  */
 export const getMemberCardIdsWithDueDate = async (
   db: dbClient,
   args: { userId: string; since: Date },
 ) => {
-  const rows = await db
+  const memberCards = await db
     .selectDistinct({ id: cards.id })
     .from(cards)
     .innerJoin(
@@ -188,11 +251,43 @@ export const getMemberCardIdsWithDueDate = async (
         eq(workspaceMembers.userId, args.userId),
         isNull(workspaceMembers.deletedAt),
         isNull(cards.deletedAt),
-        isNotNull(cards.dueDate),
-        gte(cards.dueDate, args.since),
+        or(
+          gte(cards.dueDate, args.since),
+          exists(
+            sql`(SELECT 1 FROM ${checklistItems} JOIN ${checklists} ON ${checklists.id} = ${checklistItems.checklistId} WHERE ${checklists.cardId} = ${cards.id} AND ${checklistItems.dueDate} >= ${args.since} AND ${checklistItems.deletedAt} IS NULL)`,
+          ),
+        ),
       ),
     );
-  return rows.map((row) => row.id);
+
+  const assignedCards = await db
+    .selectDistinct({ id: checklists.cardId })
+    .from(checklistItems)
+    .innerJoin(checklists, eq(checklists.id, checklistItems.checklistId))
+    .innerJoin(
+      checklistItemMembers,
+      eq(checklistItemMembers.checklistItemId, checklistItems.id),
+    )
+    .innerJoin(
+      workspaceMembers,
+      eq(workspaceMembers.id, checklistItemMembers.workspaceMemberId),
+    )
+    .where(
+      and(
+        eq(workspaceMembers.userId, args.userId),
+        isNull(workspaceMembers.deletedAt),
+        isNull(checklistItems.deletedAt),
+        isNull(checklists.deletedAt),
+        gte(checklistItems.dueDate, args.since),
+      ),
+    );
+
+  return [
+    ...new Set([
+      ...memberCards.map((row) => row.id),
+      ...assignedCards.map((row) => row.id),
+    ]),
+  ];
 };
 
 export const getByIds = (db: dbClient, ids: number[]) =>
@@ -211,7 +306,10 @@ export const hasActiveConnections = async (db: dbClient) => {
   return !!connection;
 };
 
-/** Cards with a due date in the given lists, including deleted ones. */
+/**
+ * Cards with a due date or a dated checklist item in the given lists,
+ * including deleted ones.
+ */
 export const getCardIdsWithDueDateInLists = async (
   db: dbClient,
   listIds: number[],
@@ -220,11 +318,19 @@ export const getCardIdsWithDueDateInLists = async (
   const rows = await db
     .select({ id: cards.id })
     .from(cards)
-    .where(and(inArray(cards.listId, listIds), isNotNull(cards.dueDate)));
+    .where(
+      and(
+        inArray(cards.listId, listIds),
+        or(isNotNull(cards.dueDate), hasDatedChecklistItem()),
+      ),
+    );
   return rows.map((row) => row.id);
 };
 
-/** Cards with a due date anywhere on a board, including deleted ones. */
+/**
+ * Cards with a due date or a dated checklist item anywhere on a board,
+ * including deleted ones.
+ */
 export const getCardIdsWithDueDateInBoard = async (
   db: dbClient,
   boardId: number,
@@ -233,7 +339,12 @@ export const getCardIdsWithDueDateInBoard = async (
     .select({ id: cards.id })
     .from(cards)
     .innerJoin(lists, eq(lists.id, cards.listId))
-    .where(and(eq(lists.boardId, boardId), isNotNull(cards.dueDate)));
+    .where(
+      and(
+        eq(lists.boardId, boardId),
+        or(isNotNull(cards.dueDate), hasDatedChecklistItem()),
+      ),
+    );
   return rows.map((row) => row.id);
 };
 

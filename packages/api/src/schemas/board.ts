@@ -11,6 +11,8 @@ export const boardListItemSchema = z.object({
   publicId: z.string(),
   name: z.string(),
   favorite: z.boolean(),
+  backgroundColour: z.string().nullable(),
+  backgroundImageUrl: z.string().nullable(),
   lists: z.array(
     z.object({
       publicId: z.string(),
@@ -41,7 +43,9 @@ const boardDetailCardSchema = z.object({
   index: z.number(),
   cardNumber: z.number().nullable(),
   dueDate: z.date().nullable(),
+  dueDateHasTime: z.boolean(),
   startDate: z.date().nullable(),
+  startDateHasTime: z.boolean(),
   dueDateCompleted: z.boolean(),
   coverColour: z.string().nullable(),
   coverImageUrl: z.string().nullable(),
@@ -61,6 +65,8 @@ export const boardDetailSchema = z.object({
   isArchived: z.boolean(),
   favorite: z.boolean(),
   isWatching: z.boolean(),
+  backgroundColour: z.string().nullable(),
+  backgroundImageUrl: z.string().nullable(),
   workspace: z.object({
     publicId: z.string(),
     cardPrefix: z.string(),
@@ -102,6 +108,8 @@ export const boardBySlugSchema = z.object({
   name: z.string(),
   slug: z.string(),
   visibility: z.string(),
+  backgroundColour: z.string().nullable(),
+  backgroundImageUrl: z.string().nullable(),
   workspace: z.object({
     publicId: z.string(),
     name: z.string(),

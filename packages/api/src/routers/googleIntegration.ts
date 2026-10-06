@@ -24,6 +24,7 @@ const statusSchema = z.object({
   tasksEnabled: z.boolean(),
   calendarGranted: z.boolean(),
   tasksGranted: z.boolean(),
+  driveGranted: z.boolean(),
 });
 
 const requireUserId = (userId: string | undefined) => {
@@ -64,6 +65,7 @@ export const googleIntegrationRouter = createTRPCRouter({
         tasksEnabled: connection?.tasksEnabled ?? false,
         calendarGranted: granted.calendar,
         tasksGranted: granted.tasks,
+        driveGranted: granted.drive,
       };
     }),
 
@@ -74,18 +76,26 @@ export const googleIntegrationRouter = createTRPCRouter({
         method: "GET",
         path: "/integration/google/authorize",
         description:
-          "Returns the Google consent page URL for connecting Calendar and Tasks",
+          "Returns the Google consent page URL for connecting Calendar and Tasks, or Drive file linking",
         tags: ["Integration"],
         protect: true,
       },
     })
-    .input(z.object({ timeZone: z.string().max(64).optional() }))
+    .input(
+      z.object({
+        timeZone: z.string().max(64).optional(),
+        purpose: z.enum(["sync", "drive"]).optional(),
+        // A path on this site to return to, e.g. the card being edited
+        returnTo: z.string().max(512).optional(),
+      }),
+    )
     .output(z.object({ url: z.string() }))
     .mutation(({ ctx, input }) => {
       const userId = requireUserId(ctx.user?.id);
       const url = buildAuthorizationUrl(
         userId,
         normalizeTimeZone(input.timeZone),
+        { purpose: input.purpose, returnTo: input.returnTo },
       );
 
       if (!url)

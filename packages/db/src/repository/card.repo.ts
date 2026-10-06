@@ -15,6 +15,7 @@ import type { dbClient } from "@kan/db/client";
 import {
   cardActivities,
   cardAttachments,
+  cardLinks,
   cards,
   cardsToLabels,
   cardToWorkspaceMembers,
@@ -25,6 +26,7 @@ import {
   workspaceMembers,
   workspaces,
 } from "@kan/db/schema";
+import { dateOnlyReminderHour } from "@kan/shared/constants";
 import { generateUID } from "@kan/shared/utils";
 
 export const getCount = async (db: dbClient) => {
@@ -46,6 +48,7 @@ export const create = async (
     workspaceId: number;
     position: "start" | "end";
     dueDate?: Date | null;
+    dueDateHasTime?: boolean;
   },
 ) => {
   return db.transaction(async (tx) => {
@@ -107,6 +110,7 @@ export const create = async (
         index: index,
         cardNumber,
         dueDate: cardInput.dueDate ?? null,
+        dueDateHasTime: !!cardInput.dueDate && !!cardInput.dueDateHasTime,
       })
       .returning({
         id: cards.id,
@@ -205,7 +209,9 @@ export const update = async (
     title?: string;
     description?: string | null;
     dueDate?: Date | null;
+    dueDateHasTime?: boolean;
     startDate?: Date | null;
+    startDateHasTime?: boolean;
     dueDateCompleted?: boolean;
     dueReminderMinutes?: number | null;
     coverColour?: string | null;
@@ -218,6 +224,7 @@ export const update = async (
   // A new due date or reminder offset means any reminder already sent is stale
   const resetReminder =
     cardInput.dueDate !== undefined ||
+    cardInput.dueDateHasTime !== undefined ||
     cardInput.dueReminderMinutes !== undefined;
 
   const [result] = await db
@@ -226,7 +233,9 @@ export const update = async (
       title: cardInput.title,
       description: cardInput.description,
       dueDate: cardInput.dueDate !== undefined ? cardInput.dueDate : undefined,
+      dueDateHasTime: cardInput.dueDateHasTime,
       startDate: cardInput.startDate,
+      startDateHasTime: cardInput.startDateHasTime,
       dueDateCompleted: cardInput.dueDateCompleted,
       dueReminderMinutes: cardInput.dueReminderMinutes,
       ...(resetReminder && { dueReminderSentAt: null }),
@@ -276,7 +285,9 @@ export const getByPublicId = (db: dbClient, cardPublicId: string) => {
       description: true,
       listId: true,
       dueDate: true,
+      dueDateHasTime: true,
       startDate: true,
+      startDateHasTime: true,
       dueDateCompleted: true,
       dueReminderMinutes: true,
       coverColour: true,
@@ -522,7 +533,9 @@ export const getWithListAndMembersByPublicId = async (
       title: true,
       description: true,
       dueDate: true,
+      dueDateHasTime: true,
       startDate: true,
+      startDateHasTime: true,
       dueDateCompleted: true,
       dueReminderMinutes: true,
       coverColour: true,
@@ -556,6 +569,15 @@ export const getWithListAndMembersByPublicId = async (
         where: isNull(cardAttachments.deletedAt),
         orderBy: asc(cardAttachments.createdAt),
       },
+      links: {
+        columns: {
+          publicId: true,
+          url: true,
+          title: true,
+        },
+        where: isNull(cardLinks.deletedAt),
+        orderBy: asc(cardLinks.createdAt),
+      },
       checklists: {
         columns: {
           publicId: true,
@@ -571,9 +593,27 @@ export const getWithListAndMembersByPublicId = async (
               title: true,
               completed: true,
               index: true,
+              startDate: true,
+              startDateHasTime: true,
+              dueDate: true,
+              dueDateHasTime: true,
+              dueReminderMinutes: true,
             },
             where: isNull(checklistItems.deletedAt),
             orderBy: asc(checklistItems.index),
+            with: {
+              members: {
+                columns: {},
+                with: {
+                  member: {
+                    columns: { publicId: true, email: true },
+                    with: {
+                      user: { columns: { id: true, name: true } },
+                    },
+                  },
+                },
+              },
+            },
           },
         },
       },
@@ -736,6 +776,13 @@ export const getWithListAndMembersByPublicId = async (
     ...card,
     labels: card.labels.map((label) => label.label),
     members: card.members.map((member) => member.member),
+    checklists: card.checklists.map((checklist) => ({
+      ...checklist,
+      items: checklist.items.map((item) => ({
+        ...item,
+        members: item.members.map((itemMember) => itemMember.member),
+      })),
+    })),
     activities: card.activities.filter(
       (activity) => !activity.comment?.deletedAt,
     ),
@@ -1185,6 +1232,15 @@ export const discardArchived = async (db: dbClient, cardId: number) => {
 };
 
 /**
+ * SQL for the moment a due date counts as reached by reminders: the due time,
+ * or 09:00 on the due day for a date without a time (see getDueReminderBase).
+ */
+export const dueReminderBaseSql = (table: string) =>
+  sql.raw(
+    `(${table}."dueDate" + CASE WHEN ${table}."dueDateHasTime" THEN interval '0' ELSE make_interval(hours => ${dateOnlyReminderHour}) END)`,
+  );
+
+/**
  * Claims cards whose due date reminder is now due and marks them as sent, so
  * concurrent workers never send the same reminder twice.
  */
@@ -1194,6 +1250,7 @@ export const claimDueReminders = async (
 ) => {
   // Timestamps are stored as UTC without a time zone, matching Drizzle
   const now = sql`(${args.now.toISOString()}::timestamptz AT TIME ZONE 'UTC')`;
+  const reminderBase = dueReminderBaseSql("card");
 
   const claimed = await db.execute<{ id: number }>(sql`
     UPDATE "card" SET "dueReminderSentAt" = ${now}
@@ -1204,8 +1261,8 @@ export const claimDueReminders = async (
         AND "dueReminderSentAt" IS NULL
         AND "dueDateCompleted" = false
         AND "deletedAt" IS NULL
-        AND "dueDate" - make_interval(mins => "dueReminderMinutes") <= ${now}
-        AND "dueDate" > ${now} - interval '1 hour'
+        AND ${reminderBase} - make_interval(mins => "dueReminderMinutes") <= ${now}
+        AND ${reminderBase} > ${now} - interval '1 hour'
       ORDER BY "dueDate"
       LIMIT ${args.limit ?? 100}
       FOR UPDATE SKIP LOCKED
@@ -1217,7 +1274,13 @@ export const claimDueReminders = async (
   if (ids.length === 0) return [];
 
   return db.query.cards.findMany({
-    columns: { id: true, publicId: true, title: true, dueDate: true },
+    columns: {
+      id: true,
+      publicId: true,
+      title: true,
+      dueDate: true,
+      dueDateHasTime: true,
+    },
     where: inArray(cards.id, ids),
     with: {
       list: {

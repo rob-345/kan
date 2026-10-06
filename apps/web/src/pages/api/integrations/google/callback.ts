@@ -10,8 +10,9 @@ const queryValue = (value: string | string[] | undefined) =>
 
 /**
  * Google redirects here after the person approves (or declines) access to
- * their Calendar and Tasks. Sends them back to their account settings with
- * the outcome in the query string.
+ * their Calendar and Tasks, or to the Drive files they pick. Sends them back
+ * to their account settings, or to the card they started from, with the
+ * outcome in the query string.
  */
 export default withRateLimit(
   { points: 30, duration: 60 },
@@ -33,11 +34,19 @@ export default withRateLimit(
       error: queryValue(req.query.error),
     });
 
-    const params = new URLSearchParams(
-      result.ok
-        ? { google: "connected" }
-        : { google: "error", reason: result.reason },
+    const key = result.purpose === "drive" ? "googleDrive" : "google";
+    const outcome: Record<string, string> = result.ok
+      ? { [key]: "connected" }
+      : { [key]: "error", reason: result.reason };
+
+    // returnTo was checked to be a path on this site when the flow started
+    const target = new URL(
+      result.returnTo ?? "/settings/account",
+      "http://kan.invalid",
     );
-    return res.redirect(302, `/settings/account?${params.toString()}`);
+    for (const [name, value] of Object.entries(outcome)) {
+      target.searchParams.set(name, value);
+    }
+    return res.redirect(302, `${target.pathname}${target.search}`);
   }),
 );

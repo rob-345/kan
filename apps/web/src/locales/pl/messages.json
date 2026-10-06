@@ -3,7 +3,7 @@
     "message": " (edited)",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/Comment.tsx", 153]],
+    "origin": [["src/views/card/components/Comment.tsx", 154]],
     "translation": " (edytowano)"
   },
   "lGjicL": {
@@ -32,7 +32,7 @@
     "comments": [],
     "origin": [
       ["src/views/boards/index.tsx", 58],
-      ["src/views/card/index.tsx", 361]
+      ["src/views/card/index.tsx", 378]
     ],
     "translation": "{0} | {1}"
   },
@@ -51,7 +51,7 @@
       "0": ["boardName ?? \"Board\""]
     },
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 67]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 68]],
     "translation": "{0} został dodany do ulubionych."
   },
   "bDI6VI": {
@@ -60,7 +60,7 @@
       "0": ["boardName ?? \"Board\""]
     },
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 68]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 69]],
     "translation": "{0} został usunięty z ulubionych."
   },
   "CJukzS": {
@@ -69,7 +69,7 @@
       "0": ["labelPublicIds.length"]
     },
     "comments": [],
-    "origin": [["src/views/board/components/NewCardForm.tsx", 567]],
+    "origin": [["src/views/board/components/NewCardForm.tsx", 569]],
     "translation": "{0} etykiety"
   },
   "9x4DAL": {
@@ -78,61 +78,92 @@
       "0": ["isTemplate ? \"Template\" : \"Board\""]
     },
     "comments": [],
-    "origin": [["src/views/board/index.tsx", 951]],
+    "origin": [["src/views/board/index.tsx", 964]],
     "translation": "{0} nie znaleziono"
   },
+  "CZ1vh3": {
+    "message": "{0} of the files you picked couldn't be read from Google Drive.",
+    "placeholders": {
+      "0": ["result.failed"]
+    },
+    "comments": [],
+    "origin": [["src/views/card/components/DriveFiles.tsx", 88]],
+    "translation": ""
+  },
   "qa2/Os": {
-    "translation": "",
     "message": "{actor} added you to {card}",
     "placeholders": {
       "actor": ["actor"],
       "card": ["card"]
     },
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 42]]
+    "origin": [["src/components/NotificationsMenu.tsx", 51]],
+    "translation": ""
   },
   "Z+MrcX": {
-    "translation": "",
     "message": "{actor} archived {card}",
     "placeholders": {
       "actor": ["actor"],
       "card": ["card"]
     },
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 40]]
+    "origin": [["src/components/NotificationsMenu.tsx", 49]],
+    "translation": ""
+  },
+  "bw+PL3": {
+    "message": "{actor} assigned you {item} on {card}",
+    "placeholders": {
+      "actor": ["actor"],
+      "item": ["item"],
+      "card": ["card"]
+    },
+    "comments": [],
+    "origin": [["src/components/NotificationsMenu.tsx", 66]],
+    "translation": ""
+  },
+  "7y3mIg": {
+    "message": "{actor} assigned you {item} on {card}, due {0}",
+    "placeholders": {
+      "0": ["formatDue(notification.dueDate, notification.dueDateHasTime)"],
+      "actor": ["actor"],
+      "item": ["item"],
+      "card": ["card"]
+    },
+    "comments": [],
+    "origin": [["src/components/NotificationsMenu.tsx", 65]],
+    "translation": ""
   },
   "FF0CHB": {
-    "translation": "",
     "message": "{actor} commented on {card}",
     "placeholders": {
       "actor": ["actor"],
       "card": ["card"]
     },
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 30]]
+    "origin": [["src/components/NotificationsMenu.tsx", 39]],
+    "translation": ""
   },
   "NmIFtw": {
-    "translation": "",
     "message": "{actor} mentioned you on {card}",
     "placeholders": {
       "actor": ["actor"],
       "card": ["card"]
     },
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 28]]
+    "origin": [["src/components/NotificationsMenu.tsx", 37]],
+    "translation": ""
   },
   "a2djTA": {
-    "translation": "",
     "message": "{actor} moved {card}",
     "placeholders": {
       "actor": ["actor"],
       "card": ["card"]
     },
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 34]]
+    "origin": [["src/components/NotificationsMenu.tsx", 43]],
+    "translation": ""
   },
   "zNWNy6": {
-    "translation": "",
     "message": "{actor} moved {card} from {0} to {1}",
     "placeholders": {
       "0": ["notification.fromListName"],
@@ -141,20 +172,20 @@
       "card": ["card"]
     },
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 33]]
+    "origin": [["src/components/NotificationsMenu.tsx", 42]],
+    "translation": ""
   },
   "qi15q2": {
-    "translation": "",
     "message": "{actor} removed the due date from {card}",
     "placeholders": {
       "actor": ["actor"],
       "card": ["card"]
     },
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 38]]
+    "origin": [["src/components/NotificationsMenu.tsx", 47]],
+    "translation": ""
   },
   "qjpMFI": {
-    "translation": "",
     "message": "{actor} set {card} to be due {0}",
     "placeholders": {
       "0": ["format(new Date(notification.dueDate), \"MMM d, yyyy\")"],
@@ -162,7 +193,8 @@
       "card": ["card"]
     },
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 37]]
+    "origin": [["src/components/NotificationsMenu.tsx", 46]],
+    "translation": ""
   },
   "0xWkkH": {
     "message": "{boardCount, plural, one {Import board (1)} other {Import boards ({boardCount})}}",
@@ -174,61 +206,80 @@
     "translation": "{boardCount, plural, one {Importuj tablicę (1)} few {Importuj tablice ({boardCount})} many {Importuj tablic ({boardCount})} other {Importuj tablice ({boardCount})}}"
   },
   "+Vp/+4": {
-    "translation": "",
     "message": "{card} is due {0}",
     "placeholders": {
-      "0": [
-        "formatDistanceToNow(new Date(notification.dueDate), { addSuffix: true })"
-      ],
+      "0": ["formatDue(notification.dueDate, notification.dueDateHasTime)"],
       "card": ["card"]
     },
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 45]]
+    "origin": [["src/components/NotificationsMenu.tsx", 54]],
+    "translation": ""
   },
   "38vLqY": {
-    "translation": "",
     "message": "{card} is due soon",
     "placeholders": {
       "card": ["card"]
     },
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 46]]
+    "origin": [["src/components/NotificationsMenu.tsx", 55]],
+    "translation": ""
   },
   "bhmw0b": {
-    "translation": "",
     "message": "{days} days before",
     "placeholders": {
       "days": ["days"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/DueDateDetails.tsx", 17]]
+    "origin": [["src/utils/dueDates.ts", 37]],
+    "translation": ""
   },
   "BS6eFb": {
-    "translation": "",
     "message": "{entityLabel} (copy)",
     "placeholders": {
       "entityLabel": ["entityLabel"]
     },
     "comments": [],
-    "origin": [["src/views/board/components/CopyListModal.tsx", 14]]
+    "origin": [["src/views/board/components/CopyListModal.tsx", 14]],
+    "translation": ""
   },
   "MXO9xS": {
-    "translation": "",
     "message": "{hours} hours before",
     "placeholders": {
       "hours": ["hours"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/DueDateDetails.tsx", 14]]
+    "origin": [["src/utils/dueDates.ts", 34]],
+    "translation": ""
+  },
+  "NfGzsY": {
+    "message": "{item} on {card} is due {0}",
+    "placeholders": {
+      "0": ["formatDue(notification.dueDate, notification.dueDateHasTime)"],
+      "item": ["item"],
+      "card": ["card"]
+    },
+    "comments": [],
+    "origin": [["src/components/NotificationsMenu.tsx", 59]],
+    "translation": ""
+  },
+  "yk517n": {
+    "message": "{item} on {card} is due soon",
+    "placeholders": {
+      "item": ["item"],
+      "card": ["card"]
+    },
+    "comments": [],
+    "origin": [["src/components/NotificationsMenu.tsx", 60]],
+    "translation": ""
   },
   "f1HVsp": {
-    "translation": "",
     "message": "{minutes} minutes before",
     "placeholders": {
       "minutes": ["minutes"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/DueDateDetails.tsx", 11]]
+    "origin": [["src/utils/dueDates.ts", 31]],
+    "translation": ""
   },
   "yndBF+": {
     "message": "{projectCount, plural, one {Import project (1)} other {Import projects ({projectCount})}}",
@@ -284,18 +335,18 @@
     "translation": "$8/miesiąc"
   },
   "1t5Pn5": {
-    "translation": "",
     "message": "1 day before",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/DueDateDetails.tsx", 17]]
+    "origin": [["src/utils/dueDates.ts", 37]],
+    "translation": ""
   },
   "l3g2XN": {
-    "translation": "",
     "message": "1 hour before",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/DueDateDetails.tsx", 14]]
+    "origin": [["src/utils/dueDates.ts", 34]],
+    "translation": ""
   },
   "zMlxCA": {
     "message": "1 user",
@@ -340,11 +391,25 @@
     "translation": "404 - Strona nie znaleziona | kan.bn"
   },
   "cYur8a": {
-    "translation": "",
     "message": "a card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 24]]
+    "origin": [["src/components/NotificationsMenu.tsx", 33]],
+    "translation": ""
+  },
+  "/lIoxO": {
+    "message": "a checklist item",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/components/NotificationsMenu.tsx", 63]],
+    "translation": ""
+  },
+  "grCkt6": {
+    "message": "A checklist item",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/components/NotificationsMenu.tsx", 57]],
+    "translation": ""
   },
   "/rn4RE": {
     "message": "A powerful, flexible kanban app that helps you organise work, track progress, and deliver results—all in one place.",
@@ -417,7 +482,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/card/index.tsx", 522],
+      ["src/views/card/index.tsx", 558],
       ["src/views/public/board/CardModal.tsx", 209]
     ],
     "translation": "Aktywność"
@@ -452,12 +517,27 @@
     "origin": [["src/views/board/components/List.tsx", 179]],
     "translation": "Dodaj kartę"
   },
+  "0YEoxS": {
+    "message": "Add a date",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/ChecklistItemSchedule.tsx", 298]],
+    "translation": ""
+  },
   "qtE5nt": {
     "message": "Add an item...",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/NewChecklistItemForm.tsx", 157]],
+    "origin": [["src/views/card/components/NewChecklistItemForm.tsx", 164]],
     "translation": "Dodaj element..."
+  },
+  "V8euYO": {
+    "message": "Add attachment",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/AttachmentUpload.tsx", 163]],
+    "translation": "",
+    "obsolete": true
   },
   "sFY+gw": {
     "message": "Add card",
@@ -474,7 +554,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/card/components/AttachmentUpload.tsx", 125],
+      ["src/views/card/components/AttachmentUpload.tsx", 132],
       ["src/views/card/components/Dropdown.tsx", 149]
     ],
     "translation": "Dodaj checklistę"
@@ -483,7 +563,7 @@
     "message": "Add checklist item",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/Checklists.tsx", 198]],
+    "origin": [["src/views/card/components/Checklists.tsx", 203]],
     "translation": "Dodaj element listy kontrolnej"
   },
   "ngBZOd": {
@@ -491,38 +571,38 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/card/components/Comment.tsx", 185],
+      ["src/views/card/components/Comment.tsx", 187],
       ["src/views/card/components/NewCommentForm.tsx", 85]
     ],
     "translation": "Dodaj komentarz... (wpisz '/' aby otworzyć polecenia lub '@', aby wspomnieć)"
   },
   "3kS8Hp": {
-    "translation": "",
     "message": "Add cover",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/CoverSelector.tsx", 110]]
+    "origin": [["src/views/card/components/CoverSelector.tsx", 110]],
+    "translation": ""
   },
   "gL/7jw": {
     "message": "Add description... (type '/' to open commands or '@' to mention)",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/components/Editor.tsx", 499]],
+    "origin": [["src/components/Editor.tsx", 551]],
     "translation": "Dodaj opis... (wpisz '/' aby otworzyć polecenia lub '@', aby wspomnieć)"
   },
   "abUZlY": {
     "message": "Add details...",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ChecklistItemRow.tsx", 176]],
+    "origin": [["src/views/card/components/ChecklistItemRow.tsx", 186]],
     "translation": "Dodaj szczegóły..."
   },
   "vMIeYz": {
-    "translation": "",
     "message": "Add Google Chat space",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 168]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 168]],
+    "translation": ""
   },
   "lyqwgn": {
     "message": "Add label",
@@ -533,6 +613,17 @@
       ["src/views/card/components/LabelSelector.tsx", 120]
     ],
     "translation": "Dodaj etykietę"
+  },
+  "VzGJRl": {
+    "message": "Add link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/card/components/AttachmentUpload.tsx", 146],
+      ["src/views/card/components/CardLinks.tsx", 70],
+      ["src/views/card/components/CardLinks.tsx", 242]
+    ],
+    "translation": ""
   },
   "PCIlOO": {
     "message": "Add member",
@@ -545,20 +636,20 @@
     "translation": "Dodaj członka"
   },
   "mmrqm5": {
-    "translation": "",
     "message": "Add space",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleChatSpaceModal.tsx", 304],
       ["src/views/settings/GoogleChatSettings.tsx", 35]
-    ]
+    ],
+    "translation": ""
   },
   "pBsoKL": {
     "message": "Add to favorites",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 184]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 196]],
     "translation": "Dodaj do ulubionych"
   },
   "cWXW+7": {
@@ -575,42 +666,58 @@
       "labelList": ["labelList"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 105]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 106]],
     "translation": "dodano {0} etykiety: <0>{labelList}</0>"
   },
   "h4VV67": {
     "message": "added a checklist",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 135]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 136]],
     "translation": "dodano checklistę"
   },
   "O83K21": {
     "message": "added a checklist item",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 138]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 139]],
     "translation": "dodano element checklisty"
   },
   "T21jY/": {
     "message": "added a label to the card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 131]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 132]],
     "translation": "dodano etykietę do karty"
+  },
+  "9W7mjh": {
+    "message": "added a link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/ActivityList.tsx", 151]],
+    "translation": ""
+  },
+  "hJoB0L": {
+    "message": "added a link <0>{0}</0>",
+    "placeholders": {
+      "0": ["truncate(toTitle)"]
+    },
+    "comments": [],
+    "origin": [["src/views/card/components/ActivityList.tsx", 371]],
+    "translation": ""
   },
   "rs7L54": {
     "message": "added a member to the card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 133]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 134]],
     "translation": "dodano członka do karty"
   },
   "5y6qY8": {
     "message": "added an attachment",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 143]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 147]],
     "translation": "dodano załącznik"
   },
   "CujNX4": {
@@ -619,8 +726,17 @@
       "0": ["truncate(filename)"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 288]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 343]],
     "translation": "dodano załącznik <0>{0}</0>"
+  },
+  "Od4T/T": {
+    "message": "Added by {0}",
+    "placeholders": {
+      "0": ["file.createdByName"]
+    },
+    "comments": [],
+    "origin": [["src/views/card/components/DriveFiles.tsx", 232]],
+    "translation": ""
   },
   "wakO3W": {
     "message": "added checklist <0>{0}</0>",
@@ -628,7 +744,7 @@
       "0": ["truncate(toTitle)"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 218]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 226]],
     "translation": "dodano checklistę <0>{0}</0>"
   },
   "E0t3jO": {
@@ -637,7 +753,7 @@
       "0": ["truncate(toTitle)"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 242]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 250]],
     "translation": "dodano element checklisty <0>{0}</0>"
   },
   "b5FKyH": {
@@ -646,14 +762,14 @@
       "0": ["truncate(label)"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 202]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 210]],
     "translation": "dodano etykietę <0>{0}</0>"
   },
   "pL78ec": {
     "message": "Added to favorites",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 64]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 65]],
     "translation": "Dodano do ulubionych"
   },
   "14Xi3Z": {
@@ -716,14 +832,14 @@
     "translation": "Zaawansowane zabezpieczenia, zgodność i dedykowane wsparcie dla dużych organizacji."
   },
   "me3LEG": {
-    "translation": "",
     "message": "All boards",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleChatSpaceList.tsx", 89],
       ["src/views/settings/components/GoogleChatSpaceModal.tsx", 234]
-    ]
+    ],
+    "translation": ""
   },
   "h2ztFt": {
     "message": "All Free features +",
@@ -897,25 +1013,25 @@
     "message": "Archive board",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 142]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 154]],
     "translation": "Zarchiwizuj tablicę"
   },
   "E5Y3nW": {
-    "translation": "",
     "message": "Archive card",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/board/components/CardContextMenu.tsx", 78],
       ["src/views/card/components/Dropdown.tsx", 178]
-    ]
+    ],
+    "translation": ""
   },
   "aLuntb": {
-    "translation": "",
     "message": "Archive list",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/List.tsx", 209]]
+    "origin": [["src/views/board/components/List.tsx", 209]],
+    "translation": ""
   },
   "TdfEV7": {
     "message": "Archived",
@@ -925,30 +1041,30 @@
     "translation": "Zarchiwizowana"
   },
   "3nnnfe": {
-    "translation": "",
     "message": "archived {0}",
     "placeholders": {
       "0": ["formatDistanceToNow(row.archivedAt, { addSuffix: true })"]
     },
     "comments": [],
-    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 122]]
+    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 122]],
+    "translation": ""
   },
   "rICucf": {
-    "translation": "",
     "message": "Archived items",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/board/components/ArchivedItemsModal.tsx", 80],
-      ["src/views/board/components/BoardDropdown.tsx", 175]
-    ]
+      ["src/views/board/components/BoardDropdown.tsx", 187]
+    ],
+    "translation": ""
   },
   "vx/87p": {
-    "translation": "",
     "message": "archived the card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 153]]
+    "origin": [["src/views/card/components/ActivityList.tsx", 161]],
+    "translation": ""
   },
   "lo8xBK": {
     "message": "Are you sure want to remove {entityLabel}?",
@@ -1031,14 +1147,38 @@
     ],
     "translation": "Czy na pewno chcesz usunąć swoje konto?"
   },
+  "iOvsEk": {
+    "message": "assigned <0>{0}</0> to <1>{1}</1>",
+    "placeholders": {
+      "0": ["truncate(displayName)"],
+      "1": ["truncate(toTitle)"]
+    },
+    "comments": [],
+    "origin": [["src/views/card/components/ActivityList.tsx", 323]],
+    "translation": ""
+  },
   "PyYD/v": {
     "message": "assigned <0>{0}</0> to the card",
     "placeholders": {
       "0": ["truncate(displayName)"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 182]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 190]],
     "translation": "przypisano <0>{0}</0> do karty"
+  },
+  "B8YQwA": {
+    "message": "assigned a checklist item",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/ActivityList.tsx", 145]],
+    "translation": ""
+  },
+  "lxQ+5m": {
+    "message": "Assigned to",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/ChecklistItemSchedule.tsx", 368]],
+    "translation": ""
   },
   "JUce1S": {
     "message": "Assignees",
@@ -1050,19 +1190,19 @@
     "translation": "Przypisane osoby"
   },
   "usys0y": {
-    "translation": "",
     "message": "At time of due date",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/DueDateDetails.tsx", 10]]
+    "origin": [["src/utils/dueDates.ts", 30]],
+    "translation": ""
   },
   "N7m8E+": {
     "message": "Attach files",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/NewCardForm.tsx", 630],
-      ["src/views/board/components/NewCardForm.tsx", 631]
+      ["src/views/board/components/NewCardForm.tsx", 632],
+      ["src/views/board/components/NewCardForm.tsx", 633]
     ],
     "translation": "Załącz pliki"
   },
@@ -1070,15 +1210,22 @@
     "message": "Attachment uploaded",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/AttachmentUpload.tsx", 45]],
+    "origin": [["src/views/card/components/AttachmentUpload.tsx", 52]],
     "translation": "Załącznik przesłany"
   },
   "w/Sphq": {
-    "translation": "",
     "message": "Attachments",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/CoverSelector.tsx", 143]]
+    "origin": [["src/views/card/components/CoverSelector.tsx", 143]],
+    "translation": ""
+  },
+  "zIAOWH": {
+    "message": "Aurora",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 57]],
+    "translation": ""
   },
   "1rWxEw": {
     "message": "Awaiting Customer",
@@ -1096,6 +1243,13 @@
       ["src/views/onboarding/workspace-details/index.tsx", 284]
     ],
     "translation": "Wstecz"
+  },
+  "fNtuCs": {
+    "message": "Background images can be up to 10 MB.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 125]],
+    "translation": ""
   },
   "KNKCTb": {
     "message": "Backlog",
@@ -1214,8 +1368,8 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/index.tsx", 923],
-      ["src/views/card/index.tsx", 361],
+      ["src/views/board/index.tsx", 932],
+      ["src/views/card/index.tsx", 378],
       ["src/views/public/board/index.tsx", 125],
       ["src/views/settings/components/GoogleChatSpaceModal.tsx", 227]
     ],
@@ -1235,7 +1389,7 @@
     "message": "Board archived",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 53]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 54]],
     "translation": "Tablica zarchiwizowana"
   },
   "wE3hGS": {
@@ -1249,7 +1403,7 @@
     "message": "Board name",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/index.tsx", 941]],
+    "origin": [["src/views/board/index.tsx", 954]],
     "translation": "Nazwa tablicy"
   },
   "wewm3j": {
@@ -1270,14 +1424,14 @@
     "message": "Board not found",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/public/board/index.tsx", 181]],
+    "origin": [["src/views/public/board/index.tsx", 187]],
     "translation": "Nie znaleziono tablicy"
   },
   "Mu1Zy/": {
     "message": "Board options",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 213]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 225]],
     "translation": "Opcje tablicy"
   },
   "XNxYxq": {
@@ -1293,7 +1447,7 @@
     "message": "Board unarchived",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 54]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 55]],
     "translation": "Tablica przywrócona z archiwum"
   },
   "Xid3K6": {
@@ -1367,6 +1521,13 @@
     "origin": [["src/views/boards/components/TemplateBoards.tsx", 42]],
     "translation": "Burza mózgów"
   },
+  "WltD1M": {
+    "message": "Bubbles",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 60]],
+    "translation": ""
+  },
   "vXemf6": {
     "message": "Bug",
     "placeholders": {},
@@ -1389,13 +1550,13 @@
     "translation": "Kalendarz"
   },
   "0Y87GI": {
-    "translation": "",
     "message": "Calendar access wasn't granted. Reconnect to allow it.",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 165]
-    ]
+      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 171]
+    ],
+    "translation": ""
   },
   "t6FvJH": {
     "message": "Can add comments",
@@ -1648,7 +1809,8 @@
       ["src/views/board/components/CopyListModal.tsx", 53],
       ["src/views/board/components/DeleteBoardConfirmation.tsx", 44],
       ["src/views/board/components/MoveBoardForm.tsx", 99],
-      ["src/views/card/components/Comment.tsx", 195],
+      ["src/views/card/components/CardLinks.tsx", 234],
+      ["src/views/card/components/Comment.tsx", 197],
       ["src/views/card/components/DeleteCardConfirmation.tsx", 86],
       ["src/views/card/components/DeleteChecklistConfirmation.tsx", 64],
       ["src/views/card/components/DeleteCommentConfirmation.tsx", 77],
@@ -1674,26 +1836,26 @@
     "message": "Card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/index.tsx", 361]],
+    "origin": [["src/views/card/index.tsx", 378]],
     "translation": "Karta"
   },
   "rPhHN7": {
-    "translation": "",
     "message": "Card added",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/googleChatEventLabels.ts", 9]]
+    "origin": [["src/views/settings/components/googleChatEventLabels.ts", 9]],
+    "translation": ""
   },
   "iQzw74": {
-    "translation": "",
     "message": "Card archived",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/index.tsx", 410],
+      ["src/views/board/index.tsx", 413],
       ["src/views/card/components/Dropdown.tsx", 69],
       ["src/views/settings/components/googleChatEventLabels.ts", 14]
-    ]
+    ],
+    "translation": ""
   },
   "sU2uWc": {
     "message": "Card duplicated",
@@ -1713,11 +1875,11 @@
     "translation": "Karta została pomyślnie zduplikowana."
   },
   "YVkfmo": {
-    "translation": "",
     "message": "Card marked complete",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/googleChatEventLabels.ts", 13]]
+    "origin": [["src/views/settings/components/googleChatEventLabels.ts", 13]],
+    "translation": ""
   },
   "AgE2vR": {
     "message": "Card member assignments will be cleared when moving to a different workspace.",
@@ -1727,19 +1889,19 @@
     "translation": "Przypisania członków do kart zostaną usunięte podczas przenoszenia do innego obszaru roboczego."
   },
   "JWJFsx": {
-    "translation": "",
     "message": "Card moved to another list",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/googleChatEventLabels.ts", 10]]
+    "origin": [["src/views/settings/components/googleChatEventLabels.ts", 10]],
+    "translation": ""
   },
   "fEY2vP": {
     "message": "Card not found",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/card/index.tsx", 430],
-      ["src/views/card/index.tsx", 467]
+      ["src/views/card/index.tsx", 447],
+      ["src/views/card/index.tsx", 484]
     ],
     "translation": "Nie znaleziono karty"
   },
@@ -1754,7 +1916,7 @@
     "message": "Card title",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/NewCardForm.tsx", 433]],
+    "origin": [["src/views/board/components/NewCardForm.tsx", 435]],
     "translation": "Tytuł karty"
   },
   "rQXTmd": {
@@ -1762,18 +1924,28 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/index.tsx", 474],
+      ["src/views/board/index.tsx", 477],
       ["src/views/card/components/Dropdown.tsx", 100],
       ["src/views/public/board/CardModal.tsx", 38]
     ],
     "translation": "Adres URL karty skopiowany do schowka"
   },
   "Ccpbzh": {
-    "translation": "",
     "message": "Cards",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 90]]
+    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 90]],
+    "translation": ""
+  },
+  "sIpTuZ": {
+    "message": "Change background",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/board/components/BoardBackgroundModal.tsx", 161],
+      ["src/views/board/components/BoardDropdown.tsx", 134]
+    ],
+    "translation": ""
   },
   "VhMDMg": {
     "message": "Change Password",
@@ -1801,6 +1973,13 @@
     "origin": [["src/views/settings/AccountSettings.tsx", 56]],
     "translation": "Zmień preferencje językowe."
   },
+  "AP4KzW": {
+    "message": "changed a checklist item's due date",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/ActivityList.tsx", 144]],
+    "translation": ""
+  },
   "gZxH/p": {
     "message": "changed the due date to <0>{formattedDate}</0>",
     "placeholders": {
@@ -1808,19 +1987,19 @@
     },
     "comments": [],
     "origin": [
-      ["src/views/card/components/ActivityList.tsx", 313],
-      ["src/views/card/components/ActivityList.tsx", 327]
+      ["src/views/card/components/ActivityList.tsx", 402],
+      ["src/views/card/components/ActivityList.tsx", 416]
     ],
     "translation": "zmienił termin na <0>{formattedDate}</0>"
   },
   "L2uRGA": {
-    "translation": "",
     "message": "changed the start date to <0>{formattedDate}</0>",
     "placeholders": {
       "formattedDate": ["formattedDate"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 349]]
+    "origin": [["src/views/card/components/ActivityList.tsx", 438]],
+    "translation": ""
   },
   "pFGfsR": {
     "message": "Check out some of our favorite open source projects.",
@@ -1830,11 +2009,11 @@
     "translation": "Sprawdź niektóre z naszych ulubionych projektów open source."
   },
   "0AYk/M": {
-    "translation": "",
     "message": "Check the space in Google Chat.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceList.tsx", 30]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceList.tsx", 30]],
+    "translation": ""
   },
   "5IXWmO": {
     "message": "Check your inbox",
@@ -1863,6 +2042,13 @@
       ["src/views/pricing/components/PricingTiers.tsx", 39]
     ],
     "translation": "Checklisty"
+  },
+  "l1uXGL": {
+    "message": "Choose a JPEG, PNG, WebP or GIF image.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 117]],
+    "translation": ""
   },
   "zMquA7": {
     "message": "Choose a plan",
@@ -1938,7 +2124,8 @@
     "comments": [],
     "origin": [
       ["src/components/Dashboard.tsx", 281],
-      ["src/views/card/index.tsx", 421],
+      ["src/views/board/components/BoardBackgroundModal.tsx", 165],
+      ["src/views/card/index.tsx", 438],
       ["src/views/members/components/EditMemberPermissionsModal.tsx", 172],
       ["src/views/settings/components/NewApiKeyModal.tsx", 136]
     ],
@@ -1968,11 +2155,14 @@
     "translation": "Współpraca"
   },
   "xHwgs0": {
-    "translation": "",
     "message": "Colours",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/CoverSelector.tsx", 122]]
+    "origin": [
+      ["src/views/board/components/BoardBackgroundModal.tsx", 220],
+      ["src/views/card/components/CoverSelector.tsx", 122]
+    ],
+    "translation": ""
   },
   "AUYALh": {
     "message": "Coming soon",
@@ -1982,17 +2172,17 @@
     "translation": "Wkrótce dostępne"
   },
   "vNxHdB": {
-    "translation": "",
     "message": "Comment added",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/googleChatEventLabels.ts", 11]]
+    "origin": [["src/views/settings/components/googleChatEventLabels.ts", 11]],
+    "translation": ""
   },
   "dYbQ1T": {
     "message": "Comment options",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/Comment.tsx", 161]],
+    "origin": [["src/views/card/components/Comment.tsx", 162]],
     "translation": "Opcje komentarza"
   },
   "VbyRUy": {
@@ -2030,7 +2220,7 @@
     "message": "completed a checklist item",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 140]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 141]],
     "translation": "ukończono element listy kontrolnej"
   },
   "29sSki": {
@@ -2039,7 +2229,7 @@
       "0": ["truncate(toTitle)"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 259]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 267]],
     "translation": "ukończono element listy kontrolnej <0>{0}</0>"
   },
   "tOZp9v": {
@@ -2096,13 +2286,13 @@
     "translation": "Połącz z GitHub"
   },
   "7OVsRI": {
-    "translation": "",
     "message": "Connect Google",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 131]
-    ]
+    ],
+    "translation": ""
   },
   "nk7caK": {
     "message": "Connect Trello",
@@ -2133,7 +2323,6 @@
     "translation": "Połącz swoje konto Trello, aby zaimportować tablice."
   },
   "wAvqJ1": {
-    "translation": "",
     "message": "Connected as {0}.",
     "placeholders": {
       "0": ["status.googleEmail"]
@@ -2141,7 +2330,8 @@
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 137]
-    ]
+    ],
+    "translation": ""
   },
   "jfC/xh": {
     "message": "Contact",
@@ -2259,7 +2449,6 @@
     "translation": "Kopiuj link do karty"
   },
   "PSlXm/": {
-    "translation": "",
     "message": "Copy list",
     "placeholders": {},
     "comments": [],
@@ -2267,7 +2456,8 @@
       ["src/views/board/components/CopyListModal.tsx", 40],
       ["src/views/board/components/CopyListModal.tsx", 60],
       ["src/views/board/components/List.tsx", 190]
-    ]
+    ],
+    "translation": ""
   },
   "uvH2xS": {
     "message": "Copy members",
@@ -2295,39 +2485,46 @@
     "translation": "Funkcje podstawowe"
   },
   "F5wMBI": {
-    "translation": "",
     "message": "Couldn't connect Google",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 57],
       ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 71]
-    ]
+    ],
+    "translation": ""
   },
   "xMpIkm": {
-    "translation": "",
     "message": "Couldn't disconnect Google",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 100]
-    ]
+    ],
+    "translation": ""
+  },
+  "kVwyuK": {
+    "message": "Couldn't link Google Drive files",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/DriveFiles.tsx", 45]],
+    "translation": ""
   },
   "9/NMmH": {
-    "translation": "",
     "message": "Couldn't update Google sync",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 82]
-    ]
+    ],
+    "translation": ""
   },
   "IF7RiR": {
-    "translation": "",
     "message": "Cover",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/index.tsx", 187]]
+    "origin": [["src/views/card/index.tsx", 193]],
+    "translation": ""
   },
   "b9XOHo": {
     "message": "Create {0}",
@@ -2344,7 +2541,7 @@
     "comments": [],
     "origin": [
       ["src/components/LabelForm.tsx", 208],
-      ["src/views/board/components/NewCardForm.tsx", 662],
+      ["src/views/board/components/NewCardForm.tsx", 664],
       ["src/views/board/components/NewListForm.tsx", 156]
     ],
     "translation": "Utwórz kolejną"
@@ -2360,7 +2557,7 @@
     "message": "Create card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/NewCardForm.tsx", 672]],
+    "origin": [["src/views/board/components/NewCardForm.tsx", 674]],
     "translation": "Utwórz kartę"
   },
   "d33Usy": {
@@ -2415,7 +2612,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/NewCardForm.tsx", 529],
+      ["src/views/board/components/NewCardForm.tsx", 531],
       ["src/views/card/components/LabelSelector.tsx", 101]
     ],
     "translation": "Utwórz nową etykietę"
@@ -2425,8 +2622,8 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/index.tsx", 141],
-      ["src/views/board/index.tsx", 1077]
+      ["src/views/board/index.tsx", 142],
+      ["src/views/board/index.tsx", 1092]
     ],
     "translation": "Utwórz nową listę"
   },
@@ -2465,7 +2662,7 @@
     "message": "created the card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 127]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 128]],
     "translation": "utworzył(a) kartę"
   },
   "J5nbej": {
@@ -2526,6 +2723,13 @@
     "comments": [],
     "origin": [["src/views/pricing/components/Pricing.tsx", 74]],
     "translation": "Własna domena"
+  },
+  "LNw9j5": {
+    "message": "Custom image",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 238]],
+    "translation": ""
   },
   "2M84k3": {
     "message": "Custom permissions",
@@ -2605,6 +2809,13 @@
     "origin": [["src/components/UserMenu.tsx", 158]],
     "translation": "Ciemny"
   },
+  "wSwvJI": {
+    "message": "Dates, reminder and assignees",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/ChecklistItemSchedule.tsx", 327]],
+    "translation": ""
+  },
   "cp1rsD": {
     "message": "Deactivate invite link",
     "placeholders": {},
@@ -2661,7 +2872,7 @@
     "message": "Delete board",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 195]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 207]],
     "translation": "Usuń tablicę"
   },
   "nabda1": {
@@ -2678,14 +2889,21 @@
     "message": "Delete checklist",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/Checklists.tsx", 189]],
+    "origin": [["src/views/card/components/Checklists.tsx", 194]],
     "translation": "Usuń listę kontrolną"
+  },
+  "u3s2rl": {
+    "message": "Delete checklist item",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/ChecklistItemRow.tsx", 219]],
+    "translation": ""
   },
   "njJFtc": {
     "message": "Delete comment",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/Comment.tsx", 120]],
+    "origin": [["src/views/card/components/Comment.tsx", 121]],
     "translation": "Usuń komentarz"
   },
   "lYT7pQ": {
@@ -2699,22 +2917,22 @@
     "message": "Delete template",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 195]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 207]],
     "translation": "Usuń szablon"
   },
   "oNdl3k": {
-    "translation": "",
     "message": "Delete this card for good? It can't be restored afterwards.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 149]]
+    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 149]],
+    "translation": ""
   },
   "wP61ay": {
-    "translation": "",
     "message": "Delete this list and its cards for good? They can't be restored afterwards.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 150]]
+    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 150]],
+    "translation": ""
   },
   "snMaH4": {
     "message": "Delete webhook",
@@ -2740,14 +2958,14 @@
     "message": "deleted a checklist",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 137]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 138]],
     "translation": "usunięto checklistę"
   },
   "W5r8Qh": {
     "message": "deleted a checklist item",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 142]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 143]],
     "translation": "usunięto element checklisty"
   },
   "BMkVQ3": {
@@ -2756,7 +2974,7 @@
       "0": ["truncate(fromTitle)"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 234]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 242]],
     "translation": "usunięto checklistę <0>{0}</0>"
   },
   "CHZ1jC": {
@@ -2765,7 +2983,7 @@
       "0": ["truncate(fromTitle)"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 277]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 285]],
     "translation": "usunięto element checklisty <0>{0}</0>"
   },
   "f8fH8W": {
@@ -2790,13 +3008,13 @@
     "translation": "Odłącz GitHub"
   },
   "yzsRge": {
-    "translation": "",
     "message": "Disconnect Google",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 200]
-    ]
+      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 206]
+    ],
+    "translation": ""
   },
   "YBBifR": {
     "message": "Disconnect Trello",
@@ -2842,6 +3060,13 @@
     "comments": [],
     "origin": [["src/views/settings/components/UpdateDisplayNameForm.tsx", 41]],
     "translation": "Nazwa wyświetlana została zaktualizowana"
+  },
+  "8RycaY": {
+    "message": "Display text (optional)",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardLinks.tsx", 229]],
+    "translation": ""
   },
   "evj0lK": {
     "message": "Do you offer a free plan?",
@@ -2923,24 +3148,25 @@
     "comments": [],
     "origin": [
       ["src/views/board/components/Filters.tsx", 178],
-      ["src/views/board/components/NewCardForm.tsx", 584],
-      ["src/views/card/index.tsx", 167]
+      ["src/views/board/components/NewCardForm.tsx", 586],
+      ["src/views/card/components/ChecklistItemSchedule.tsx", 342],
+      ["src/views/card/index.tsx", 171]
     ],
     "translation": "Termin wykonania"
   },
   "OXttBs": {
-    "translation": "",
     "message": "Due date changed",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/googleChatEventLabels.ts", 12]]
+    "origin": [["src/views/settings/components/googleChatEventLabels.ts", 12]],
+    "translation": ""
   },
   "pDfLqW": {
-    "translation": "",
     "message": "Due date reminder",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/googleChatEventLabels.ts", 16]]
+    "origin": [["src/views/settings/components/googleChatEventLabels.ts", 16]],
+    "translation": ""
   },
   "ri1hHe": {
     "message": "Due next month",
@@ -2969,6 +3195,13 @@
     "comments": [],
     "origin": [["src/views/board/components/Filters.tsx", 119]],
     "translation": "Termin jutro"
+  },
+  "Fiagqe": {
+    "message": "Dunes",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 58]],
+    "translation": ""
   },
   "euc6Ns": {
     "message": "Duplicate",
@@ -3015,7 +3248,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/BoardDropdown.tsx", 133],
+      ["src/views/board/components/BoardDropdown.tsx", 145],
       ["src/views/board/components/UpdateBoardSlugForm.tsx", 116]
     ],
     "translation": "Edytuj URL tablicy"
@@ -3024,15 +3257,15 @@
     "message": "Edit comment",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/Comment.tsx", 111]],
+    "origin": [["src/views/card/components/Comment.tsx", 112]],
     "translation": "Edytuj komentarz"
   },
   "XTMgcF": {
-    "translation": "",
     "message": "Edit Google Chat space",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 168]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 168]],
+    "translation": ""
   },
   "dgr4Kq": {
     "message": "Edit label",
@@ -3152,6 +3385,13 @@
     "comments": [],
     "origin": [["src/components/YouTubeEmbed/EditYouTubeModal.tsx", 131]],
     "translation": "Wprowadź własny tytuł"
+  },
+  "stqxKS": {
+    "message": "Enter a valid web address, like https://example.com.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardLinks.tsx", 190]],
+    "translation": ""
   },
   "rQRXo8": {
     "message": "Enter new secret to update",
@@ -3494,7 +3734,7 @@
     "message": "Failed to upload attachment. Please try again.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/AttachmentUpload.tsx", 52]],
+    "origin": [["src/views/card/components/AttachmentUpload.tsx", 59]],
     "translation": "Nie udało się przesłać załącznika. Spróbuj ponownie."
   },
   "/lDBHm": {
@@ -3560,6 +3800,13 @@
     "comments": [],
     "origin": [["src/components/FeedbackModal.tsx", 33]],
     "translation": "Opinia została wysłana"
+  },
+  "NMzjiG": {
+    "message": "File too large",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 124]],
+    "translation": ""
   },
   "F6m23G": {
     "message": "File uploads",
@@ -3708,7 +3955,7 @@
     "message": "Get started by creating a new list",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/index.tsx", 1059]],
+    "origin": [["src/views/board/index.tsx", 1074]],
     "translation": "Rozpocznij, tworząc nową listę"
   },
   "oW13KZ": {
@@ -3826,65 +4073,64 @@
     "translation": "Dobry dla osób zaczynających, które potrzebują tylko podstaw."
   },
   "ARFVgO": {
-    "translation": "",
     "message": "Google access wasn't granted. Allow Calendar or Tasks access to connect.",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 13]
-    ]
+    ],
+    "translation": ""
   },
   "zHpfN/": {
-    "translation": "",
     "message": "Google Calendar and Tasks",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 123]
-    ]
+    ],
+    "translation": ""
   },
   "ce+hz1": {
-    "translation": "",
     "message": "Google Calendar: add due dates to a \"Kan\" calendar",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 162]
-    ]
+      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 168]
+    ],
+    "translation": ""
   },
   "WH23WU": {
-    "translation": "",
     "message": "Google Chat",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/components/SettingsLayout.tsx", 79],
       ["src/views/settings/GoogleChatSettings.tsx", 24]
-    ]
+    ],
+    "translation": ""
   },
   "YGT+l4": {
-    "translation": "",
     "message": "Google Chat didn't accept the message.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceList.tsx", 36]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceList.tsx", 36]],
+    "translation": ""
   },
   "VmkNzy": {
-    "translation": "",
     "message": "Google Chat space added",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 127]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 127]],
+    "translation": ""
   },
   "7/tsLI": {
-    "translation": "",
     "message": "Google Chat space options",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceList.tsx", 95]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceList.tsx", 95]],
+    "translation": ""
   },
   "FMBk3W": {
-    "translation": "",
     "message": "Google Chat space removed",
     "placeholders": {},
     "comments": [],
@@ -3893,50 +4139,58 @@
         "src/views/settings/components/DeleteGoogleChatSpaceConfirmation.tsx",
         26
       ]
-    ]
+    ],
+    "translation": ""
   },
   "pkkiLU": {
-    "translation": "",
     "message": "Google Chat space updated",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 134]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 134]],
+    "translation": ""
   },
   "q37KvH": {
-    "translation": "",
     "message": "Google connected",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 49]
-    ]
+    ],
+    "translation": ""
   },
   "V1XLUK": {
-    "translation": "",
     "message": "Google didn't allow ongoing access. Please try again.",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 17]
-    ]
+    ],
+    "translation": ""
   },
   "JtG0Jy": {
-    "translation": "",
     "message": "Google disconnected",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 93]
-    ]
+    ],
+    "translation": ""
+  },
+  "rxCU4m": {
+    "message": "Google Drive access wasn't granted, so Kan can't link files.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/DriveFiles.tsx", 17]],
+    "translation": ""
   },
   "EbuWkR": {
-    "translation": "",
     "message": "Google is connected.",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 138]
-    ]
+    ],
+    "translation": ""
   },
   "cdyS7J": {
     "message": "Google SSO",
@@ -3958,22 +4212,29 @@
     "translation": "Google SSO + SAML"
   },
   "bfvACf": {
-    "translation": "",
     "message": "Google Tasks only keeps the due date, not the time.",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 184]
-    ]
+      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 190]
+    ],
+    "translation": ""
   },
   "Kbq0p8": {
-    "translation": "",
     "message": "Google Tasks: add cards to a \"Kan\" task list",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 181]
-    ]
+      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 187]
+    ],
+    "translation": ""
+  },
+  "YI4znr": {
+    "message": "Gradients",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 197]],
+    "translation": ""
   },
   "O1wAlQ": {
     "message": "Guest",
@@ -3988,6 +4249,13 @@
     "comments": [],
     "origin": [["src/views/boards/components/TemplateBoards.tsx", 18]],
     "translation": "Wysoki priorytet"
+  },
+  "cy9wfr": {
+    "message": "Hills",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 59]],
+    "translation": ""
   },
   "XXbgHS": {
     "message": "Hired",
@@ -4163,20 +4431,20 @@
     "translation": "w"
   },
   "Mmu8Qv": {
-    "translation": "",
     "message": "in {0}",
     "placeholders": {
       "0": ["card.listName"]
     },
     "comments": [],
-    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 64]]
+    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 64]],
+    "translation": ""
   },
   "soKt8i": {
-    "translation": "",
     "message": "In Google Chat, open the space, then Apps & integrations → Webhooks → Add webhook, and copy its URL.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 218]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 218]],
+    "translation": ""
   },
   "WbTDwg": {
     "message": "In Progress",
@@ -4340,17 +4608,25 @@
     "origin": [["src/views/boards/components/TemplateBoards.tsx", 82]],
     "translation": "Junior"
   },
+  "XPUbsz": {
+    "message": "Kan can also open the Google Drive files you link to cards. Disconnecting stops new links; files already linked stay on their cards.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 143]
+    ],
+    "translation": ""
+  },
   "ti2xgJ": {
-    "translation": "",
     "message": "Kan lost access to your Google account, so syncing has stopped. Reconnect to resume.",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 144]
-    ]
+      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 150]
+    ],
+    "translation": ""
   },
   "LhFn3m": {
-    "translation": "",
     "message": "Kan will stop posting to this space.",
     "placeholders": {},
     "comments": [],
@@ -4359,7 +4635,8 @@
         "src/views/settings/components/DeleteGoogleChatSpaceConfirmation.tsx",
         27
       ]
-    ]
+    ],
+    "translation": ""
   },
   "aWDhU5": {
     "message": "Kanban is better with a team. Perfect for small and growing teams looking to collaborate.",
@@ -4399,9 +4676,9 @@
     "origin": [
       ["src/views/board/components/CardContextLabelsModal.tsx", 31],
       ["src/views/board/components/Filters.tsx", 160],
-      ["src/views/board/components/NewCardForm.tsx", 533],
+      ["src/views/board/components/NewCardForm.tsx", 535],
       ["src/views/card/components/LabelSelector.tsx", 102],
-      ["src/views/card/index.tsx", 137]
+      ["src/views/card/index.tsx", 140]
     ],
     "translation": "Etykiety"
   },
@@ -4473,11 +4750,11 @@
     "translation": "Nauka"
   },
   "9zjEUv": {
-    "translation": "",
     "message": "Leave blank to keep the current URL",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 211]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 211]],
+    "translation": ""
   },
   "vifyyw": {
     "message": "Legal",
@@ -4523,17 +4800,88 @@
     ],
     "translation": "Ograniczony dostęp do API"
   },
+  "8Ntmm5": {
+    "message": "Link address",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/components/Editor.tsx", 400],
+      ["src/views/card/components/CardLinks.tsx", 222]
+    ],
+    "translation": ""
+  },
   "edWbV6": {
     "message": "Link copied",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/index.tsx", 472],
+      ["src/views/board/index.tsx", 475],
       ["src/views/card/components/Dropdown.tsx", 98],
       ["src/views/public/board/CardModal.tsx", 36],
       ["src/views/public/board/index.tsx", 77]
     ],
     "translation": "Link skopiowany"
+  },
+  "smMkWC": {
+    "message": "Link display text",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardLinks.tsx", 230]],
+    "translation": ""
+  },
+  "EbnTQn": {
+    "message": "Link files from Google Drive",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/views/card/components/DriveFiles.tsx", 139],
+      ["src/views/card/components/DriveFiles.tsx", 140]
+    ],
+    "translation": ""
+  },
+  "Fh0JRf": {
+    "message": "Link files to this card",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/DriveFiles.tsx", 76]],
+    "translation": ""
+  },
+  "pUbcSv": {
+    "message": "Link options",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardLinks.tsx", 135]],
+    "translation": ""
+  },
+  "gh27t1": {
+    "message": "Link previews",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/components/LinkPreview.tsx", 224]],
+    "translation": ""
+  },
+  "zKEEFr": {
+    "message": "linked a Google Drive file",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/ActivityList.tsx", 149]],
+    "translation": ""
+  },
+  "y3jkpn": {
+    "message": "linked a Google Drive file <0>{0}</0>",
+    "placeholders": {
+      "0": ["truncate(toTitle)"]
+    },
+    "comments": [],
+    "origin": [["src/views/card/components/ActivityList.tsx", 362]],
+    "translation": ""
+  },
+  "Rj01Fz": {
+    "message": "Links",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardLinks.tsx", 43]],
+    "translation": ""
   },
   "2BBAbc": {
     "message": "List",
@@ -4541,23 +4889,23 @@
     "comments": [],
     "origin": [
       ["src/views/board/components/CardContextDuplicateModal.tsx", 117],
-      ["src/views/card/index.tsx", 128]
+      ["src/views/card/index.tsx", 131]
     ],
     "translation": "Lista"
   },
   "OMYeEQ": {
-    "translation": "",
     "message": "List archived",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/List.tsx", 75]]
+    "origin": [["src/views/board/components/List.tsx", 75]],
+    "translation": ""
   },
   "hPziiv": {
-    "translation": "",
     "message": "List moved",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/MoveListModal.tsx", 27]]
+    "origin": [["src/views/board/components/MoveListModal.tsx", 27]],
+    "translation": ""
   },
   "zQX5Dj": {
     "message": "List name",
@@ -4592,7 +4940,7 @@
     "message": "Load more activities",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 616]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 714]],
     "translation": "Załaduj więcej aktywności"
   },
   "0qyZ4b": {
@@ -4608,7 +4956,7 @@
     "message": "Loading...",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 616]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 714]],
     "translation": "Ładowanie..."
   },
   "N/bcWA": {
@@ -4657,7 +5005,7 @@
     "message": "Make template",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 122]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 123]],
     "translation": "Utwórz szablon"
   },
   "hB02vO": {
@@ -4671,24 +5019,24 @@
     "translation": "Zarządzaj członkami"
   },
   "onllUU": {
-    "translation": "",
     "message": "Mark all as read",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 143]]
+    "origin": [["src/components/NotificationsMenu.tsx", 164]],
+    "translation": ""
   },
   "SDF1oV": {
-    "translation": "",
     "message": "Mark complete",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/DueDateDetails.tsx", 82]]
+    "origin": [["src/views/card/components/DueDateDetails.tsx", 75]],
+    "translation": ""
   },
   "IDvohQ": {
     "message": "marked a checklist item as incomplete",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 141]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 142]],
     "translation": "oznaczył(a) element listy kontrolnej jako nieukończony"
   },
   "jl3aEJ": {
@@ -4697,22 +5045,22 @@
       "0": ["truncate(toTitle)"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 268]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 276]],
     "translation": "oznaczył(a) element listy kontrolnej <0>{0}</0> jako nieukończony"
   },
   "a+ybXY": {
-    "translation": "",
     "message": "marked the due date complete",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 148]]
+    "origin": [["src/views/card/components/ActivityList.tsx", 156]],
+    "translation": ""
   },
   "fCeWnE": {
-    "translation": "",
     "message": "marked the due date incomplete",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 149]]
+    "origin": [["src/views/card/components/ActivityList.tsx", 157]],
+    "translation": ""
   },
   "vo2a+a": {
     "message": "Marketing",
@@ -4747,18 +5095,18 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/card/components/ActivityList.tsx", 56],
-      ["src/views/card/components/ActivityList.tsx", 91],
+      ["src/views/card/components/ActivityList.tsx", 57],
+      ["src/views/card/components/ActivityList.tsx", 92],
       ["src/views/members/index.tsx", 222]
     ],
     "translation": "Członek"
   },
   "UBKXpd": {
-    "translation": "",
     "message": "Member added to a card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/googleChatEventLabels.ts", 15]]
+    "origin": [["src/views/settings/components/googleChatEventLabels.ts", 15]],
+    "translation": ""
   },
   "fTHH1x": {
     "message": "Member options",
@@ -4781,9 +5129,9 @@
     "origin": [
       ["src/components/SideNavigation.tsx", 123],
       ["src/views/board/components/Filters.tsx", 151],
-      ["src/views/board/components/NewCardForm.tsx", 491],
+      ["src/views/board/components/NewCardForm.tsx", 493],
       ["src/views/card/components/MemberSelector.tsx", 116],
-      ["src/views/card/index.tsx", 147],
+      ["src/views/card/index.tsx", 150],
       ["src/views/members/index.tsx", 284],
       ["src/views/pricing/components/FeatureComparisonTable.tsx", 90]
     ],
@@ -4834,6 +5182,13 @@
     "origin": [["src/views/members/components/InviteMemberForm.tsx", 170]],
     "translation": "rozliczenie miesięczne"
   },
+  "WU4PPU": {
+    "message": "Mountains",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 55]],
+    "translation": ""
+  },
   "sZ/WDz": {
     "message": "Move board",
     "placeholders": {},
@@ -4849,14 +5204,14 @@
     "translation": "Przenieś tablicę do innego obszaru roboczego"
   },
   "4ZG+dS": {
-    "translation": "",
     "message": "Move list to board",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/board/components/List.tsx", 202],
       ["src/views/board/components/MoveListModal.tsx", 48]
-    ]
+    ],
+    "translation": ""
   },
   "51UCsN": {
     "message": "Move to another list",
@@ -4876,7 +5231,7 @@
     "message": "Move to workspace",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 153]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 165]],
     "translation": "Przenieś do obszaru roboczego"
   },
   "BOqTi5": {
@@ -4886,14 +5241,14 @@
       "1": ["truncate(toList)"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 170]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 178]],
     "translation": "przeniósł(-ęła) kartę z <0>{0}</0> do<1>{1}</1>"
   },
   "T7LJic": {
     "message": "moved the card to another list",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 130]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 131]],
     "translation": "przeniósł(-ęła) kartę do innej listy"
   },
   "uEGGDs": {
@@ -4918,18 +5273,18 @@
     "translation": "Nazwa"
   },
   "MVGER/": {
-    "translation": "",
     "message": "Name cannot exceed 255 characters",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 55]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 55]],
+    "translation": ""
   },
   "8/brI5": {
-    "translation": "",
     "message": "Name is required",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 54]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 54]],
+    "translation": ""
   },
   "UxKoFf": {
     "message": "Navigation",
@@ -4972,11 +5327,11 @@
     "translation": "Nowy {0}"
   },
   "ln8Qo3": {
-    "translation": "",
     "message": "New activity",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 54]]
+    "origin": [["src/components/NotificationsMenu.tsx", 75]],
+    "translation": ""
   },
   "TjREUS": {
     "message": "New API key",
@@ -4989,7 +5344,7 @@
     "message": "New card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/NewCardForm.tsx", 416]],
+    "origin": [["src/views/board/components/NewCardForm.tsx", 418]],
     "translation": "Nowa karta"
   },
   "cWcxrL": {
@@ -5019,7 +5374,7 @@
     "comments": [],
     "origin": [
       ["src/views/board/components/NewListForm.tsx", 128],
-      ["src/views/board/index.tsx", 1003]
+      ["src/views/board/index.tsx", 1016]
     ],
     "translation": "Nowa lista"
   },
@@ -5107,18 +5462,18 @@
     "translation": "Brak zarchiwizowanych tablic"
   },
   "5aI7Zw": {
-    "translation": "",
     "message": "No archived cards",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 105]]
+    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 105]],
+    "translation": ""
   },
   "XOV9dc": {
-    "translation": "",
     "message": "No archived lists",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 105]]
+    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 105]],
+    "translation": ""
   },
   "Eg99Sc": {
     "message": "No authentication methods are currently available",
@@ -5126,6 +5481,13 @@
     "comments": [],
     "origin": [["src/components/AuthForm.tsx", 374]],
     "translation": "Obecnie nie są dostępne żadne metody uwierzytelniania"
+  },
+  "p+9+ky": {
+    "message": "No board members yet",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/ChecklistItemSchedule.tsx", 372]],
+    "translation": ""
   },
   "2Bu8xj": {
     "message": "No boards found",
@@ -5163,11 +5525,11 @@
     "translation": "Brak dostępnego adresu URL do pobrania tego załącznika."
   },
   "23IVnh": {
-    "translation": "",
     "message": "No Google Chat spaces yet. Add one to post card updates to your team.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceList.tsx", 60]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceList.tsx", 60]],
+    "translation": ""
   },
   "TXO5TM": {
     "message": "No keyboard shortcuts registered.",
@@ -5187,14 +5549,14 @@
     "message": "No lists",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/index.tsx", 1055]],
+    "origin": [["src/views/board/index.tsx", 1070]],
     "translation": "Brak list"
   },
   "fvLNDy": {
     "message": "No lists have been created yet",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/index.tsx", 1060]],
+    "origin": [["src/views/board/index.tsx", 1075]],
     "translation": "Nie utworzono jeszcze żadnych list"
   },
   "i30J2U": {
@@ -5228,22 +5590,25 @@
     "translation": "Brak skonfigurowanych webhooków. Dodaj webhook, aby otrzymywać powiadomienia."
   },
   "EdQY6l": {
-    "translation": "",
     "message": "None",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/DueDateDetails.tsx", 98]]
+    "origin": [
+      ["src/views/card/components/ChecklistItemSchedule.tsx", 357],
+      ["src/views/card/components/DueDateDetails.tsx", 91]
+    ],
+    "translation": ""
   },
   "iDNBZe": {
-    "translation": "",
     "message": "Notifications",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/components/NotificationsMenu.tsx", 104],
-      ["src/components/NotificationsMenu.tsx", 118],
-      ["src/components/NotificationsMenu.tsx", 135]
-    ]
+      ["src/components/NotificationsMenu.tsx", 125],
+      ["src/components/NotificationsMenu.tsx", 139],
+      ["src/components/NotificationsMenu.tsx", 156]
+    ],
+    "translation": ""
   },
   "9h7RDh": {
     "message": "Offer",
@@ -5251,6 +5616,22 @@
     "comments": [],
     "origin": [["src/views/boards/components/TemplateBoards.tsx", 78]],
     "translation": "Oferta"
+  },
+  "UCQiqt": {
+    "message": "on {0}",
+    "placeholders": {
+      "0": ["format(date, \"MMM d\")"]
+    },
+    "comments": [],
+    "origin": [["src/components/NotificationsMenu.tsx", 28]],
+    "translation": ""
+  },
+  "2XdErM": {
+    "message": "On the day",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/utils/dueDates.ts", 30]],
+    "translation": ""
   },
   "QnzD50": {
     "message": "On-premise",
@@ -5288,6 +5669,15 @@
     "comments": [],
     "origin": [["src/views/settings/WorkspaceSettings.tsx", 88]],
     "translation": "Po usunięciu workspace'a nie będzie można tego cofnąć. Tej operacji nie da się odwrócić."
+  },
+  "NqaG61": {
+    "message": "Open {0} in Google Drive",
+    "placeholders": {
+      "0": ["file.name"]
+    },
+    "comments": [],
+    "origin": [["src/views/card/components/DriveFiles.tsx", 240]],
+    "translation": ""
   },
   "69b7aE": {
     "message": "Open command menu",
@@ -5347,7 +5737,10 @@
     "message": "Overdue",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/Filters.tsx", 109]],
+    "origin": [
+      ["src/views/board/components/Filters.tsx", 109],
+      ["src/views/card/components/ChecklistItemSchedule.tsx", 82]
+    ],
     "translation": "Zaległe"
   },
   "P6dJdq": {
@@ -5435,14 +5828,28 @@
     ],
     "translation": "Hasła nie są zgodne"
   },
+  "Ev/cxT": {
+    "message": "Paste a link, e.g. https://example.com",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardLinks.tsx", 221]],
+    "translation": ""
+  },
+  "PDvZB8": {
+    "message": "Paste an https image link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 251]],
+    "translation": ""
+  },
   "rAX3hs": {
-    "translation": "",
     "message": "Paste the webhook URL from Google Chat. It starts with {CHAT_WEBHOOK_PREFIX}",
     "placeholders": {
       "CHAT_WEBHOOK_PREFIX": ["CHAT_WEBHOOK_PREFIX"]
     },
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 64]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 64]],
+    "translation": ""
   },
   "URAE3q": {
     "message": "Paused",
@@ -5536,6 +5943,13 @@
     "comments": [],
     "origin": [["src/views/boards/components/TemplateBoards.tsx", 86]],
     "translation": "Projekt osobisty"
+  },
+  "LXdhFY": {
+    "message": "Photos",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 173]],
+    "translation": ""
   },
   "Oi+J+N": {
     "message": "Pick a plan to get started. All paid plans include a 14-day free trial.",
@@ -5640,44 +6054,49 @@
       ["src/components/FeedbackModal.tsx", 41],
       ["src/components/NewWorkspaceForm.tsx", 110],
       ["src/views/board/components/ArchivedItemsModal.tsx", 38],
-      ["src/views/board/components/BoardDropdown.tsx", 76],
-      ["src/views/board/components/BoardDropdown.tsx", 96],
+      ["src/views/board/components/BoardBackgroundModal.tsx", 73],
+      ["src/views/board/components/BoardDropdown.tsx", 77],
+      ["src/views/board/components/BoardDropdown.tsx", 97],
       ["src/views/board/components/CopyListModal.tsx", 24],
       ["src/views/board/components/List.tsx", 84],
       ["src/views/board/components/MoveListModal.tsx", 36],
-      ["src/views/board/components/NewCardForm.tsx", 204],
+      ["src/views/board/components/NewCardForm.tsx", 206],
       ["src/views/board/components/NewListForm.tsx", 94],
       ["src/views/board/components/NewTemplateForm.tsx", 61],
       ["src/views/board/components/NewTemplateForm.tsx", 77],
       ["src/views/board/components/UpdateBoardSlugForm.tsx", 73],
       ["src/views/board/components/VisibilityButton.tsx", 57],
-      ["src/views/board/index.tsx", 287],
-      ["src/views/board/index.tsx", 343],
-      ["src/views/board/index.tsx", 380],
-      ["src/views/board/index.tsx", 419],
+      ["src/views/board/index.tsx", 290],
+      ["src/views/board/index.tsx", 346],
+      ["src/views/board/index.tsx", 383],
+      ["src/views/board/index.tsx", 422],
       ["src/views/boards/components/ImportBoardsForm.tsx", 243],
       ["src/views/boards/components/ImportBoardsForm.tsx", 395],
       ["src/views/card/components/AttachmentThumbnails.tsx", 74],
-      ["src/views/card/components/ChecklistItemRow.tsx", 73],
-      ["src/views/card/components/ChecklistItemRow.tsx", 101],
+      ["src/views/card/components/CardLinks.tsx", 110],
+      ["src/views/card/components/CardLinks.tsx", 191],
+      ["src/views/card/components/ChecklistItemRow.tsx", 83],
+      ["src/views/card/components/ChecklistItemRow.tsx", 111],
+      ["src/views/card/components/ChecklistItemSchedule.tsx", 176],
       ["src/views/card/components/ChecklistNameInput.tsx", 47],
-      ["src/views/card/components/Checklists.tsx", 94],
-      ["src/views/card/components/Comment.tsx", 93],
+      ["src/views/card/components/Checklists.tsx", 99],
+      ["src/views/card/components/Comment.tsx", 94],
       ["src/views/card/components/CoverSelector.tsx", 71],
       ["src/views/card/components/DeleteCardConfirmation.tsx", 52],
       ["src/views/card/components/DeleteChecklistConfirmation.tsx", 38],
       ["src/views/card/components/DeleteCommentConfirmation.tsx", 46],
-      ["src/views/card/components/DueDateDetails.tsx", 57],
-      ["src/views/card/components/DueDateSelector.tsx", 72],
+      ["src/views/card/components/DriveFiles.tsx", 189],
+      ["src/views/card/components/DueDateDetails.tsx", 50],
+      ["src/views/card/components/DueDateSelector.tsx", 80],
       ["src/views/card/components/LabelSelector.tsx", 75],
       ["src/views/card/components/ListSelector.tsx", 55],
       ["src/views/card/components/MemberSelector.tsx", 82],
       ["src/views/card/components/NewChecklistForm.tsx", 82],
-      ["src/views/card/components/NewChecklistItemForm.tsx", 106],
+      ["src/views/card/components/NewChecklistItemForm.tsx", 113],
       ["src/views/card/components/NewCommentForm.tsx", 38],
       ["src/views/card/components/WatchButton.tsx", 64],
-      ["src/views/card/index.tsx", 276],
-      ["src/views/card/index.tsx", 289],
+      ["src/views/card/index.tsx", 293],
+      ["src/views/card/index.tsx", 306],
       ["src/views/members/components/DeleteMemberConfirmation.tsx", 28],
       ["src/views/members/components/EditMemberPermissionsModal.tsx", 42],
       ["src/views/members/components/EditMemberPermissionsModal.tsx", 65],
@@ -5702,6 +6121,8 @@
     "placeholders": {},
     "comments": [],
     "origin": [
+      ["src/views/card/components/CardLinks.tsx", 126],
+      ["src/views/card/components/DriveFiles.tsx", 95],
       ["src/views/members/components/InviteMemberForm.tsx", 137],
       ["src/views/members/components/InviteMemberForm.tsx", 153]
     ],
@@ -5714,7 +6135,7 @@
     "origin": [
       ["src/views/board/components/CardContextDuplicateModal.tsx", 76],
       ["src/views/board/components/CardContextMoveListModal.tsx", 42],
-      ["src/views/board/index.tsx", 481],
+      ["src/views/board/index.tsx", 484],
       ["src/views/card/components/Dropdown.tsx", 58],
       ["src/views/card/components/Dropdown.tsx", 84],
       ["src/views/card/components/Dropdown.tsx", 107],
@@ -5734,18 +6155,18 @@
     "translation": "Pozycja na liście (0 = pierwsza, puste pole = koniec)"
   },
   "/+fl4R": {
-    "translation": "",
     "message": "Post a message when",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 245]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 245]],
+    "translation": ""
   },
   "CO4B6q": {
-    "translation": "",
     "message": "Post card updates to Google Chat spaces: new cards, moves, comments, completed cards and due date reminders. Messages about the same card are grouped into one thread.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/GoogleChatSettings.tsx", 27]]
+    "origin": [["src/views/settings/GoogleChatSettings.tsx", 27]],
+    "translation": ""
   },
   "1xwZj/": {
     "message": "Previous month",
@@ -5823,11 +6244,11 @@
     "translation": "Plan Pro ∞"
   },
   "QSXmqh": {
-    "translation": "",
     "message": "Product team",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 192]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 192]],
+    "translation": ""
   },
   "0rPv1T": {
     "message": "Profile image updated",
@@ -5879,14 +6300,14 @@
     "translation": "Szybka wygrana"
   },
   "AOwsLb": {
-    "translation": "",
     "message": "Reconnect Google",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 146],
-      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 194]
-    ]
+      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 152],
+      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 200]
+    ],
+    "translation": ""
   },
   "6EWT6T": {
     "message": "Recruitment",
@@ -5894,6 +6315,13 @@
     "comments": [],
     "origin": [["src/views/boards/components/TemplateBoards.tsx", 73]],
     "translation": "Rekrutacja"
+  },
+  "vVkJqG": {
+    "message": "Refresh preview",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardLinks.tsx", 138]],
+    "translation": ""
   },
   "ekCRTP": {
     "message": "Rejected",
@@ -5903,11 +6331,14 @@
     "translation": "Odrzucono"
   },
   "/kpR4w": {
-    "translation": "",
     "message": "Reminder",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/DueDateDetails.tsx", 85]]
+    "origin": [
+      ["src/views/card/components/ChecklistItemSchedule.tsx", 346],
+      ["src/views/card/components/DueDateDetails.tsx", 78]
+    ],
+    "translation": ""
   },
   "qlAIQ1": {
     "message": "Remote",
@@ -5930,29 +6361,51 @@
     ],
     "translation": "Usuń"
   },
+  "SOL2Iq": {
+    "message": "Remove {0} from this card",
+    "placeholders": {
+      "0": ["file.name"]
+    },
+    "comments": [],
+    "origin": [["src/views/card/components/DriveFiles.tsx", 251]],
+    "translation": ""
+  },
+  "ylbfBl": {
+    "message": "Remove background",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 304]],
+    "translation": ""
+  },
   "xhcj8E": {
-    "translation": "",
     "message": "Remove cover",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/CoverSelector.tsx", 178]]
+    "origin": [["src/views/card/components/CoverSelector.tsx", 178]],
+    "translation": ""
+  },
+  "cNp+3o": {
+    "message": "Remove date",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/ChecklistItemSchedule.tsx", 303]],
+    "translation": ""
   },
   "cILfnJ": {
     "message": "Remove file",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/NewCardForm.tsx", 649]],
+    "origin": [["src/views/board/components/NewCardForm.tsx", 651]],
     "translation": "Usuń plik"
   },
   "T/pF0Z": {
     "message": "Remove from favorites",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 184]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 196]],
     "translation": "Usuń z ulubionych"
   },
   "HFZL9g": {
-    "translation": "",
     "message": "Remove Google Chat space",
     "placeholders": {},
     "comments": [],
@@ -5961,7 +6414,15 @@
         "src/views/settings/components/DeleteGoogleChatSpaceConfirmation.tsx",
         45
       ]
-    ]
+    ],
+    "translation": ""
+  },
+  "484LKL": {
+    "message": "Remove link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardLinks.tsx", 144]],
+    "translation": ""
   },
   "99VIgC": {
     "message": "Remove member",
@@ -5977,28 +6438,60 @@
       "labelList": ["labelList"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 119]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 120]],
     "translation": "usunięto {0} etykiety: <0>{labelList}</0>"
+  },
+  "to01jK": {
+    "message": "removed a Google Drive file",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/ActivityList.tsx", 150]],
+    "translation": ""
+  },
+  "qXRgvB": {
+    "message": "removed a Google Drive file <0>{0}</0>",
+    "placeholders": {
+      "0": ["truncate(fromTitle)"]
+    },
+    "comments": [],
+    "origin": [["src/views/card/components/ActivityList.tsx", 379]],
+    "translation": ""
   },
   "kQwvU8": {
     "message": "removed a label from the card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 132]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 133]],
     "translation": "usunięto etykietę z karty"
+  },
+  "Dxwllt": {
+    "message": "removed a link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/ActivityList.tsx", 152]],
+    "translation": ""
+  },
+  "Gm1g6e": {
+    "message": "removed a link <0>{0}</0>",
+    "placeholders": {
+      "0": ["truncate(fromTitle)"]
+    },
+    "comments": [],
+    "origin": [["src/views/card/components/ActivityList.tsx", 388]],
+    "translation": ""
   },
   "uck1tz": {
     "message": "removed a member from the card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 134]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 135]],
     "translation": "usunięto członka z karty"
   },
   "KEim/+": {
     "message": "removed an attachment",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 144]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 148]],
     "translation": "usunięto załącznik"
   },
   "zwTiVn": {
@@ -6007,14 +6500,14 @@
       "0": ["truncate(filename)"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 298]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 353]],
     "translation": "usunięto załącznik <0>{0}</0>"
   },
   "Qh7QmR": {
     "message": "Removed from favorites",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 65]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 66]],
     "translation": "Usunięto z ulubionych"
   },
   "YVT40D": {
@@ -6023,7 +6516,7 @@
       "0": ["truncate(label)"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 210]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 218]],
     "translation": "usunięto etykietę <0>{0}</0>"
   },
   "aHRWVI": {
@@ -6031,23 +6524,32 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/card/components/ActivityList.tsx", 147],
-      ["src/views/card/components/ActivityList.tsx", 334]
+      ["src/views/card/components/ActivityList.tsx", 155],
+      ["src/views/card/components/ActivityList.tsx", 423]
     ],
     "translation": "usunięto termin"
   },
+  "ZuEfbj": {
+    "message": "removed the due date from <0>{0}</0>",
+    "placeholders": {
+      "0": ["truncate(toTitle)"]
+    },
+    "comments": [],
+    "origin": [["src/views/card/components/ActivityList.tsx", 295]],
+    "translation": ""
+  },
   "4kgcyZ": {
-    "translation": "",
     "message": "removed the start date",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 152]]
+    "origin": [["src/views/card/components/ActivityList.tsx", 160]],
+    "translation": ""
   },
   "NypLoL": {
     "message": "renamed a checklist",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 136]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 137]],
     "translation": "zmieniono nazwę checklisty"
   },
   "3ZjRJY": {
@@ -6056,7 +6558,7 @@
       "0": ["truncate(toTitle)"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 226]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 234]],
     "translation": "zmieniono nazwę checklisty <0>{0}</0>"
   },
   "NH54UR": {
@@ -6065,7 +6567,7 @@
       "0": ["truncate(toTitle)"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 250]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 258]],
     "translation": "zmieniono nazwę elementu checklisty na <0>{0}</0>"
   },
   "Yx0Ud8": {
@@ -6109,18 +6611,18 @@
     "translation": "Zasoby"
   },
   "yKu/3Y": {
-    "translation": "",
     "message": "Restore",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 139]]
+    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 139]],
+    "translation": ""
   },
   "NTE3cf": {
-    "translation": "",
     "message": "restored the card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 154]]
+    "origin": [["src/views/card/components/ActivityList.tsx", 162]],
+    "translation": ""
   },
   "5k0NLb": {
     "message": "Review",
@@ -6194,7 +6696,7 @@
     "comments": [],
     "origin": [
       ["src/components/YouTubeEmbed/EditYouTubeModal.tsx", 183],
-      ["src/views/card/components/Comment.tsx", 202],
+      ["src/views/card/components/Comment.tsx", 204],
       ["src/views/settings/components/Avatar.tsx", 290]
     ],
     "translation": "Zapisz"
@@ -6352,7 +6854,7 @@
     "message": "self-assigned the card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 179]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 187]],
     "translation": "samodzielnie przypisał(a) kartę"
   },
   "RoafuO": {
@@ -6370,11 +6872,11 @@
     "translation": "Wyślij test"
   },
   "cD/KjC": {
-    "translation": "",
     "message": "Send test message",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceList.tsx", 116]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceList.tsx", 116]],
+    "translation": ""
   },
   "v3YoMA": {
     "message": "Senior",
@@ -6382,6 +6884,16 @@
     "comments": [],
     "origin": [["src/views/boards/components/TemplateBoards.tsx", 82]],
     "translation": "Starszy"
+  },
+  "3dUDk2": {
+    "message": "set <0>{0}</0> due <1>{formattedDate}</1>",
+    "placeholders": {
+      "0": ["truncate(toTitle)"],
+      "formattedDate": ["formattedDate"]
+    },
+    "comments": [],
+    "origin": [["src/views/card/components/ActivityList.tsx", 307]],
+    "translation": ""
   },
   "GXGbXi": {
     "message": "Set a password to enable password-based login.",
@@ -6397,7 +6909,7 @@
     "origin": [
       ["src/views/board/components/CardContextDueDateModal.tsx", 20],
       ["src/views/board/components/CardContextMenu.tsx", 60],
-      ["src/views/card/components/DueDateSelector.tsx", 132]
+      ["src/views/card/components/DueDateSelector.tsx", 126]
     ],
     "translation": "Ustaw termin"
   },
@@ -6414,25 +6926,25 @@
     "translation": "Ustaw hasło"
   },
   "bPoqDk": {
-    "translation": "",
     "message": "Set start date",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/DueDateSelector.tsx", 132]]
+    "origin": [["src/views/card/components/DueDateSelector.tsx", 126]],
+    "translation": ""
   },
   "Eit43O": {
     "message": "set the due date",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 145]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 153]],
     "translation": "ustaw termin"
   },
   "9uhBXt": {
-    "translation": "",
     "message": "set the start date",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 150]]
+    "origin": [["src/views/card/components/ActivityList.tsx", 158]],
+    "translation": ""
   },
   "JjEJSy": {
     "message": "Set up your workspace",
@@ -6473,11 +6985,11 @@
     "translation": "Ustawienia | Rozliczenia"
   },
   "jWa2rH": {
-    "translation": "",
     "message": "Settings | Google Chat",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/GoogleChatSettings.tsx", 20]]
+    "origin": [["src/views/settings/GoogleChatSettings.tsx", 20]],
+    "translation": ""
   },
   "hYzsXr": {
     "message": "Settings | Integrations",
@@ -6515,13 +7027,13 @@
     "translation": "Skróty klawiaturowe"
   },
   "mJvdCl": {
-    "translation": "",
     "message": "Show the cards you're a member of in your own Google account: a \"Kan\" calendar with an event at each due time (with your card's reminder), and a \"Kan\" list in Google Tasks. Kan can only see the calendar and task list it creates.",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 129]
-    ]
+    ],
+    "translation": ""
   },
   "5lWFkC": {
     "message": "Sign in",
@@ -6659,15 +7171,15 @@
     "message": "Some attachments failed",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/NewCardForm.tsx", 336]],
+    "origin": [["src/views/board/components/NewCardForm.tsx", 338]],
     "translation": "Nie udało się przesłać niektórych załączników"
   },
   "C6+ZRl": {
-    "translation": "",
     "message": "Someone",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 23]]
+    "origin": [["src/components/NotificationsMenu.tsx", 32]],
+    "translation": ""
   },
   "J9+zIR": {
     "message": "Something went wrong during activation. Please try again.",
@@ -6683,14 +7195,21 @@
     "origin": [["src/components/Dashboard.tsx", 132]],
     "translation": "Coś poszło nie tak podczas aktywacji licencji."
   },
+  "gWNX0J": {
+    "message": "Something went wrong while connecting Google Drive. Please try again.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/DriveFiles.tsx", 18]],
+    "translation": ""
+  },
   "TSTnPf": {
-    "translation": "",
     "message": "Something went wrong while connecting Google. Please try again.",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 19]
-    ]
+    ],
+    "translation": ""
   },
   "vnS6Rf": {
     "message": "SSO",
@@ -6719,11 +7238,14 @@
     "obsolete": true
   },
   "WAjFYI": {
-    "translation": "",
     "message": "Start date",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/index.tsx", 157]]
+    "origin": [
+      ["src/views/card/components/ChecklistItemSchedule.tsx", 341],
+      ["src/views/card/index.tsx", 160]
+    ],
+    "translation": ""
   },
   "4+JaWo": {
     "message": "Start free trial",
@@ -6758,7 +7280,6 @@
     "translation": "Status"
   },
   "EBcnPd": {
-    "translation": "",
     "message": "Stop posting card updates to \"{spaceName}\"? Messages already in the space stay there.",
     "placeholders": {
       "spaceName": ["spaceName"]
@@ -6769,21 +7290,22 @@
         "src/views/settings/components/DeleteGoogleChatSpaceConfirmation.tsx",
         58
       ]
-    ]
+    ],
+    "translation": ""
   },
   "ou+6P2": {
-    "translation": "",
     "message": "Stop watching board",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 164]]
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 176]],
+    "translation": ""
   },
   "8wSJ4o": {
-    "translation": "",
     "message": "Stopped watching board",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 86]]
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 87]],
+    "translation": ""
   },
   "hQRttt": {
     "message": "Submit",
@@ -6860,13 +7382,13 @@
     "translation": "System"
   },
   "WS/9nP": {
-    "translation": "",
     "message": "Tasks access wasn't granted. Reconnect to allow it.",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 185]
-    ]
+      ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 191]
+    ],
+    "translation": ""
   },
   "KM6m8p": {
     "message": "Team",
@@ -6902,8 +7424,8 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/index.tsx", 923],
-      ["src/views/board/index.tsx", 960]
+      ["src/views/board/index.tsx", 932],
+      ["src/views/board/index.tsx", 973]
     ],
     "translation": "Szablon"
   },
@@ -6973,11 +7495,11 @@
     "translation": "Test nie powiódł się"
   },
   "ndbfiH": {
-    "translation": "",
     "message": "Test message sent",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceList.tsx", 29]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceList.tsx", 29]],
+    "translation": ""
   },
   "zDNL2V": {
     "message": "Test sent",
@@ -7024,7 +7546,7 @@
     "message": "The board has been archived.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 56]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 57]],
     "translation": "Tablica została zarchiwizowana."
   },
   "ZWk38w": {
@@ -7040,7 +7562,7 @@
     "message": "The board has been unarchived.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 57]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 58]],
     "translation": "Tablica została przywrócona z archiwum."
   },
   "nKBUeF": {
@@ -7059,24 +7581,24 @@
       "failedCount": ["failedCount"]
     },
     "comments": [],
-    "origin": [["src/views/board/components/NewCardForm.tsx", 337]],
+    "origin": [["src/views/board/components/NewCardForm.tsx", 339]],
     "translation": "Karta została utworzona, ale nie udało się przesłać {failedCount} z {0} załączników."
   },
   "JeP3E/": {
-    "translation": "",
     "message": "The connection link expired. Please try again.",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 15]
-    ]
+    ],
+    "translation": ""
   },
   "HD9AHY": {
-    "translation": "",
     "message": "The copy keeps every card with its labels, members and checklists.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/CopyListModal.tsx", 43]]
+    "origin": [["src/views/board/components/CopyListModal.tsx", 43]],
+    "translation": ""
   },
   "jlB2RY": {
     "message": "The current password you entered is incorrect.",
@@ -7088,20 +7610,20 @@
     "translation": "Wprowadzone obecne hasło jest nieprawidłowe."
   },
   "MvNhTK": {
-    "translation": "",
     "message": "The Kan calendar and task list were removed from your Google account.",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 94]
-    ]
+    ],
+    "translation": ""
   },
   "kkMCGs": {
-    "translation": "",
     "message": "The list and its cards are now at the end of the other board.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/MoveListModal.tsx", 28]]
+    "origin": [["src/views/board/components/MoveListModal.tsx", 28]],
+    "translation": ""
   },
   "lkz85l": {
     "message": "The main difference between Kan and Trello is that Kan is open source, allowing anyone to view, modify, and contribute to our code. Our cloud offering also offers no restrictions on features for individual use, whereas Trello locks basic features such as the number of boards you can create behind a paywall.",
@@ -7158,11 +7680,11 @@
     "translation": "Motyw"
   },
   "vMwv3g": {
-    "translation": "",
     "message": "There are no other boards in this workspace.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/MoveListModal.tsx", 61]]
+    "origin": [["src/views/board/components/MoveListModal.tsx", 61]],
+    "translation": ""
   },
   "Yf9FAx": {
     "message": "They won't be able to access this workspace.",
@@ -7197,7 +7719,7 @@
     "message": "This board is private or does not exist",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/public/board/index.tsx", 184]],
+    "origin": [["src/views/public/board/index.tsx", 190]],
     "translation": "Ta tablica jest prywatna lub nie istnieje"
   },
   "wY+6Ye": {
@@ -7304,6 +7826,16 @@
     "origin": [["src/views/card/components/Dropdown.tsx", 119]],
     "translation": "ID zgłoszenia skopiowane do schowka"
   },
+  "LhMjLm": {
+    "message": "Time",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      ["src/components/DateTimePicker.tsx", 70],
+      ["src/components/DateTimePicker.tsx", 75]
+    ],
+    "translation": ""
+  },
   "MHrjPM": {
     "message": "Title",
     "placeholders": {},
@@ -7330,6 +7862,13 @@
     ],
     "translation": "Do zrobienia"
   },
+  "X0OwOB": {
+    "message": "today",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/components/NotificationsMenu.tsx", 26]],
+    "translation": ""
+  },
   "ecUA8p": {
     "message": "Today",
     "placeholders": {},
@@ -7350,6 +7889,22 @@
     "comments": [],
     "origin": [["src/views/settings/IntegrationsSettings.tsx", 19]],
     "translation": "Wymagany jest token"
+  },
+  "t9zNOe": {
+    "message": "tomorrow",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/components/NotificationsMenu.tsx", 27]],
+    "translation": ""
+  },
+  "16xJHI": {
+    "message": "took on <0>{0}</0>",
+    "placeholders": {
+      "0": ["truncate(toTitle)"]
+    },
+    "comments": [],
+    "origin": [["src/views/card/components/ActivityList.tsx", 317]],
+    "translation": ""
   },
   "eEQyz+": {
     "message": "Track all card changes with detailed activity history.",
@@ -7400,7 +7955,7 @@
     "message": "Unable to add checklist item",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/NewChecklistItemForm.tsx", 105]],
+    "origin": [["src/views/card/components/NewChecklistItemForm.tsx", 112]],
     "translation": "Nie można dodać elementu listy kontrolnej"
   },
   "T7DJ2k": {
@@ -7411,35 +7966,49 @@
     "translation": "Nie można dodać komentarza"
   },
   "fYRyph": {
-    "translation": "",
     "message": "Unable to add Google Chat space",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 130]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 130]],
+    "translation": ""
   },
   "2Q871c": {
     "message": "Unable to add label",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/index.tsx", 288]],
+    "origin": [["src/views/card/index.tsx", 305]],
     "translation": "Nie można dodać etykiety"
   },
+  "/WFEfd": {
+    "message": "Unable to add link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardLinks.tsx", 187]],
+    "translation": ""
+  },
   "+xPEjx": {
-    "translation": "",
     "message": "Unable to archive card",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/index.tsx", 418],
+      ["src/views/board/index.tsx", 421],
       ["src/views/card/components/Dropdown.tsx", 82]
-    ]
+    ],
+    "translation": ""
   },
   "zkavoA": {
-    "translation": "",
     "message": "Unable to archive list",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/List.tsx", 83]]
+    "origin": [["src/views/board/components/List.tsx", 83]],
+    "translation": ""
+  },
+  "82wVXk": {
+    "message": "Unable to change background",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 72]],
+    "translation": ""
   },
   "LeM5RY": {
     "message": "Unable to clear overrides",
@@ -7460,7 +8029,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/index.tsx", 479],
+      ["src/views/board/index.tsx", 482],
       ["src/views/card/components/Dropdown.tsx", 105],
       ["src/views/public/board/CardModal.tsx", 43],
       ["src/views/public/board/index.tsx", 84]
@@ -7468,17 +8037,17 @@
     "translation": "Nie można skopiować linku"
   },
   "6pGCPU": {
-    "translation": "",
     "message": "Unable to copy list",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/CopyListModal.tsx", 23]]
+    "origin": [["src/views/board/components/CopyListModal.tsx", 23]],
+    "translation": ""
   },
   "zl1b97": {
     "message": "Unable to create card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/NewCardForm.tsx", 201]],
+    "origin": [["src/views/board/components/NewCardForm.tsx", 203]],
     "translation": "Nie można utworzyć karty"
   },
   "mHhffx": {
@@ -7552,7 +8121,7 @@
     "message": "Unable to delete checklist item",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ChecklistItemRow.tsx", 100]],
+    "origin": [["src/views/card/components/ChecklistItemRow.tsx", 110]],
     "translation": "Nie można usunąć elementu listy kontrolnej"
   },
   "2QGEbi": {
@@ -7563,11 +8132,11 @@
     "translation": "Nie można usunąć komentarza"
   },
   "BqCTQD": {
-    "translation": "",
     "message": "Unable to delete list",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 56]]
+    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 56]],
+    "translation": ""
   },
   "23nvb2": {
     "message": "Unable to delete webhook",
@@ -7603,14 +8172,27 @@
     "translation": "Nie można przenieść karty"
   },
   "HQhwv5": {
-    "translation": "",
     "message": "Unable to move list",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/MoveListModal.tsx", 35]]
+    "origin": [["src/views/board/components/MoveListModal.tsx", 35]],
+    "translation": ""
+  },
+  "jy3eRU": {
+    "message": "Unable to refresh preview",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardLinks.tsx", 125]],
+    "translation": ""
+  },
+  "Sz7z9h": {
+    "message": "Unable to remove file",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/DriveFiles.tsx", 188]],
+    "translation": ""
   },
   "nGtCZk": {
-    "translation": "",
     "message": "Unable to remove Google Chat space",
     "placeholders": {},
     "comments": [],
@@ -7619,7 +8201,15 @@
         "src/views/settings/components/DeleteGoogleChatSpaceConfirmation.tsx",
         34
       ]
-    ]
+    ],
+    "translation": ""
+  },
+  "TP6KDu": {
+    "message": "Unable to remove link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/CardLinks.tsx", 109]],
+    "translation": ""
   },
   "8yFGGF": {
     "message": "Unable to remove member",
@@ -7634,7 +8224,7 @@
     "message": "Unable to reorder checklist item",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/Checklists.tsx", 93]],
+    "origin": [["src/views/card/components/Checklists.tsx", 98]],
     "translation": "Nie można zmienić kolejności elementu listy kontrolnej"
   },
   "vfRdCZ": {
@@ -7647,18 +8237,18 @@
     "translation": "Nie można zresetować uprawnień"
   },
   "8tfe4t": {
-    "translation": "",
     "message": "Unable to restore card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 44]]
+    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 44]],
+    "translation": ""
   },
   "8sj46H": {
-    "translation": "",
     "message": "Unable to restore list",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 52]]
+    "origin": [["src/views/board/components/ArchivedItemsModal.tsx", 52]],
+    "translation": ""
   },
   "A8jqN7": {
     "message": "Unable to send feedback",
@@ -7668,11 +8258,11 @@
     "translation": "Nie można wysłać opinii"
   },
   "ZYGNKk": {
-    "translation": "",
     "message": "Unable to send test message",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceList.tsx", 43]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceList.tsx", 43]],
+    "translation": ""
   },
   "Q60WUZ": {
     "message": "Unable to start checkout",
@@ -7691,11 +8281,18 @@
     ],
     "translation": "Nie można przetestować webhooka"
   },
+  "puPHY0": {
+    "message": "Unable to update assignees",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/ChecklistItemSchedule.tsx", 233]],
+    "translation": ""
+  },
   "T7Mywq": {
     "message": "Unable to update board",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 75]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 76]],
     "translation": "Nie można zaktualizować tablicy"
   },
   "XpcjLO": {
@@ -7717,8 +8314,8 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/index.tsx", 342],
-      ["src/views/card/index.tsx", 275]
+      ["src/views/board/index.tsx", 345],
+      ["src/views/card/index.tsx", 292]
     ],
     "translation": "Nie można zaktualizować karty"
   },
@@ -7733,40 +8330,43 @@
     "message": "Unable to update checklist item",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ChecklistItemRow.tsx", 72]],
+    "origin": [
+      ["src/views/card/components/ChecklistItemRow.tsx", 82],
+      ["src/views/card/components/ChecklistItemSchedule.tsx", 200]
+    ],
     "translation": "Nie można zaktualizować elementu listy kontrolnej"
   },
   "fYVH36": {
     "message": "Unable to update comment",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/Comment.tsx", 92]],
+    "origin": [["src/views/card/components/Comment.tsx", 93]],
     "translation": "Nie można zaktualizować komentarza"
   },
   "KLV1M+": {
-    "translation": "",
     "message": "Unable to update cover",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/CoverSelector.tsx", 70]]
+    "origin": [["src/views/card/components/CoverSelector.tsx", 70]],
+    "translation": ""
   },
   "C56tim": {
     "message": "Unable to update due date",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/index.tsx", 379],
-      ["src/views/card/components/DueDateDetails.tsx", 56],
-      ["src/views/card/components/DueDateSelector.tsx", 71]
+      ["src/views/board/index.tsx", 382],
+      ["src/views/card/components/DueDateDetails.tsx", 49],
+      ["src/views/card/components/DueDateSelector.tsx", 79]
     ],
     "translation": "Nie można zaktualizować terminu"
   },
   "KxAkvA": {
-    "translation": "",
     "message": "Unable to update Google Chat space",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 135]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 135]],
+    "translation": ""
   },
   "delOXn": {
     "message": "Unable to update labels",
@@ -7780,7 +8380,7 @@
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/index.tsx", 286],
+      ["src/views/board/index.tsx", 289],
       ["src/views/card/components/ListSelector.tsx", 54]
     ],
     "translation": "Nie można zaktualizować listy"
@@ -7810,21 +8410,21 @@
     "translation": "Nie można zaktualizować roli"
   },
   "k3Zols": {
-    "translation": "",
     "message": "Unable to update start date",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/DueDateSelector.tsx", 70]]
+    "origin": [["src/views/card/components/DueDateSelector.tsx", 78]],
+    "translation": ""
   },
   "eqC0eM": {
-    "translation": "",
     "message": "Unable to update watching",
     "placeholders": {},
     "comments": [],
     "origin": [
-      ["src/views/board/components/BoardDropdown.tsx", 95],
+      ["src/views/board/components/BoardDropdown.tsx", 96],
       ["src/views/card/components/WatchButton.tsx", 63]
-    ]
+    ],
+    "translation": ""
   },
   "V1o9Jo": {
     "message": "Unable to update webhook",
@@ -7837,8 +8437,18 @@
     "message": "Unarchive board",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 142]],
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 154]],
     "translation": "Przywróć tablicę z archiwum"
+  },
+  "GasFFy": {
+    "message": "unassigned <0>{0}</0> from <1>{1}</1>",
+    "placeholders": {
+      "0": ["truncate(displayName)"],
+      "1": ["truncate(toTitle)"]
+    },
+    "comments": [],
+    "origin": [["src/views/card/components/ActivityList.tsx", 332]],
+    "translation": ""
   },
   "E8zYtd": {
     "message": "unassigned <0>{0}</0> from the card",
@@ -7846,14 +8456,21 @@
       "0": ["truncate(displayName)"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 193]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 201]],
     "translation": "<0>{0}</0> został(a) odpięty(a) od karty"
+  },
+  "1THFKO": {
+    "message": "unassigned a checklist item",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/ActivityList.tsx", 146]],
+    "translation": ""
   },
   "hAMddS": {
     "message": "unassigned themselves from the card",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 190]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 198]],
     "translation": "Użytkownik odpiął się od karty"
   },
   "9Xigls": {
@@ -7973,6 +8590,13 @@
     "translation": "Anuluj subskrypcję",
     "obsolete": true
   },
+  "2wWjzQ": {
+    "message": "Unsupported file",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 116]],
+    "translation": ""
+  },
   "EkH9pt": {
     "message": "Update",
     "placeholders": {},
@@ -7997,35 +8621,35 @@
     "message": "updated a checklist item",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 139]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 140]],
     "translation": "zaktualizowano element listy kontrolnej"
   },
   "tGwwnq": {
     "message": "updated the description",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 129]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 130]],
     "translation": "zaktualizowano opis"
   },
   "RfgJqw": {
     "message": "updated the due date",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 146]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 154]],
     "translation": "zaktualizowano termin"
   },
   "pA21lt": {
-    "translation": "",
     "message": "updated the start date",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 151]]
+    "origin": [["src/views/card/components/ActivityList.tsx", 159]],
+    "translation": ""
   },
   "V3MPSQ": {
     "message": "updated the title",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 128]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 129]],
     "translation": "zaktualizowano tytuł"
   },
   "zERArS": {
@@ -8034,7 +8658,7 @@
       "0": ["truncate(toTitle)"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/ActivityList.tsx", 162]],
+    "origin": [["src/views/card/components/ActivityList.tsx", 170]],
     "translation": "zaktualizowano tytuł na <0>{0}</0>"
   },
   "kwkhPe": {
@@ -8073,11 +8697,25 @@
     "origin": [["src/views/onboarding/select-plan/index.tsx", 157]],
     "translation": "Ulepsz swój plan"
   },
+  "gFjV1c": {
+    "message": "Upload an attachment",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/card/components/AttachmentUpload.tsx", 158]],
+    "translation": ""
+  },
+  "ISKWIA": {
+    "message": "Upload an image",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 292]],
+    "translation": ""
+  },
   "b3Thhd": {
     "message": "Upload failed",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/AttachmentUpload.tsx", 51]],
+    "origin": [["src/views/card/components/AttachmentUpload.tsx", 58]],
     "translation": "Przesyłanie nie powiodło się"
   },
   "BBUDfW": {
@@ -8137,21 +8775,60 @@
     ],
     "translation": "URL musi mieć co najmniej 3 znaki"
   },
+  "xfSyLz": {
+    "message": "Use {0} background",
+    "placeholders": {
+      "0": ["photoLabels[photo.key]"]
+    },
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 179]],
+    "translation": ""
+  },
+  "wSkN00": {
+    "message": "Use a full link starting with https://",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 256]],
+    "translation": ""
+  },
   "r7uis8": {
-    "translation": "",
     "message": "Use attachment as cover",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/CoverSelector.tsx", 150]]
+    "origin": [["src/views/card/components/CoverSelector.tsx", 150]],
+    "translation": ""
+  },
+  "6kyCBu": {
+    "message": "Use colour {colour} as background",
+    "placeholders": {
+      "colour": ["colour"]
+    },
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 226]],
+    "translation": ""
   },
   "Ghbi8Y": {
-    "translation": "",
     "message": "Use colour {colour} as cover",
     "placeholders": {
       "colour": ["colour"]
     },
     "comments": [],
-    "origin": [["src/views/card/components/CoverSelector.tsx", 129]]
+    "origin": [["src/views/card/components/CoverSelector.tsx", 129]],
+    "translation": ""
+  },
+  "etpYoA": {
+    "message": "Use gradient background",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 208]],
+    "translation": ""
+  },
+  "kAv/K1": {
+    "message": "Use link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 266]],
+    "translation": ""
   },
   "QNtP5M": {
     "message": "Use template",
@@ -8161,11 +8838,11 @@
     "translation": "Użyj szablonu"
   },
   "d3uEGW": {
-    "translation": "",
     "message": "Use Test to check that messages arrive.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 128]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 128]],
+    "translation": ""
   },
   "n6EWYz": {
     "message": "Used to sign webhook payloads for verification. Leave blank to keep existing secret.",
@@ -8220,7 +8897,7 @@
     "message": "View only",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/public/board/index.tsx", 153]],
+    "origin": [["src/views/public/board/index.tsx", 159]],
     "translation": "Tylko podgląd"
   },
   "fSf2ee": {
@@ -8234,7 +8911,7 @@
     "message": "View workspace",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/public/board/index.tsx", 187]],
+    "origin": [["src/views/public/board/index.tsx", 193]],
     "translation": "Zobacz przestrzeń roboczą"
   },
   "2q/Q7x": {
@@ -8245,46 +8922,53 @@
     "translation": "Widoczność"
   },
   "AlfqgK": {
-    "translation": "",
     "message": "Watch",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/WatchButton.tsx", 36]]
+    "origin": [["src/views/card/components/WatchButton.tsx", 36]],
+    "translation": ""
   },
   "vTNSCL": {
-    "translation": "",
     "message": "Watch board",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 164]]
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 176]],
+    "translation": ""
   },
   "3TAdun": {
-    "translation": "",
     "message": "Watch to get notified about activity",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/WatchButton.tsx", 27]]
+    "origin": [["src/views/card/components/WatchButton.tsx", 27]],
+    "translation": ""
   },
   "12cc1j": {
-    "translation": "",
     "message": "Watching",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/WatchButton.tsx", 36]]
+    "origin": [["src/views/card/components/WatchButton.tsx", 36]],
+    "translation": ""
   },
   "UkMTuX": {
-    "translation": "",
     "message": "Watching board",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 86]]
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 87]],
+    "translation": ""
   },
   "EYDNIz": {
-    "translation": "",
     "message": "Watching: you get notified about activity. Click to stop.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/WatchButton.tsx", 26]]
+    "origin": [["src/views/card/components/WatchButton.tsx", 26]],
+    "translation": ""
+  },
+  "FItJTE": {
+    "message": "Waves",
+    "placeholders": {},
+    "comments": [],
+    "origin": [["src/views/board/components/BoardBackgroundModal.tsx", 56]],
+    "translation": ""
   },
   "BJbLe4": {
     "message": "We are using the <0>AGPL-3.0 license</0>.",
@@ -8395,11 +9079,11 @@
     "translation": "Webhook został zaktualizowany pomyślnie"
   },
   "nuh/Wq": {
-    "translation": "",
     "message": "Webhook URL",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 203]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 203]],
+    "translation": ""
   },
   "Hf1cEZ": {
     "message": "Webhook URL is required",
@@ -8466,7 +9150,7 @@
     "comments": [],
     "origin": [
       ["src/components/SettingsLayout.tsx", 49],
-      ["src/views/board/index.tsx", 923],
+      ["src/views/board/index.tsx", 932],
       ["src/views/boards/index.tsx", 58],
       ["src/views/members/index.tsx", 279],
       ["src/views/public/board/index.tsx", 125],
@@ -8689,15 +9373,15 @@
     "translation": "Możesz zaprosić członków zespołu, klikając przycisk „Zaproś” w prawym górnym rogu <0>strony członków</0> i wpisując ich adres e-mail. Otrzymają oni wiadomość e-mail z linkiem do dołączenia do przestrzeni roboczej."
   },
   "nvzs2Q": {
-    "translation": "",
     "message": "You can restore it from the board's archived items.",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/board/components/List.tsx", 76],
-      ["src/views/board/index.tsx", 411],
+      ["src/views/board/index.tsx", 414],
       ["src/views/card/components/Dropdown.tsx", 71]
-    ]
+    ],
+    "translation": ""
   },
   "vAj6xG": {
     "message": "You can self-host by following the instructions in our <0>repo</0>.",
@@ -8720,8 +9404,8 @@
     "origin": [
       ["src/views/board/components/List.tsx", 160],
       ["src/views/board/components/VisibilityButton.tsx", 72],
-      ["src/views/board/index.tsx", 991],
-      ["src/views/board/index.tsx", 1066],
+      ["src/views/board/index.tsx", 1004],
+      ["src/views/board/index.tsx", 1081],
       ["src/views/boards/components/BoardsList.tsx", 71],
       ["src/views/boards/index.tsx", 69],
       ["src/views/boards/index.tsx", 90]
@@ -8775,39 +9459,39 @@
     "translation": "Zalogowałeś się bez hasła. Ustaw hasło, aby włączyć logowanie za pomocą hasła."
   },
   "EYpSRU": {
-    "translation": "",
     "message": "You were added to a workspace",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 48]]
+    "origin": [["src/components/NotificationsMenu.tsx", 69]],
+    "translation": ""
   },
   "YdIn4I": {
-    "translation": "",
     "message": "You were removed from a workspace",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 50]]
+    "origin": [["src/components/NotificationsMenu.tsx", 71]],
+    "translation": ""
   },
   "RMwsaM": {
-    "translation": "",
     "message": "You'll be notified about activity on every card in this board.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 88]]
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 89]],
+    "translation": ""
   },
   "kdHM9E": {
-    "translation": "",
     "message": "You'll no longer be notified about this board.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/board/components/BoardDropdown.tsx", 89]]
+    "origin": [["src/views/board/components/BoardDropdown.tsx", 90]],
+    "translation": ""
   },
   "PK3+Q2": {
-    "translation": "",
     "message": "You're all caught up",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 158]]
+    "origin": [["src/components/NotificationsMenu.tsx", 179]],
+    "translation": ""
   },
   "2SePRT": {
     "message": "You've been invited to join a workspace on kan.bn.",
@@ -8863,20 +9547,20 @@
     "translation": "Twoje tablice zostały zaimportowane."
   },
   "fp7ub5": {
-    "translation": "",
     "message": "Your cards will appear in Google Calendar and Tasks shortly.",
     "placeholders": {},
     "comments": [],
     "origin": [
       ["src/views/settings/components/GoogleCalendarTasksSettings.tsx", 50]
-    ]
+    ],
+    "translation": ""
   },
   "MeULJG": {
-    "translation": "",
     "message": "Your changes are saved.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 134]]
+    "origin": [["src/views/settings/components/GoogleChatSpaceModal.tsx", 134]],
+    "translation": ""
   },
   "LqWW5F": {
     "message": "Your display name has been updated.",
@@ -8889,7 +9573,7 @@
     "message": "Your file has been uploaded successfully.",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/views/card/components/AttachmentUpload.tsx", 46]],
+    "origin": [["src/views/card/components/AttachmentUpload.tsx", 53]],
     "translation": "Twój plik został pomyślnie przesłany."
   },
   "HcT8J4": {
@@ -9023,11 +9707,11 @@
     "translation": "Nazwa Twojego workspace została zaktualizowana."
   },
   "6VSRqY": {
-    "translation": "",
     "message": "Your workspace role changed",
     "placeholders": {},
     "comments": [],
-    "origin": [["src/components/NotificationsMenu.tsx", 52]]
+    "origin": [["src/components/NotificationsMenu.tsx", 73]],
+    "translation": ""
   },
   "Hg1qE9": {
     "message": "Your workspace slug has been updated.",

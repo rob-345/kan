@@ -13,6 +13,7 @@ import Editor from "~/components/Editor";
 import FeedbackModal from "~/components/FeedbackModal";
 import { LabelForm } from "~/components/LabelForm";
 import LabelIcon from "~/components/LabelIcon";
+import { InlineLinkPreviews } from "~/components/LinkPreview";
 import Modal from "~/components/modal";
 import { NewWorkspaceForm } from "~/components/NewWorkspaceForm";
 import { PageHead } from "~/components/PageHead";
@@ -29,11 +30,13 @@ import { DeleteLabelConfirmation } from "../../components/DeleteLabelConfirmatio
 import ActivityList from "./components/ActivityList";
 import { AttachmentThumbnails } from "./components/AttachmentThumbnails";
 import { AttachmentUpload } from "./components/AttachmentUpload";
+import { CardLinks } from "./components/CardLinks";
 import Checklists from "./components/Checklists";
 import { CoverSelector } from "./components/CoverSelector";
 import { DeleteCardConfirmation } from "./components/DeleteCardConfirmation";
 import { DeleteChecklistConfirmation } from "./components/DeleteChecklistConfirmation";
 import { DeleteCommentConfirmation } from "./components/DeleteCommentConfirmation";
+import { DriveFileList } from "./components/DriveFiles";
 import Dropdown from "./components/Dropdown";
 import { DueDateDetails } from "./components/DueDateDetails";
 import { DueDateSelector } from "./components/DueDateSelector";
@@ -158,6 +161,7 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
         <DueDateSelector
           cardPublicId={cardId ?? ""}
           dueDate={card?.startDate}
+          hasTime={card?.startDateHasTime}
           isLoading={!card}
           disabled={!canEdit}
           field="startDate"
@@ -168,6 +172,7 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
         <DueDateSelector
           cardPublicId={cardId ?? ""}
           dueDate={card?.dueDate}
+          hasTime={card?.dueDateHasTime}
           isLoading={!card}
           disabled={!canEdit}
         />
@@ -179,6 +184,7 @@ export function CardRightPanel({ isTemplate }: { isTemplate?: boolean }) {
             cardPublicId={cardId ?? ""}
             dueDateCompleted={card.dueDateCompleted}
             dueReminderMinutes={card.dueReminderMinutes}
+            dueDateHasTime={card.dueDateHasTime}
             disabled={!canEdit}
           />
         </div>
@@ -216,6 +222,7 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
   const [activeChecklistForm, setActiveChecklistForm] = useState<string | null>(
     null,
   );
+  const [isAddingLink, setIsAddingLink] = useState(false);
 
   const cardId = Array.isArray(router.query.cardId)
     ? router.query.cardId[0]
@@ -253,6 +260,16 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
     router.query.returnUrl,
     `/${isTemplate ? "templates" : "boards"}/${boardId}`,
   );
+
+  const assignableMembers = (workspaceMembers ?? []).map((member) => ({
+    publicId: member.publicId,
+    name: formatMemberDisplayName(
+      member.user?.name ?? null,
+      member.user?.email ?? member.email,
+    ),
+    email: member.user?.email ?? member.email,
+    imageUrl: member.user?.image ? getAvatarUrl(member.user.image) : undefined,
+  }));
 
   const editorWorkspaceMembers =
     workspaceMembers
@@ -489,12 +506,17 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                           workspaceMembers={workspaceMembers ?? []}
                           readOnly={!canEdit}
                         />
+                        <InlineLinkPreviews
+                          html={card.description}
+                          className="mt-2"
+                        />
                       </div>
                     </form>
                   </div>
                   <Checklists
                     checklists={card.checklists}
                     cardPublicId={cardId}
+                    members={assignableMembers}
                     activeChecklistForm={activeChecklistForm}
                     setActiveChecklistForm={setActiveChecklistForm}
                     viewOnly={!canEdit}
@@ -510,9 +532,23 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                           />
                         </div>
                       )}
+                      <DriveFileList
+                        cardPublicId={cardId ?? ""}
+                        isReadOnly={!canEdit}
+                      />
+                      <CardLinks
+                        links={card.links}
+                        cardPublicId={cardId ?? ""}
+                        isReadOnly={!canEdit}
+                        isAdding={isAddingLink}
+                        setIsAdding={setIsAddingLink}
+                      />
                       {canEdit && (
                         <div className="mt-6">
-                          <AttachmentUpload cardPublicId={cardId} />
+                          <AttachmentUpload
+                            cardPublicId={cardId}
+                            onAddLink={() => setIsAddingLink(true)}
+                          />
                         </div>
                       )}
                     </>

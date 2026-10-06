@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0ea5e9"/>
+      <stop offset="1" stop-color="#0c4a6e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sea)"/>
+  <path d="M0 360 C200 300 400 420 600 360 S1000 300 1200 360 S1500 420 1600 380 V900 H0Z" fill="#0284c7" opacity="0.7"/>
+  <path d="M0 500 C220 440 420 560 640 500 S1060 440 1280 500 S1520 560 1600 520 V900 H0Z" fill="#0369a1" opacity="0.8"/>
+  <path d="M0 640 C240 580 460 700 700 640 S1140 580 1380 640 S1560 690 1600 660 V900 H0Z" fill="#075985"/>
+  <path d="M0 780 C260 730 500 830 760 780 S1220 730 1480 780 S1580 800 1600 790 V900 H0Z" fill="#0c4a6e"/>
+</svg>

@@ -25,6 +25,9 @@ export interface CardNotificationMetadata {
   fromListName?: string;
   toListName?: string;
   dueDate?: string | null;
+  dueDateHasTime?: boolean;
+  /** Set for notifications about a checklist item (sub-task) */
+  itemTitle?: string;
 }
 
 /** Card notifications that are also posted to Google Chat spaces. */
@@ -77,6 +80,7 @@ export async function notifyCardAudience({
         fromListName: metadata?.fromListName,
         toListName: metadata?.toListName,
         dueDate: metadata?.dueDate,
+        dueDateHasTime: metadata?.dueDateHasTime,
       },
     });
   }

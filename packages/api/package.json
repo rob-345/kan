@@ -36,6 +36,10 @@
       "types": "./src/utils/apiLogging.ts",
       "default": "./src/utils/apiLogging.ts"
     },
+    "./utils/boardBackground": {
+      "types": "./src/utils/boardBackground.ts",
+      "default": "./src/utils/boardBackground.ts"
+    },
     "./utils/dueReminders": {
       "types": "./src/utils/dueReminders.ts",
       "default": "./src/utils/dueReminders.ts"
@@ -43,6 +47,10 @@
     "./utils/google/connection": {
       "types": "./src/utils/google/connection.ts",
       "default": "./src/utils/google/connection.ts"
+    },
+    "./utils/google/chatApp": {
+      "types": "./src/utils/google/chatApp/index.ts",
+      "default": "./src/utils/google/chatApp/index.ts"
     },
     "./utils/integrationJobs": {
       "types": "./src/utils/integrationJobs.ts",
@@ -88,6 +96,7 @@
     "@kan/shared": "workspace:^",
     "@kan/stripe": "workspace:^",
     "@trpc/server": "catalog:",
+    "jose": "^6.1.2",
     "rate-limiter-flexible": "^9.0.1",
     "superjson": "2.2.1",
     "trpc-to-openapi": "^2.3.2",

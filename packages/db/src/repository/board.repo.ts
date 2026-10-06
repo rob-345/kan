@@ -50,6 +50,8 @@ export const getAllByWorkspaceId = async (
     columns: {
       publicId: true,
       name: true,
+      backgroundColour: true,
+      backgroundImage: true,
     },
     with: {
       userFavorites: {
@@ -200,6 +202,8 @@ export const getByPublicId = async (
       slug: true,
       visibility: true,
       isArchived: true,
+      backgroundColour: true,
+      backgroundImage: true,
     },
     with: {
       userFavorites: {
@@ -258,7 +262,9 @@ export const getByPublicId = async (
               listId: true,
               index: true,
               dueDate: true,
+              dueDateHasTime: true,
               startDate: true,
+              startDateHasTime: true,
               dueDateCompleted: true,
               coverColour: true,
               cardNumber: true,
@@ -427,6 +433,8 @@ export const getBySlug = async (
       name: true,
       slug: true,
       visibility: true,
+      backgroundColour: true,
+      backgroundImage: true,
     },
     with: {
       workspace: {
@@ -461,7 +469,9 @@ export const getBySlug = async (
               listId: true,
               index: true,
               dueDate: true,
+              dueDateHasTime: true,
               startDate: true,
+              startDateHasTime: true,
               dueDateCompleted: true,
               coverColour: true,
               cardNumber: true,
@@ -652,6 +662,8 @@ export const update = async (
     visibility: BoardVisibilityStatus | undefined;
     boardPublicId: string;
     isArchived?: boolean;
+    backgroundColour?: string | null;
+    backgroundImage?: string | null;
   },
 ) => {
   const [result] = await db
@@ -663,6 +675,12 @@ export const update = async (
       updatedAt: new Date(),
       ...(boardInput.isArchived !== undefined && {
         isArchived: boardInput.isArchived,
+      }),
+      ...(boardInput.backgroundColour !== undefined && {
+        backgroundColour: boardInput.backgroundColour,
+      }),
+      ...(boardInput.backgroundImage !== undefined && {
+        backgroundImage: boardInput.backgroundImage,
       }),
     })
     .where(eq(boards.publicId, boardInput.boardPublicId))
@@ -733,6 +751,7 @@ export const getWorkspaceAndBoardIdByBoardPublicId = async (
       id: true,
       workspaceId: true,
       createdBy: true,
+      backgroundImage: true,
     },
     where: eq(boards.publicId, boardPublicId),
   });
@@ -780,12 +799,19 @@ export const isBoardSlugAvailable = async (
   return result === undefined;
 };
 
+const isSharedBackgroundImage = (
+  image: string | null | undefined,
+): image is string =>
+  !!image && (image.startsWith("/") || image.startsWith("https://"));
+
 // Create a new board (regular/template) from a full board snapshot
 export const createFromSnapshot = async (
   db: dbClient,
   args: {
     source: {
       name: string;
+      backgroundColour?: string | null;
+      backgroundImage?: string | null;
       labels: { publicId: string; name: string; colourCode: string | null }[];
       lists: {
         name: string;
@@ -832,6 +858,12 @@ export const createFromSnapshot = async (
         workspaceId: args.workspaceId,
         type: args.type,
         sourceBoardId: args.sourceBoardId,
+        backgroundColour: args.source.backgroundColour ?? null,
+        // Uploaded images belong to the source board, so only bundled
+        // presets and external URLs are carried over to the copy.
+        backgroundImage: isSharedBackgroundImage(args.source.backgroundImage)
+          ? args.source.backgroundImage
+          : null,
       })
       .returning({
         id: boards.id,

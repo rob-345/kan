@@ -3,7 +3,7 @@ import { t } from "@lingui/core/macro";
 import { HiOutlineRectangleStack, HiOutlineStar, HiStar } from "react-icons/hi2";
 import { motion } from "framer-motion";
 import Button from "~/components/Button";
-import PatternedBackground from "~/components/PatternedBackground";
+import BoardBackground, { hasBoardBackground } from "~/components/BoardBackground";
 import { Tooltip } from "~/components/Tooltip";
 import { usePermissions } from "~/hooks/usePermissions";
 import { useModal } from "~/providers/modal";
@@ -88,7 +88,9 @@ export function BoardsList({ isTemplate, archived = false }: { isTemplate?: bool
       className="3xl:grid-cols-4 grid h-fit w-full grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3"
       layout
     >
-      {data?.map((board) => (
+      {data?.map((board) => {
+        const hasCustomBackground = hasBoardBackground(board);
+        return (
         <motion.div
           key={board.publicId}
           layout
@@ -108,8 +110,16 @@ export function BoardsList({ isTemplate, archived = false }: { isTemplate?: bool
           <Link
             href={`${isTemplate ? "templates" : "boards"}/${board.publicId}`}
           >
-            <div className="group relative mr-5 flex h-[150px] w-full items-center justify-center rounded-md border border-dashed border-light-400 bg-light-50 shadow-sm hover:bg-light-200 dark:border-dark-600 dark:bg-dark-50 dark:hover:bg-dark-100">
-              <PatternedBackground />
+            <div
+              className={`group relative isolate mr-5 flex h-[150px] w-full items-center justify-center overflow-hidden rounded-md shadow-sm ${hasCustomBackground ? "" : "border border-dashed border-light-400 bg-light-50 hover:bg-light-200 dark:border-dark-600 dark:bg-dark-50 dark:hover:bg-dark-100"}`}
+            >
+              <BoardBackground
+                colour={board.backgroundColour}
+                imageUrl={board.backgroundImageUrl}
+              />
+              {hasCustomBackground && (
+                <div className="absolute inset-0 -z-10 bg-black/20 transition-colors group-hover:bg-black/30" />
+              )}
               <button
                 onClick={(e) => handleToggleFavorite(e, board.publicId, board.favorite)}
                 className={`absolute right-3 top-3 z-10 rounded p-1 transition-all hover:bg-light-300 dark:hover:bg-dark-200 ${board.favorite ? "" : "md:opacity-0 md:group-hover:opacity-100"
@@ -117,18 +127,21 @@ export function BoardsList({ isTemplate, archived = false }: { isTemplate?: bool
                 aria-label={board.favorite ? "Remove from favorites" : "Add to favorites"}
               >
                 {board.favorite ? (
-                  <HiStar className="h-5 w-5 text-neutral-700 dark:text-dark-1000" />
+                  <HiStar className={`h-5 w-5 ${hasCustomBackground ? "text-white" : "text-neutral-700 dark:text-dark-1000"}`} />
                 ) : (
-                  <HiOutlineStar className="h-5 w-5 text-neutral-700 dark:text-dark-800" />
+                  <HiOutlineStar className={`h-5 w-5 ${hasCustomBackground ? "text-white" : "text-neutral-700 dark:text-dark-800"}`} />
                 )}
               </button>
-              <p className="px-4 text-[14px] font-bold text-neutral-700 dark:text-dark-1000">
+              <p
+                className={`relative px-4 text-[14px] font-bold ${hasCustomBackground ? "text-white drop-shadow" : "text-neutral-700 dark:text-dark-1000"}`}
+              >
                 {board.name}
               </p>
             </div>
           </Link>
         </motion.div>
-      ))}
+        );
+      })}
     </motion.div>
   );
 }

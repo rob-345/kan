@@ -9,6 +9,7 @@ import Avatar from "~/components/Avatar";
 import Button from "~/components/Button";
 import Dropdown from "~/components/Dropdown";
 import Editor from "~/components/Editor";
+import { InlineLinkPreviews } from "~/components/LinkPreview";
 import { usePermissions } from "~/hooks/usePermissions";
 import { useModal } from "~/providers/modal";
 import { usePopup } from "~/providers/popup";
@@ -173,6 +174,7 @@ const Comment = ({
             enableYouTubeEmbed={false}
             disableHeadings={true}
           />
+          <InlineLinkPreviews html={comment} className="mt-2" />
         </div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>

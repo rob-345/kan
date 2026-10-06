@@ -6,13 +6,28 @@ import * as googleConnectionRepo from "@kan/db/repository/googleConnection.repo"
 
 import { decryptToken, encryptToken } from "../encryption";
 
-export const GOOGLE_SCOPES = [
-  "openid",
-  "email",
-  // Create and manage only the calendars Kan creates
-  "https://www.googleapis.com/auth/calendar.app.created",
-  "https://www.googleapis.com/auth/tasks",
-] as const;
+const CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar.app.created";
+const TASKS_SCOPE = "https://www.googleapis.com/auth/tasks";
+// Only the Drive files a person picks in Kan, never the rest of their Drive
+export const DRIVE_FILE_SCOPE = "https://www.googleapis.com/auth/drive.file";
+
+/**
+ * What a connect flow asks Google for. "sync" is Calendar and Tasks from the
+ * account settings; "drive" is file linking from a card. Google keeps earlier
+ * grants (include_granted_scopes), so one connection ends up with both.
+ */
+export const GOOGLE_SCOPES = {
+  sync: [
+    "openid",
+    "email",
+    // Create and manage only the calendars Kan creates
+    CALENDAR_SCOPE,
+    TASKS_SCOPE,
+  ],
+  drive: ["openid", "email", DRIVE_FILE_SCOPE],
+} as const;
+
+export type GoogleConnectPurpose = keyof typeof GOOGLE_SCOPES;
 
 const AUTHORIZE_URL = "https://accounts.google.com/o/oauth2/v2/auth";
 const TOKEN_URL = "https://oauth2.googleapis.com/token";
@@ -59,27 +74,47 @@ export const isGoogleIntegrationConfigured = () => !!getGoogleOAuthConfig();
 export const getGrantedFeatures = (scope: string | undefined) => {
   const scopes = new Set((scope ?? "").split(" "));
   return {
-    calendar: scopes.has(
-      "https://www.googleapis.com/auth/calendar.app.created",
-    ),
-    tasks: scopes.has("https://www.googleapis.com/auth/tasks"),
+    calendar: scopes.has(CALENDAR_SCOPE),
+    tasks: scopes.has(TASKS_SCOPE),
+    drive: scopes.has(DRIVE_FILE_SCOPE),
   };
+};
+
+/**
+ * The Picker's app id is the Cloud project number, which is the part of the
+ * OAuth client id before the first dash.
+ */
+export const getGoogleProjectNumber = () => {
+  const projectNumber = process.env.GOOGLE_CLIENT_ID?.split("-")[0];
+  return projectNumber && /^\d+$/.test(projectNumber) ? projectNumber : null;
+};
+
+/** A path on this site to come back to after connecting, or null. */
+export const normalizeReturnTo = (returnTo: string | undefined) => {
+  if (!returnTo?.startsWith("/") || returnTo.length > 512) return null;
+  // "//host" and "/\\host" are read by browsers as another site
+  if (returnTo.startsWith("//") || returnTo.startsWith("/\\")) return null;
+  return returnTo;
 };
 
 /**
  * The OAuth state ties the callback to the user who started the flow and
  * expires after ten minutes. It is encrypted, so it can't be forged. It also
- * carries the browser's time zone, used for the calendar and task due dates.
+ * carries the browser's time zone, used for the calendar and task due dates,
+ * what the flow was for and where to send the person afterwards.
  */
 export const createOAuthState = (
   userId: string,
   timeZone: string,
   now = Date.now(),
+  options: { purpose?: GoogleConnectPurpose; returnTo?: string | null } = {},
 ) =>
   encryptToken(
     JSON.stringify({
       userId,
       timeZone,
+      purpose: options.purpose ?? "sync",
+      returnTo: options.returnTo ?? null,
       issuedAt: now,
       nonce: crypto.randomBytes(8).toString("hex"),
     }),
@@ -90,11 +125,17 @@ export const verifyOAuthState = (
   state: string,
   userId: string,
   now = Date.now(),
-) => {
+): {
+  timeZone: string;
+  purpose: GoogleConnectPurpose;
+  returnTo: string | null;
+} | null => {
   try {
     const parsed = JSON.parse(decryptToken(state)) as {
       userId?: string;
       timeZone?: string;
+      purpose?: string;
+      returnTo?: string | null;
       issuedAt?: number;
     };
     if (
@@ -104,7 +145,11 @@ export const verifyOAuthState = (
     ) {
       return null;
     }
-    return { timeZone: normalizeTimeZone(parsed.timeZone) };
+    return {
+      timeZone: normalizeTimeZone(parsed.timeZone),
+      purpose: parsed.purpose === "drive" ? "drive" : "sync",
+      returnTo: normalizeReturnTo(parsed.returnTo ?? undefined),
+    };
   } catch {
     return null;
   }
@@ -121,20 +166,28 @@ export const normalizeTimeZone = (timeZone: string | undefined) => {
   }
 };
 
-export const buildAuthorizationUrl = (userId: string, timeZone: string) => {
+export const buildAuthorizationUrl = (
+  userId: string,
+  timeZone: string,
+  options: { purpose?: GoogleConnectPurpose; returnTo?: string | null } = {},
+) => {
   const config = getGoogleOAuthConfig();
   if (!config) return null;
 
+  const purpose = options.purpose ?? "sync";
   const params = new URLSearchParams({
     client_id: config.clientId,
     redirect_uri: config.redirectUri,
     response_type: "code",
-    scope: GOOGLE_SCOPES.join(" "),
+    scope: GOOGLE_SCOPES[purpose].join(" "),
     access_type: "offline",
     // Always ask, so Google returns a refresh token on every connect
     prompt: "consent",
     include_granted_scopes: "true",
-    state: createOAuthState(userId, timeZone),
+    state: createOAuthState(userId, timeZone, Date.now(), {
+      purpose,
+      returnTo: normalizeReturnTo(options.returnTo ?? undefined),
+    }),
   });
   return `${AUTHORIZE_URL}?${params.toString()}`;
 };

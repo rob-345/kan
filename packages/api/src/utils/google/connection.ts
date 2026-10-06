@@ -2,6 +2,7 @@ import type { dbClient } from "@kan/db/client";
 import * as googleConnectionRepo from "@kan/db/repository/googleConnection.repo";
 import { createLogger } from "@kan/logger";
 
+import type { GoogleConnectPurpose } from "./oauth";
 import { decryptToken, encryptToken } from "../encryption";
 import { enqueueGoogleUserSync } from "../integrationJobs";
 import { deleteKanCalendar } from "./calendar";
@@ -21,16 +22,21 @@ type Connection = NonNullable<
   Awaited<ReturnType<typeof googleConnectionRepo.getById>>
 >;
 
-export type ConnectGoogleResult =
+export type ConnectGoogleResult = {
+  purpose: GoogleConnectPurpose;
+  returnTo: string | null;
+} & (
   | { ok: true }
   | {
       ok: false;
       reason: "invalid_state" | "denied" | "no_refresh_token" | "failed";
-    };
+    }
+);
 
 /**
- * Finishes the OAuth flow started from the account settings: stores the
- * tokens and queues a sync of the person's cards.
+ * Finishes the OAuth flow started from the account settings (Calendar and
+ * Tasks) or from a card (Drive): stores the tokens and queues a sync of the
+ * person's cards.
  */
 export const completeGoogleConnection = async (
   db: dbClient,
@@ -44,27 +50,47 @@ export const completeGoogleConnection = async (
   const verified = args.state
     ? verifyOAuthState(args.state, args.userId)
     : null;
-  if (!verified) return { ok: false, reason: "invalid_state" };
-  if (args.error || !args.code) return { ok: false, reason: "denied" };
+  if (!verified)
+    return {
+      ok: false,
+      reason: "invalid_state",
+      purpose: "sync",
+      returnTo: null,
+    };
+  const { purpose, returnTo } = verified;
+  const fail = (reason: "denied" | "no_refresh_token" | "failed") => ({
+    ok: false as const,
+    reason,
+    purpose,
+    returnTo,
+  });
+  if (args.error || !args.code) return fail("denied");
 
   try {
     const tokens = await exchangeCodeForTokens(args.code);
-    if (!tokens.refresh_token) return { ok: false, reason: "no_refresh_token" };
+    if (!tokens.refresh_token) return fail("no_refresh_token");
 
     const granted = getGrantedFeatures(tokens.scope);
-    if (!granted.calendar && !granted.tasks) {
-      await revokeToken(tokens.refresh_token);
-      return { ok: false, reason: "denied" };
+    const grantedWhatWasAsked =
+      purpose === "drive" ? granted.drive : granted.calendar || granted.tasks;
+    if (!grantedWhatWasAsked) {
+      // Keep an existing connection working; only drop a token nothing uses
+      if (!granted.calendar && !granted.tasks && !granted.drive) {
+        await revokeToken(tokens.refresh_token);
+      }
+      return fail("denied");
     }
 
     const googleEmail = await getGoogleEmail(tokens.access_token);
 
     // Reconnecting with a different Google account starts afresh; the old
     // account keeps its Kan calendar, which the person can delete
-    const existing = await googleConnectionRepo.getByUserId(db, args.userId);
+    let existing = await googleConnectionRepo.getByUserId(db, args.userId);
     if (existing && existing.googleEmail !== googleEmail) {
       await googleConnectionRepo.deleteByUserId(db, args.userId);
+      existing = undefined;
     }
+    const previouslyGranted = getGrantedFeatures(existing?.scope ?? undefined);
 
     const connection = await googleConnectionRepo.upsert(db, {
       userId: args.userId,
@@ -75,21 +101,37 @@ export const completeGoogleConnection = async (
       scope: tokens.scope ?? null,
       timeZone: verified.timeZone,
     });
-    if (!connection) return { ok: false, reason: "failed" };
+    if (!connection) return fail("failed");
 
-    // Only sync what Google actually let Kan do
-    if (!granted.calendar || !granted.tasks) {
+    // Only sync what Google actually let Kan do. A sync that was already
+    // granted keeps the person's on/off choice; a newly granted one turns on
+    // when they connected for Calendar and Tasks, but not when they only
+    // connected to link a Drive file.
+    const syncEnabled = (
+      feature: "calendar" | "tasks",
+      currentlyEnabled: boolean,
+    ) =>
+      granted[feature] &&
+      (previouslyGranted[feature] ? currentlyEnabled : purpose === "sync");
+    const calendarEnabled = syncEnabled("calendar", connection.calendarEnabled);
+    const tasksEnabled = syncEnabled("tasks", connection.tasksEnabled);
+    if (
+      calendarEnabled !== connection.calendarEnabled ||
+      tasksEnabled !== connection.tasksEnabled
+    ) {
       await googleConnectionRepo.update(db, connection.id, {
-        calendarEnabled: connection.calendarEnabled && granted.calendar,
-        tasksEnabled: connection.tasksEnabled && granted.tasks,
+        calendarEnabled,
+        tasksEnabled,
       });
     }
 
-    await enqueueGoogleUserSync(db, args.userId);
-    return { ok: true };
+    if (calendarEnabled || tasksEnabled) {
+      await enqueueGoogleUserSync(db, args.userId);
+    }
+    return { ok: true, purpose, returnTo };
   } catch (error) {
     log.error({ err: error, userId: args.userId }, "Google connect failed");
-    return { ok: false, reason: "failed" };
+    return fail("failed");
   }
 };
 

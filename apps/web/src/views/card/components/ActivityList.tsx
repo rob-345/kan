@@ -142,6 +142,8 @@ const getActivityText = ({
     "card.updated.checklist.item.deleted": t`deleted a checklist item`,
     "card.updated.attachment.added": t`added an attachment`,
     "card.updated.attachment.removed": t`removed an attachment`,
+    "card.updated.driveFile.added": t`linked a Google Drive file`,
+    "card.updated.driveFile.removed": t`removed a Google Drive file`,
     "card.updated.dueDate.added": t`set the due date`,
     "card.updated.dueDate.updated": t`updated the due date`,
     "card.updated.dueDate.removed": t`removed the due date`,
@@ -302,6 +304,24 @@ const getActivityText = ({
     );
   }
 
+  if (type === "card.updated.driveFile.added" && toTitle) {
+    return (
+      <Trans>
+        linked a Google Drive file{" "}
+        <TextHighlight>{truncate(toTitle)}</TextHighlight>
+      </Trans>
+    );
+  }
+
+  if (type === "card.updated.driveFile.removed" && fromTitle) {
+    return (
+      <Trans>
+        removed a Google Drive file{" "}
+        <TextHighlight>{truncate(fromTitle)}</TextHighlight>
+      </Trans>
+    );
+  }
+
   if (type === "card.updated.dueDate.added" && toDueDate) {
     const showYear = !isSameYear(toDueDate, new Date());
     const formattedDate = format(
@@ -374,6 +394,8 @@ const ACTIVITY_ICON_MAP: Partial<Record<ActivityType, React.ReactNode | null>> =
     "card.updated.checklist.item.deleted": <HiOutlineTrash />,
     "card.updated.attachment.added": <HiOutlinePaperClip />,
     "card.updated.attachment.removed": <HiOutlinePaperClip />,
+    "card.updated.driveFile.added": <HiOutlinePaperClip />,
+    "card.updated.driveFile.removed": <HiOutlinePaperClip />,
     "card.updated.dueDate.added": <HiOutlineClock />,
     "card.updated.dueDate.updated": <HiOutlineClock />,
     "card.updated.dueDate.removed": <HiOutlineClock />,
@@ -544,8 +566,8 @@ const ActivityList = ({
           dateLocale: dateLocale,
           mergedLabels: (activity as ActivityWithMergedLabels).mergedLabels,
           attachmentName:
-            (activity as ActivityWithMergedLabels).attachment?.originalFilename ??
-            null,
+            (activity as ActivityWithMergedLabels).attachment
+              ?.originalFilename ?? null,
         });
 
         if (activity.type === "card.updated.comment.added")
@@ -578,7 +600,9 @@ const ActivityList = ({
                 size="sm"
                 name={activity.user?.name ?? ""}
                 email={activity.user?.email ?? ""}
-                imageUrl={getAvatarUrl(activity.user?.image ?? null) || undefined}
+                imageUrl={
+                  getAvatarUrl(activity.user?.image ?? null) || undefined
+                }
                 icon={getActivityIcon(
                   activity.type,
                   activity.fromList?.index,

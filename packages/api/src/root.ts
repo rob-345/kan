@@ -2,6 +2,7 @@ import { attachmentRouter } from "./routers/attachment";
 import { boardRouter } from "./routers/board";
 import { cardRouter } from "./routers/card";
 import { checklistRouter } from "./routers/checklist";
+import { driveFileRouter } from "./routers/driveFile";
 import { feedbackRouter } from "./routers/feedback";
 import { googleChatRouter } from "./routers/googleChat";
 import { googleIntegrationRouter } from "./routers/googleIntegration";
@@ -23,6 +24,7 @@ export const appRouter = createTRPCRouter({
   board: boardRouter,
   card: cardRouter,
   checklist: checklistRouter,
+  driveFile: driveFileRouter,
   feedback: feedbackRouter,
   googleChat: googleChatRouter,
   googleIntegration: googleIntegrationRouter,

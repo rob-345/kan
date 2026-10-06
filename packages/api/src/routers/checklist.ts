@@ -4,9 +4,13 @@ import { z } from "zod";
 import * as cardRepo from "@kan/db/repository/card.repo";
 import * as cardActivityRepo from "@kan/db/repository/cardActivity.repo";
 import * as checklistRepo from "@kan/db/repository/checklist.repo";
+import * as workspaceRepo from "@kan/db/repository/workspace.repo";
+import { dueReminderOptions } from "@kan/shared/constants";
 import { stripHtml } from "@kan/shared/utils";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { enqueueGoogleCardSync } from "../utils/integrationJobs";
+import { notifyCardAudience } from "../utils/notifications";
 import { assertPermission } from "../utils/permissions";
 
 const checklistSchema = z.object({
@@ -18,7 +22,15 @@ const checklistItemSchema = z.object({
   publicId: z.string().length(12),
   title: z.string().min(1).max(500),
   completed: z.boolean(),
+  startDate: z.date().nullable(),
+  startDateHasTime: z.boolean(),
+  dueDate: z.date().nullable(),
+  dueDateHasTime: z.boolean(),
+  dueReminderMinutes: z.number().nullable(),
 });
+
+const sameDate = (a: Date | null, b: Date | null) =>
+  (a?.getTime() ?? null) === (b?.getTime() ?? null);
 
 export const checklistRouter = createTRPCRouter({
   create: protectedProcedure
@@ -208,6 +220,9 @@ export const checklistRouter = createTRPCRouter({
         createdBy: userId,
       });
 
+      // Removes the deleted items' Google Calendar events and tasks
+      void enqueueGoogleCardSync(ctx.db, [checklist.cardId]);
+
       return { success: true };
     }),
   createItem: protectedProcedure
@@ -281,7 +296,8 @@ export const checklistRouter = createTRPCRouter({
         summary: "Update a checklist item",
         method: "PATCH",
         path: "/checklists/items/{checklistItemPublicId}",
-        description: "Updates a checklist item (title/completed)",
+        description:
+          "Updates a checklist item: its title, completion, position, or its start date, due date and reminder as a sub-task",
         tags: ["Cards"],
         protect: true,
       },
@@ -292,6 +308,19 @@ export const checklistRouter = createTRPCRouter({
         title: z.string().min(1).max(500).transform(stripHtml).optional(),
         completed: z.boolean().optional(),
         index: z.number().int().min(0).optional(),
+        startDate: z.date().nullable().optional(),
+        // Whether startDate carries a time of day; false means a whole day
+        startDateHasTime: z.boolean().optional(),
+        dueDate: z.date().nullable().optional(),
+        dueDateHasTime: z.boolean().optional(),
+        dueReminderMinutes: z
+          .number()
+          .int()
+          .refine((value) =>
+            (dueReminderOptions as readonly number[]).includes(value),
+          )
+          .nullable()
+          .optional(),
       }),
     )
     .output(checklistItemSchema)
@@ -304,13 +333,21 @@ export const checklistRouter = createTRPCRouter({
           code: "UNAUTHORIZED",
         });
 
+      const scheduleChanged =
+        input.startDate !== undefined ||
+        input.startDateHasTime !== undefined ||
+        input.dueDate !== undefined ||
+        input.dueDateHasTime !== undefined ||
+        input.dueReminderMinutes !== undefined;
+
       if (
         input.title === undefined &&
         input.completed === undefined &&
-        input.index === undefined
+        input.index === undefined &&
+        !scheduleChanged
       )
         throw new TRPCError({
-          message: `At least one of title, completed, or index must be provided`,
+          message: `Nothing to update: provide a title, completion, index, dates or reminder`,
           code: "BAD_REQUEST",
         });
 
@@ -335,11 +372,22 @@ export const checklistRouter = createTRPCRouter({
 
       let updatedItem;
 
-      if (input.title !== undefined || input.completed !== undefined) {
+      if (
+        input.title !== undefined ||
+        input.completed !== undefined ||
+        scheduleChanged
+      ) {
         updatedItem = await checklistRepo.updateItemById(ctx.db, {
           id: item.id,
           title: input.title,
           completed: input.completed,
+          startDate: input.startDate,
+          // Clearing a date also clears its time
+          startDateHasTime:
+            input.startDate === null ? false : input.startDateHasTime,
+          dueDate: input.dueDate,
+          dueDateHasTime: input.dueDate === null ? false : input.dueDateHasTime,
+          dueReminderMinutes: input.dueReminderMinutes,
         });
       }
 
@@ -378,6 +426,37 @@ export const checklistRouter = createTRPCRouter({
           toTitle: updatedItem.title,
           createdBy: userId,
         });
+      }
+
+      const dueDateChanged =
+        !sameDate(item.dueDate, updatedItem.dueDate) ||
+        item.dueDateHasTime !== updatedItem.dueDateHasTime;
+      const startDateChanged =
+        !sameDate(item.startDate, updatedItem.startDate) ||
+        item.startDateHasTime !== updatedItem.startDateHasTime;
+
+      if (dueDateChanged) {
+        await cardActivityRepo.create(ctx.db, {
+          type: "card.updated.checklist.item.dueDate.updated",
+          cardId: item.checklist.cardId,
+          toTitle: updatedItem.title,
+          fromDueDate: item.dueDate ?? undefined,
+          toDueDate: updatedItem.dueDate ?? undefined,
+          createdBy: userId,
+        });
+      }
+
+      // Keep the item's Google Calendar event and task up to date
+      const shownInGoogle = !!item.dueDate || !!updatedItem.dueDate;
+      if (
+        shownInGoogle &&
+        (dueDateChanged ||
+          startDateChanged ||
+          item.dueReminderMinutes !== updatedItem.dueReminderMinutes ||
+          item.completed !== updatedItem.completed ||
+          item.title !== updatedItem.title)
+      ) {
+        void enqueueGoogleCardSync(ctx.db, [item.checklist.cardId]);
       }
 
       return updatedItem;
@@ -438,6 +517,107 @@ export const checklistRouter = createTRPCRouter({
         createdBy: userId,
       });
 
+      if (item.dueDate) {
+        void enqueueGoogleCardSync(ctx.db, [item.checklist.cardId]);
+      }
+
       return { success: true };
+    }),
+  addOrRemoveItemMember: protectedProcedure
+    .meta({
+      openapi: {
+        summary: "Assign or unassign a checklist item",
+        method: "PUT",
+        path: "/checklists/items/{checklistItemPublicId}/members/{workspaceMemberPublicId}",
+        description:
+          "Assigns a board member to a checklist item (sub-task), or removes them if already assigned",
+        tags: ["Cards"],
+        protect: true,
+      },
+    })
+    .input(
+      z.object({
+        checklistItemPublicId: z.string().length(12),
+        workspaceMemberPublicId: z.string().min(12),
+      }),
+    )
+    .output(z.object({ newMember: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.user?.id;
+      if (!userId)
+        throw new TRPCError({
+          message: `User not authenticated`,
+          code: "UNAUTHORIZED",
+        });
+
+      const item = await checklistRepo.getChecklistItemByPublicIdWithChecklist(
+        ctx.db,
+        input.checklistItemPublicId,
+      );
+      if (!item || item.checklist.deletedAt)
+        throw new TRPCError({
+          message: `Checklist item with public ID ${input.checklistItemPublicId} not found`,
+          code: "NOT_FOUND",
+        });
+
+      const workspaceId = item.checklist.card.list.board.workspace.id;
+      await assertPermission(ctx.db, userId, workspaceId, "card:edit");
+
+      const member = await workspaceRepo.getMemberByPublicId(
+        ctx.db,
+        input.workspaceMemberPublicId,
+        workspaceId,
+      );
+      if (!member)
+        throw new TRPCError({
+          message: `Member with public ID ${input.workspaceMemberPublicId} not found`,
+          code: "NOT_FOUND",
+        });
+
+      const ids = { checklistItemId: item.id, workspaceMemberId: member.id };
+      const cardId = item.checklist.cardId;
+      const existing = await checklistRepo.getItemMember(ctx.db, ids);
+
+      if (existing) {
+        await checklistRepo.removeItemMember(ctx.db, ids);
+        await cardActivityRepo.create(ctx.db, {
+          type: "card.updated.checklist.item.member.removed",
+          cardId,
+          toTitle: item.title,
+          workspaceMemberId: member.id,
+          createdBy: userId,
+        });
+        if (item.dueDate) void enqueueGoogleCardSync(ctx.db, [cardId]);
+        return { newMember: false };
+      }
+
+      await checklistRepo.addItemMember(ctx.db, ids);
+      await cardActivityRepo.create(ctx.db, {
+        type: "card.updated.checklist.item.member.added",
+        cardId,
+        toTitle: item.title,
+        workspaceMemberId: member.id,
+        createdBy: userId,
+      });
+
+      if (member.userId) {
+        void notifyCardAudience({
+          db: ctx.db,
+          cardId,
+          workspaceId,
+          actorUserId: userId,
+          type: "checklist.item.assigned",
+          metadata: {
+            boardName: item.checklist.card.list.board.name,
+            itemTitle: item.title,
+            dueDate: item.dueDate?.toISOString() ?? null,
+            dueDateHasTime: item.dueDateHasTime,
+          },
+          onlyUserIds: [member.userId],
+        });
+      }
+      if (item.dueDate) void enqueueGoogleCardSync(ctx.db, [cardId]);
+
+      return { newMember: true };
     }),
 });

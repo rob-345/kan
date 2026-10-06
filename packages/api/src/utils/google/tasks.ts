@@ -1,4 +1,5 @@
 import type { CardSyncData } from "./calendar";
+import { toCalendarDay } from "./calendar";
 import { GoogleApiError, googleFetch } from "./oauth";
 
 const TASKS_API = "https://tasks.googleapis.com/tasks/v1";
@@ -17,29 +18,16 @@ export const createKanTaskList = async (accessToken: string) => {
  * The calendar date of an instant in a time zone, as Google Tasks wants it.
  * Tasks only store the date of a due time, never the time itself.
  */
-export const toTaskDueDate = (date: Date, timeZone: string) => {
-  let day: string;
-  try {
-    // en-CA formats as YYYY-MM-DD
-    day = new Intl.DateTimeFormat("en-CA", {
-      timeZone,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    }).format(date);
-  } catch {
-    day = date.toISOString().slice(0, 10);
-  }
-  return `${day}T00:00:00.000Z`;
-};
+export const toTaskDueDate = (date: Date, timeZone: string, hasTime = true) =>
+  `${toCalendarDay(date, hasTime, timeZone)}T00:00:00.000Z`;
 
-export const buildTask = (card: CardSyncData, timeZone: string) => ({
-  title: card.title,
-  notes: `${card.boardName} · ${card.listName}\n${card.cardUrl}`,
-  due: toTaskDueDate(card.dueDate, timeZone),
-  status: card.dueDateCompleted ? "completed" : "needsAction",
+export const buildTask = (data: CardSyncData, timeZone: string) => ({
+  title: data.title,
+  notes: `${data.boardName} · ${data.listName}\n${data.cardUrl}`,
+  due: toTaskDueDate(data.dueDate, timeZone, data.dueDateHasTime),
+  status: data.dueDateCompleted ? "completed" : "needsAction",
   // Clearing "completed" is required to reopen a task
-  ...(!card.dueDateCompleted && { completed: null }),
+  ...(!data.dueDateCompleted && { completed: null }),
 });
 
 const tasksUrl = (taskListId: string) =>

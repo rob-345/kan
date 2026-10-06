@@ -25,7 +25,9 @@ const Card = ({
   comments,
   attachments,
   dueDate,
+  dueDateHasTime = false,
   startDate,
+  startDateHasTime = false,
   dueDateCompleted,
   coverColour,
   coverImageUrl,
@@ -52,7 +54,9 @@ const Card = ({
   comments: { publicId: string }[];
   attachments?: { publicId: string }[];
   dueDate?: Date | null;
+  dueDateHasTime?: boolean;
   startDate?: Date | null;
+  startDateHasTime?: boolean;
   dueDateCompleted?: boolean;
   coverColour?: string | null;
   coverImageUrl?: string | null;
@@ -63,10 +67,14 @@ const Card = ({
   );
   const isOverdue =
     dueDate && !dueDateCompleted
-      ? isBefore(dueDate, startOfDay(new Date()))
+      ? isBefore(dueDate, dueDateHasTime ? new Date() : startOfDay(new Date()))
       : false;
-  const formatCardDate = (date: Date) =>
-    format(date, showYear ? "do MMM yyyy" : "do MMM", { locale: dateLocale });
+  const formatCardDate = (date: Date, hasTime: boolean) =>
+    format(
+      date,
+      `${showYear ? "do MMM yyyy" : "do MMM"}${hasTime ? ", p" : ""}`,
+      { locale: dateLocale },
+    );
   const completedItems = checklists.reduce((acc, checklist) => {
     return acc + checklist.items.filter((item) => item.completed).length;
   }, 0);
@@ -144,10 +152,10 @@ const Card = ({
                   )}
                   <span className="text-[11px]">
                     {startDate && dueDate
-                      ? `${formatCardDate(startDate)} - ${formatCardDate(dueDate)}`
+                      ? `${formatCardDate(startDate, startDateHasTime)} - ${formatCardDate(dueDate, dueDateHasTime)}`
                       : startDate
-                        ? formatCardDate(startDate)
-                        : dueDate && formatCardDate(dueDate)}
+                        ? formatCardDate(startDate, startDateHasTime)
+                        : dueDate && formatCardDate(dueDate, dueDateHasTime)}
                   </span>
                 </div>
               )}

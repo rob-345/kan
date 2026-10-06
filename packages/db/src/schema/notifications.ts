@@ -27,6 +27,8 @@ export const notificationTypes = [
   "card.archived",
   "card.member.added",
   "card.due.reminder",
+  "checklist.item.assigned",
+  "checklist.item.due.reminder",
 ] as const;
 
 export type NotificationType = (typeof notificationTypes)[number];

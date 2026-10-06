@@ -19,3 +19,18 @@ export type DueReminderOption = (typeof dueReminderOptions)[number];
 
 /** Reminder offset selected when a due date is first added to a card. */
 export const defaultDueReminderMinutes: DueReminderOption = 1440;
+
+/**
+ * A due date without a time counts as due at this hour of that day, so its
+ * reminders go out during the working day instead of at midnight.
+ */
+export const dateOnlyReminderHour = 9;
+
+/**
+ * When a due date counts as reached for reminders. A date without a time is
+ * stored as the start of its day in the time zone of whoever set it.
+ */
+export const getDueReminderBase = (dueDate: Date, hasTime: boolean) =>
+  hasTime
+    ? dueDate
+    : new Date(dueDate.getTime() + dateOnlyReminderHour * 60 * 60 * 1000);

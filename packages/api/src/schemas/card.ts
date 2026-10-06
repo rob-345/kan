@@ -1,10 +1,32 @@
 import { z } from "zod";
 
 import {
+  checklistItemResponseSchema,
   checklistResponseSchema,
   labelSchema,
   workspaceMemberSchema,
 } from "./common";
+
+// A checklist item doubles as a sub-task with its own dates and assignees
+export const checklistItemDetailSchema = checklistItemResponseSchema.extend({
+  startDate: z.date().nullable(),
+  startDateHasTime: z.boolean(),
+  dueDate: z.date().nullable(),
+  dueDateHasTime: z.boolean(),
+  dueReminderMinutes: z.number().nullable(),
+  members: z.array(
+    z.object({
+      publicId: z.string(),
+      email: z.string(),
+      user: z
+        .object({
+          id: z.string(),
+          name: z.string().nullable(),
+        })
+        .nullable(),
+    }),
+  ),
+});
 
 // ─── card.create ─────────────────────────────────────────────
 export const cardCreateResponseSchema = z.object({
@@ -67,7 +89,9 @@ export const cardDetailSchema = z.object({
   cardNumber: z.number().nullable(),
   index: z.number(),
   dueDate: z.date().nullable(),
+  dueDateHasTime: z.boolean(),
   startDate: z.date().nullable(),
+  startDateHasTime: z.boolean(),
   dueDateCompleted: z.boolean(),
   dueReminderMinutes: z.number().nullable(),
   coverColour: z.string().nullable(),
@@ -85,7 +109,11 @@ export const cardDetailSchema = z.object({
       url: z.string().nullable(),
     }),
   ),
-  checklists: z.array(checklistResponseSchema),
+  checklists: z.array(
+    checklistResponseSchema.extend({
+      items: z.array(checklistItemDetailSchema),
+    }),
+  ),
   list: z.object({
     publicId: z.string(),
     name: z.string(),

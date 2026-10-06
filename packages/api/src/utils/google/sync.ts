@@ -31,39 +31,118 @@ const errorMessage = (error: unknown) =>
   error instanceof Error ? error.message : String(error);
 
 /**
- * Works out who should see a card in Google, and with what details. A card is
- * shown to its members while it has a due date and isn't archived or deleted
- * (nor its list or board).
+ * One thing shown in Google: the card itself (checklistItemId null) or one of
+ * its checklist items. `data` is null when it should no longer be shown.
  */
-export const getCardSyncTarget = async (db: dbClient, cardId: number) => {
-  const card = await googleConnectionRepo.getCardForSync(db, cardId);
-  if (
-    !card?.dueDate ||
-    card.deletedAt ||
-    card.list.deletedAt ||
-    card.list.board.deletedAt
-  ) {
-    return { data: null, userIds: new Set<string>() };
-  }
+export interface SyncTarget {
+  checklistItemId: number | null;
+  data: CardSyncData | null;
+  userIds: Set<string>;
+}
 
+const activeUserIds = (
+  rows: { member: { userId: string | null; deletedAt: Date | null } }[],
+) => {
   const userIds = new Set<string>();
-  for (const { member } of card.members) {
+  for (const { member } of rows) {
     if (member.userId && !member.deletedAt) userIds.add(member.userId);
   }
+  return userIds;
+};
 
-  const data: CardSyncData = {
+/**
+ * Works out what of a card should be in Google, for whom, and with what
+ * details. While the card isn't archived or deleted (nor its list or board):
+ * - the card is shown to its members when it has a due date
+ * - each checklist item with a due date is shown to the people it's assigned
+ *   to, or to the card's members when nobody is assigned.
+ *
+ * Checklist items listed in `knownItemIds` (they're in someone's Google) are
+ * always returned, with null data when they should be removed.
+ */
+export const getCardSyncTargets = async (
+  db: dbClient,
+  cardId: number,
+  knownItemIds: number[] = [],
+): Promise<SyncTarget[]> => {
+  const card = await googleConnectionRepo.getCardForSync(db, cardId);
+  const active =
+    !!card &&
+    !card.deletedAt &&
+    !card.list.deletedAt &&
+    !card.list.board.deletedAt;
+
+  const targets: SyncTarget[] = [];
+  const removed = (checklistItemId: number | null): SyncTarget => ({
+    checklistItemId,
+    data: null,
+    userIds: new Set(),
+  });
+
+  if (!card || !active) {
+    targets.push(removed(null), ...knownItemIds.map(removed));
+    return targets;
+  }
+
+  const cardMembers = activeUserIds(card.members);
+  const cardUrl = `${env("NEXT_PUBLIC_BASE_URL")}/cards/${card.publicId}`;
+  const shared = {
     publicId: card.publicId,
-    title: card.title,
-    dueDate: card.dueDate,
-    startDate: card.startDate,
-    dueDateCompleted: card.dueDateCompleted,
-    dueReminderMinutes: card.dueReminderMinutes,
     boardName: card.list.board.name,
     listName: card.list.name,
-    cardUrl: `${env("NEXT_PUBLIC_BASE_URL")}/cards/${card.publicId}`,
+    cardUrl,
   };
 
-  return { data, userIds };
+  targets.push(
+    card.dueDate
+      ? {
+          checklistItemId: null,
+          userIds: cardMembers,
+          data: {
+            ...shared,
+            title: card.title,
+            dueDate: card.dueDate,
+            dueDateHasTime: card.dueDateHasTime,
+            startDate: card.startDate,
+            startDateHasTime: card.startDateHasTime,
+            dueDateCompleted: card.dueDateCompleted,
+            dueReminderMinutes: card.dueReminderMinutes,
+          },
+        }
+      : removed(null),
+  );
+
+  const seen = new Set<number>();
+  for (const checklist of card.checklists) {
+    for (const item of checklist.items) {
+      seen.add(item.id);
+      if (!item.dueDate || item.deletedAt || checklist.deletedAt) {
+        targets.push(removed(item.id));
+        continue;
+      }
+      const assignees = activeUserIds(item.members);
+      targets.push({
+        checklistItemId: item.id,
+        userIds: assignees.size > 0 ? assignees : cardMembers,
+        data: {
+          ...shared,
+          checklistItemPublicId: item.publicId,
+          title: `${item.title} (${card.title})`,
+          dueDate: item.dueDate,
+          dueDateHasTime: item.dueDateHasTime,
+          startDate: item.startDate,
+          startDateHasTime: item.startDateHasTime,
+          dueDateCompleted: item.completed,
+          dueReminderMinutes: item.dueReminderMinutes,
+        },
+      });
+    }
+  }
+  for (const itemId of knownItemIds) {
+    if (!seen.has(itemId)) targets.push(removed(itemId));
+  }
+
+  return targets;
 };
 
 /**
@@ -74,6 +153,7 @@ const syncConnection = async (
   db: dbClient,
   connection: Connection,
   cardId: number,
+  checklistItemId: number | null,
   data: CardSyncData | null,
   items: SyncItem[],
 ) => {
@@ -102,6 +182,7 @@ const syncConnection = async (
         calendarId,
         event?.externalId ?? null,
         data,
+        connection.timeZone,
       );
     } catch (error) {
       // The person deleted the Kan calendar in Google: make a new one
@@ -111,12 +192,14 @@ const syncConnection = async (
         await ensureCalendar(),
         null,
         data,
+        connection.timeZone,
       );
     }
     if (eventId !== event?.externalId) {
       await googleConnectionRepo.saveSyncItem(db, {
         connectionId: connection.id,
         cardId,
+        checklistItemId,
         kind: "calendar",
         externalId: eventId,
       });
@@ -172,6 +255,7 @@ const syncConnection = async (
       await googleConnectionRepo.saveSyncItem(db, {
         connectionId: connection.id,
         cardId,
+        checklistItemId,
         kind: "tasks",
         externalId: taskId,
       });
@@ -185,24 +269,30 @@ const syncConnection = async (
 };
 
 /**
- * Updates a card's calendar events and tasks for everyone who has connected
- * Google: adds them for current members, updates them, and removes them for
- * people who are no longer members or when the card is gone.
+ * Updates the calendar events and tasks of a card and its checklist items for
+ * everyone who has connected Google: adds them for the people who should see
+ * them, updates them, and removes them for people who no longer should or
+ * when the card or item is gone.
  *
  * A connection whose Google access was revoked is marked as needing to be
  * reconnected. Any other failure is thrown after every connection was tried,
  * so the job is retried (each step is safe to repeat).
  */
 export const syncCardToGoogle = async (db: dbClient, cardId: number) => {
-  const [{ data, userIds }, items] = await Promise.all([
-    getCardSyncTarget(db, cardId),
-    googleConnectionRepo.getSyncItemsForCard(db, cardId),
+  const items = await googleConnectionRepo.getSyncItemsForCard(db, cardId);
+  const targets = await getCardSyncTargets(db, cardId, [
+    ...new Set(
+      items.flatMap((item) =>
+        item.checklistItemId === null ? [] : [item.checklistItemId],
+      ),
+    ),
   ]);
+  const allUserIds = new Set(targets.flatMap(({ userIds }) => [...userIds]));
 
   const connections = new Map<number, Connection>();
   for (const connection of [
     ...(await googleConnectionRepo.getActiveConnectionsForUsers(db, [
-      ...userIds,
+      ...allUserIds,
     ])),
     ...(await googleConnectionRepo.getByIds(db, [
       ...new Set(items.map((item) => item.connectionId)),
@@ -217,13 +307,24 @@ export const syncCardToGoogle = async (db: dbClient, cardId: number) => {
 
   for (const connection of connections.values()) {
     try {
-      await syncConnection(
-        db,
-        connection,
-        cardId,
-        userIds.has(connection.userId) ? data : null,
-        items.filter((item) => item.connectionId === connection.id),
-      );
+      for (const target of targets) {
+        const own = items.filter(
+          (item) =>
+            item.connectionId === connection.id &&
+            item.checklistItemId === target.checklistItemId,
+        );
+        const data = target.userIds.has(connection.userId) ? target.data : null;
+        // Nothing to add and nothing to remove
+        if (!data && own.length === 0) continue;
+        await syncConnection(
+          db,
+          connection,
+          cardId,
+          target.checklistItemId,
+          data,
+          own,
+        );
+      }
     } catch (error) {
       if (error instanceof GoogleApiError && error.isAuthError) {
         log.warn(

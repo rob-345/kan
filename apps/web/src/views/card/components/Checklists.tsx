@@ -16,6 +16,10 @@ import { t } from "@lingui/core/macro";
 import { useMemo } from "react";
 import { HiPlus, HiXMark } from "react-icons/hi2";
 
+import type {
+  AssignableMember,
+  ChecklistItemScheduleData,
+} from "./ChecklistItemSchedule";
 import CircularProgress from "~/components/CircularProgress";
 import { useModal } from "~/providers/modal";
 import { usePopup } from "~/providers/popup";
@@ -24,12 +28,10 @@ import ChecklistNameInput from "./ChecklistNameInput";
 import NewChecklistItemForm from "./NewChecklistItemForm";
 import SortableChecklistItemRow from "./SortableChecklistItemRow";
 
-interface ChecklistItem {
-  publicId: string;
+type ChecklistItem = ChecklistItemScheduleData & {
   title: string;
-  completed: boolean;
   clientId?: string;
-}
+};
 
 interface Checklist {
   publicId: string;
@@ -40,6 +42,8 @@ interface Checklist {
 interface ChecklistsProps {
   checklists: Checklist[];
   cardPublicId: string;
+  /** Board members checklist items can be assigned to */
+  members?: AssignableMember[];
   activeChecklistForm?: string | null;
   setActiveChecklistForm?: (id: string | null) => void;
   viewOnly?: boolean;
@@ -48,6 +52,7 @@ interface ChecklistsProps {
 export default function Checklists({
   checklists,
   cardPublicId,
+  members = [],
   activeChecklistForm,
   setActiveChecklistForm,
   viewOnly = false,
@@ -230,12 +235,8 @@ export default function Checklists({
                     {checklist.items.map((item) => (
                       <SortableChecklistItemRow
                         key={item.clientId ?? item.publicId}
-                        item={{
-                          publicId: item.publicId,
-                          title: item.title,
-                          completed: item.completed,
-                          clientId: item.clientId,
-                        }}
+                        item={item}
+                        members={members}
                         cardPublicId={cardPublicId}
                         onCreateNewItem={() =>
                           setActiveChecklistForm?.(checklist.publicId)

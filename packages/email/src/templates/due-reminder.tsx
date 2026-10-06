@@ -16,16 +16,19 @@ export const DueReminderTemplate = ({
   boardName,
   cardTitle,
   cardUrl,
+  itemTitle,
 }: {
   dueText: string;
   boardName: string;
   cardTitle: string;
   cardUrl: string;
+  /** Set when the reminder is for a checklist item (sub-task) of the card */
+  itemTitle?: string;
 }) => (
   <Html>
     <Head />
     <Preview>
-      {cardTitle} is due {dueText}
+      {itemTitle ?? cardTitle} is due {dueText}
     </Preview>
     <Body style={{ backgroundColor: "white" }}>
       <Container
@@ -51,7 +54,7 @@ export const DueReminderTemplate = ({
         <Heading
           style={{ fontSize: "24px", fontWeight: "bold", color: "#232323" }}
         >
-          A card is coming due
+          {itemTitle ? "A sub-task is coming due" : "A card is coming due"}
         </Heading>
         <Text
           style={{
@@ -60,8 +63,18 @@ export const DueReminderTemplate = ({
             color: "#232323",
           }}
         >
-          The card <strong>{cardTitle}</strong> in the board{" "}
-          <strong>{boardName}</strong> is due {dueText}.
+          {itemTitle ? (
+            <>
+              The sub-task <strong>{itemTitle}</strong> on the card{" "}
+              <strong>{cardTitle}</strong> in the board{" "}
+              <strong>{boardName}</strong> is due {dueText}.
+            </>
+          ) : (
+            <>
+              The card <strong>{cardTitle}</strong> in the board{" "}
+              <strong>{boardName}</strong> is due {dueText}.
+            </>
+          )}
         </Text>
         <Button
           target="_blank"

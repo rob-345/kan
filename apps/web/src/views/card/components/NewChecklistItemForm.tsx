@@ -64,6 +64,13 @@ const NewChecklistItemForm = ({
           clientId: optimisticPublicId,
           title: vars.title,
           completed: false,
+          index: Number.MAX_SAFE_INTEGER,
+          startDate: null,
+          startDateHasTime: false,
+          dueDate: null,
+          dueDateHasTime: false,
+          dueReminderMinutes: null,
+          members: [],
         };
         const updatedChecklists = old.checklists.map((cl) =>
           cl.publicId === checklistPublicId

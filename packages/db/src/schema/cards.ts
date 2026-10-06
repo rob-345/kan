@@ -45,6 +45,9 @@ export const activityTypes = [
   "card.updated.checklist.item.completed",
   "card.updated.checklist.item.uncompleted",
   "card.updated.checklist.item.deleted",
+  "card.updated.checklist.item.dueDate.updated",
+  "card.updated.checklist.item.member.added",
+  "card.updated.checklist.item.member.removed",
   "card.updated.attachment.added",
   "card.updated.attachment.removed",
   "card.updated.dueDate.added",
@@ -88,7 +91,10 @@ export const cards = pgTable(
       () => imports.id,
     ),
     dueDate: timestamp("dueDate"),
+    // false means the date is a whole day, stored as the start of that day
+    dueDateHasTime: boolean("dueDateHasTime").notNull().default(false),
     startDate: timestamp("startDate"),
+    startDateHasTime: boolean("startDateHasTime").notNull().default(false),
     dueDateCompleted: boolean("dueDateCompleted").notNull().default(false),
     // Minutes before the due date to send a reminder; null means no reminder
     dueReminderMinutes: integer("dueReminderMinutes"),

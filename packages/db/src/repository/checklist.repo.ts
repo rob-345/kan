@@ -1,8 +1,26 @@
-import { and, count, desc, eq, isNull, sql } from "drizzle-orm";
+import { and, count, desc, eq, inArray, isNull, sql } from "drizzle-orm";
 
 import type { dbClient } from "@kan/db/client";
-import { checklistItems, checklists } from "@kan/db/schema";
+import {
+  checklistItemMembers,
+  checklistItems,
+  checklists,
+} from "@kan/db/schema";
 import { generateUID } from "@kan/shared/utils";
+
+import { dueReminderBaseSql } from "./card.repo";
+
+/** Columns returned for a checklist item after it changes. */
+const itemReturning = {
+  publicId: checklistItems.publicId,
+  title: checklistItems.title,
+  completed: checklistItems.completed,
+  startDate: checklistItems.startDate,
+  startDateHasTime: checklistItems.startDateHasTime,
+  dueDate: checklistItems.dueDate,
+  dueDateHasTime: checklistItems.dueDateHasTime,
+  dueReminderMinutes: checklistItems.dueReminderMinutes,
+};
 
 export const getCount = async (db: dbClient) => {
   const result = await db
@@ -84,12 +102,7 @@ export const createItem = async (
         index: lastItem ? lastItem.index + 1 : 0,
         completed: checklistItemInput.completed ?? false,
       })
-      .returning({
-        id: checklistItems.id,
-        publicId: checklistItems.publicId,
-        title: checklistItems.title,
-        completed: checklistItems.completed,
-      });
+      .returning({ id: checklistItems.id, ...itemReturning });
 
     return result;
   });
@@ -157,23 +170,167 @@ export const getChecklistItemByPublicIdWithChecklist = async (
 
 export const updateItemById = async (
   db: dbClient,
-  args: { id: number; title?: string; completed?: boolean },
+  args: {
+    id: number;
+    title?: string;
+    completed?: boolean;
+    startDate?: Date | null;
+    startDateHasTime?: boolean;
+    dueDate?: Date | null;
+    dueDateHasTime?: boolean;
+    dueReminderMinutes?: number | null;
+  },
 ) => {
+  // A new due date or reminder offset means any reminder already sent is stale
+  const resetReminder =
+    args.dueDate !== undefined ||
+    args.dueDateHasTime !== undefined ||
+    args.dueReminderMinutes !== undefined;
+
   const [result] = await db
     .update(checklistItems)
     .set({
-      ...(args.title !== undefined ? { title: args.title } : {}),
-      ...(args.completed !== undefined ? { completed: args.completed } : {}),
+      title: args.title,
+      completed: args.completed,
+      startDate: args.startDate,
+      startDateHasTime: args.startDateHasTime,
+      dueDate: args.dueDate,
+      dueDateHasTime: args.dueDateHasTime,
+      dueReminderMinutes: args.dueReminderMinutes,
+      ...(resetReminder && { dueReminderSentAt: null }),
       updatedAt: new Date(),
     })
     .where(eq(checklistItems.id, args.id))
-    .returning({
-      publicId: checklistItems.publicId,
-      title: checklistItems.title,
-      completed: checklistItems.completed,
-    });
+    .returning(itemReturning);
 
   return result;
+};
+
+export const getItemMember = (
+  db: dbClient,
+  args: { checklistItemId: number; workspaceMemberId: number },
+) =>
+  db.query.checklistItemMembers.findFirst({
+    where: and(
+      eq(checklistItemMembers.checklistItemId, args.checklistItemId),
+      eq(checklistItemMembers.workspaceMemberId, args.workspaceMemberId),
+    ),
+  });
+
+export const addItemMember = async (
+  db: dbClient,
+  args: { checklistItemId: number; workspaceMemberId: number },
+) => {
+  const rows = await db
+    .insert(checklistItemMembers)
+    .values(args)
+    .onConflictDoNothing()
+    .returning({ checklistItemId: checklistItemMembers.checklistItemId });
+  return rows.length > 0;
+};
+
+export const removeItemMember = async (
+  db: dbClient,
+  args: { checklistItemId: number; workspaceMemberId: number },
+) => {
+  const rows = await db
+    .delete(checklistItemMembers)
+    .where(
+      and(
+        eq(checklistItemMembers.checklistItemId, args.checklistItemId),
+        eq(checklistItemMembers.workspaceMemberId, args.workspaceMemberId),
+      ),
+    )
+    .returning({ checklistItemId: checklistItemMembers.checklistItemId });
+  return rows.length > 0;
+};
+
+/** User ids of the active board members a checklist item is assigned to. */
+export const getItemAssigneeUserIds = async (
+  db: dbClient,
+  checklistItemId: number,
+) => {
+  const rows = await db.query.checklistItemMembers.findMany({
+    where: eq(checklistItemMembers.checklistItemId, checklistItemId),
+    with: { member: { columns: { userId: true, deletedAt: true } } },
+  });
+  return [
+    ...new Set(
+      rows.flatMap(({ member }) =>
+        member.userId && !member.deletedAt ? [member.userId] : [],
+      ),
+    ),
+  ];
+};
+
+/**
+ * Claims checklist items whose due date reminder is now due and marks them as
+ * sent, so concurrent workers never send the same reminder twice. Items of
+ * deleted checklists or cards are skipped.
+ */
+export const claimDueReminders = async (
+  db: dbClient,
+  args: { now: Date; limit?: number },
+) => {
+  // Timestamps are stored as UTC without a time zone, matching Drizzle
+  const now = sql`(${args.now.toISOString()}::timestamptz AT TIME ZONE 'UTC')`;
+  const reminderBase = dueReminderBaseSql("item");
+
+  const claimed = await db.execute<{ id: number }>(sql`
+    UPDATE "card_checklist_item" SET "dueReminderSentAt" = ${now}
+    WHERE id IN (
+      SELECT item.id FROM "card_checklist_item" item
+      JOIN "card_checklist" checklist ON checklist.id = item."checklistId"
+      JOIN "card" card ON card.id = checklist."cardId"
+      WHERE item."dueDate" IS NOT NULL
+        AND item."dueReminderMinutes" IS NOT NULL
+        AND item."dueReminderSentAt" IS NULL
+        AND item.completed = false
+        AND item."deletedAt" IS NULL
+        AND checklist."deletedAt" IS NULL
+        AND card."deletedAt" IS NULL
+        AND ${reminderBase} - make_interval(mins => item."dueReminderMinutes") <= ${now}
+        AND ${reminderBase} > ${now} - interval '1 hour'
+      ORDER BY item."dueDate"
+      LIMIT ${args.limit ?? 100}
+      FOR UPDATE OF item SKIP LOCKED
+    )
+    RETURNING id
+  `);
+
+  const ids = claimed.rows.map((row) => Number(row.id));
+  if (ids.length === 0) return [];
+
+  return db.query.checklistItems.findMany({
+    columns: {
+      id: true,
+      publicId: true,
+      title: true,
+      dueDate: true,
+      dueDateHasTime: true,
+    },
+    where: inArray(checklistItems.id, ids),
+    with: {
+      checklist: {
+        columns: {},
+        with: {
+          card: {
+            columns: { id: true, publicId: true, title: true },
+            with: {
+              list: {
+                columns: { name: true },
+                with: {
+                  board: {
+                    columns: { id: true, name: true, workspaceId: true },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
 };
 
 export const softDeleteItemById = async (
@@ -391,6 +548,11 @@ export const reorderItem = async (
           publicId: true,
           title: true,
           completed: true,
+          startDate: true,
+          startDateHasTime: true,
+          dueDate: true,
+          dueDateHasTime: true,
+          dueReminderMinutes: true,
         },
         where: and(
           eq(checklistItems.id, args.itemId),
@@ -429,11 +591,7 @@ export const reorderItem = async (
       .update(checklistItems)
       .set({ index: newIndex })
       .where(eq(checklistItems.id, args.itemId))
-      .returning({
-        publicId: checklistItems.publicId,
-        title: checklistItems.title,
-        completed: checklistItems.completed,
-      });
+      .returning(itemReturning);
 
     if (!updated) {
       throw new Error(`Failed to update checklist item with ID ${args.itemId}`);

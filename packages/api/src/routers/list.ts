@@ -6,10 +6,15 @@ import * as cardRepo from "@kan/db/repository/card.repo";
 import * as activityRepo from "@kan/db/repository/cardActivity.repo";
 import * as listRepo from "@kan/db/repository/list.repo";
 
-import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { listCreateResponseSchema, listUpdateResponseSchema } from "../schemas";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { duplicateCard } from "../utils/duplicateCard";
-import { assertCanDelete, assertCanEdit, assertPermission } from "../utils/permissions";
+import { enqueueGoogleListSync } from "../utils/integrationJobs";
+import {
+  assertCanDelete,
+  assertCanEdit,
+  assertPermission,
+} from "../utils/permissions";
 
 export const listRouter = createTRPCRouter({
   create: protectedProcedure
@@ -145,6 +150,8 @@ export const listRouter = createTRPCRouter({
 
       if (activities.length) await activityRepo.bulkCreate(ctx.db, activities);
 
+      void enqueueGoogleListSync(ctx.db, [list.id]);
+
       return { success: true };
     }),
   update: protectedProcedure
@@ -268,6 +275,8 @@ export const listRouter = createTRPCRouter({
         archive: true,
       });
 
+      void enqueueGoogleListSync(ctx.db, [list.id]);
+
       return { success: true };
     }),
   restore: protectedProcedure
@@ -313,6 +322,8 @@ export const listRouter = createTRPCRouter({
       );
 
       await listRepo.restore(ctx.db, list.id);
+
+      void enqueueGoogleListSync(ctx.db, [list.id]);
 
       return { success: true };
     }),
@@ -448,6 +459,8 @@ export const listRouter = createTRPCRouter({
         });
       }
 
+      void enqueueGoogleListSync(ctx.db, [newList.id]);
+
       return { publicId: newList.publicId, name: newList.name };
     }),
   move: protectedProcedure
@@ -517,6 +530,8 @@ export const listRouter = createTRPCRouter({
         targetBoardId: targetBoard.id,
         userId,
       });
+
+      void enqueueGoogleListSync(ctx.db, [list.id]);
 
       return { success: true };
     }),

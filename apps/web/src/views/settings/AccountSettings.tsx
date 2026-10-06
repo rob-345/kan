@@ -13,6 +13,7 @@ import { api } from "~/utils/api";
 import Avatar from "./components/Avatar";
 import { ChangePasswordFormConfirmation } from "./components/ChangePasswordConfirmation";
 import { DeleteAccountConfirmation } from "./components/DeleteAccountConfirmation";
+import GoogleCalendarTasksSettings from "./components/GoogleCalendarTasksSettings";
 import UpdateDisplayNameForm from "./components/UpdateDisplayNameForm";
 
 export default function AccountSettings() {
@@ -44,6 +45,8 @@ export default function AccountSettings() {
           </h2>
           <p className="text-sm text-neutral-700 dark:text-dark-900">{data?.email}</p>
         </div>
+
+        <GoogleCalendarTasksSettings />
 
         <div className="mb-8 border-t border-light-300 dark:border-dark-300">
           <h2 className="mb-4 mt-8 text-[14px] font-bold text-neutral-900 dark:text-dark-1000">

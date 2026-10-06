@@ -1,18 +1,26 @@
 import crypto from "crypto";
 
 const ALGORITHM = "aes-256-gcm";
-const SECRET_KEY = process.env.BETTER_AUTH_SECRET;
+let cachedKey: Buffer | undefined;
 
-if (!SECRET_KEY) {
-  throw new Error("Encryption key is missing. Set BETTER_AUTH_SECRET.");
-}
+// Derived on first use, so modules that only import this file (and never
+// encrypt anything) load without the secret, e.g. in tests
+const getKey = () => {
+  if (cachedKey) return cachedKey;
 
-// Ensure the key is exactly 32 bytes
-const key = crypto.createHash("sha256").update(String(SECRET_KEY)).digest();
+  const secretKey = process.env.BETTER_AUTH_SECRET;
+  if (!secretKey) {
+    throw new Error("Encryption key is missing. Set BETTER_AUTH_SECRET.");
+  }
+
+  // Ensure the key is exactly 32 bytes
+  cachedKey = crypto.createHash("sha256").update(String(secretKey)).digest();
+  return cachedKey;
+};
 
 export const encryptToken = (text: string) => {
   const iv = crypto.randomBytes(12); // 12 bytes is the recommended IV size for GCM
-  const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
+  const cipher = crypto.createCipheriv(ALGORITHM, getKey(), iv);
 
   // buffer concat is faster/cleaner for raw binary manipulation
   const encrypted = Buffer.concat([
@@ -41,7 +49,7 @@ export const decryptToken = (text: string) => {
   const authTag = combined.subarray(12, 28);
   const encryptedText = combined.subarray(28);
 
-  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+  const decipher = crypto.createDecipheriv(ALGORITHM, getKey(), iv);
   decipher.setAuthTag(authTag);
 
   // If the cookie was tampered with, this will throw an error

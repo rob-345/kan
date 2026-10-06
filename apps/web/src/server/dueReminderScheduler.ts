@@ -1,4 +1,5 @@
 import { processDueReminders } from "@kan/api/utils/dueReminders";
+import { processIntegrationJobs } from "@kan/api/utils/integrationJobs";
 import { createDrizzleClient } from "@kan/db/client";
 import { createLogger } from "@kan/logger";
 
@@ -22,30 +23,69 @@ declare global {
 }
 
 /**
- * Checks for due date reminders once a minute inside the web server process.
- * Several instances can run this safely: each reminder is claimed atomically.
+ * Runs background work inside the web server process: due date reminders
+ * (unless disabled) and queued integration jobs such as Google Chat messages
+ * and Calendar/Tasks syncs, on every tick. New integration jobs also run about
+ * a second after they're queued. Several instances can run this safely: each
+ * reminder and job is claimed atomically.
  */
-export function startDueReminderScheduler() {
+export function startDueReminderScheduler({
+  remindersEnabled = true,
+}: { remindersEnabled?: boolean } = {}) {
   if (globalThis.__kanDueReminderTimer) return;
 
   const db = createDrizzleClient();
-  let running = false;
+  let remindersRunning = false;
+  let jobsRunning = false;
+  let jobRunRequests = 0;
+
+  const runJobs = async () => {
+    jobRunRequests++;
+    // A run already in progress picks up this request when it finishes
+    if (jobsRunning) return;
+    jobsRunning = true;
+    try {
+      let handled = 0;
+      while (handled < jobRunRequests) {
+        handled = jobRunRequests;
+        await processIntegrationJobs(db);
+      }
+    } catch (error) {
+      log.error({ err: error }, "Integration job run failed");
+    } finally {
+      jobsRunning = false;
+    }
+  };
 
   const tick = async () => {
-    if (running) return;
-    running = true;
-    try {
-      await processDueReminders(db);
-    } catch (error) {
-      log.error({ err: error }, "Due reminder check failed");
-    } finally {
-      running = false;
+    if (remindersEnabled && !remindersRunning) {
+      remindersRunning = true;
+      try {
+        await processDueReminders(db);
+      } catch (error) {
+        log.error({ err: error }, "Due reminder check failed");
+      } finally {
+        remindersRunning = false;
+      }
     }
+    await runJobs();
+  };
+
+  let soonTimer: ReturnType<typeof setTimeout> | undefined;
+  globalThis.__kanRunIntegrationJobsSoon = () => {
+    if (soonTimer) return;
+    soonTimer = setTimeout(() => {
+      soonTimer = undefined;
+      void runJobs();
+    }, 1000);
   };
 
   globalThis.__kanDueReminderTimer = setInterval(
     () => void tick(),
     intervalMs(),
   );
-  log.info({ intervalMs: intervalMs() }, "Due reminder scheduler started");
+  log.info(
+    { intervalMs: intervalMs(), remindersEnabled },
+    "Background scheduler started",
+  );
 }

@@ -13,11 +13,13 @@ import {
   HiChevronDown,
   HiOutlineBanknotes,
   HiOutlineBolt,
+  HiOutlineChatBubbleLeftRight,
   HiOutlineCodeBracketSquare,
   HiOutlineRectangleGroup,
   HiOutlineShieldCheck,
   HiOutlineUser,
 } from "react-icons/hi2";
+
 import { usePermissions } from "~/hooks/usePermissions";
 import { useWorkspace } from "~/providers/workspace";
 
@@ -69,6 +71,12 @@ export function SettingsLayout({ children, currentTab }: SettingsLayoutProps) {
       key: "webhooks",
       icon: <HiOutlineBolt />,
       label: t`Webhooks`,
+      condition: isAdmin,
+    },
+    {
+      key: "google-chat",
+      icon: <HiOutlineChatBubbleLeftRight />,
+      label: t`Google Chat`,
       condition: isAdmin,
     },
     {

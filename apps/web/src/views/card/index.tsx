@@ -13,6 +13,7 @@ import Editor from "~/components/Editor";
 import FeedbackModal from "~/components/FeedbackModal";
 import { LabelForm } from "~/components/LabelForm";
 import LabelIcon from "~/components/LabelIcon";
+import { InlineLinkPreviews } from "~/components/LinkPreview";
 import Modal from "~/components/modal";
 import { NewWorkspaceForm } from "~/components/NewWorkspaceForm";
 import { PageHead } from "~/components/PageHead";
@@ -29,6 +30,7 @@ import { DeleteLabelConfirmation } from "../../components/DeleteLabelConfirmatio
 import ActivityList from "./components/ActivityList";
 import { AttachmentThumbnails } from "./components/AttachmentThumbnails";
 import { AttachmentUpload } from "./components/AttachmentUpload";
+import { CardLinks } from "./components/CardLinks";
 import Checklists from "./components/Checklists";
 import { CoverSelector } from "./components/CoverSelector";
 import { DeleteCardConfirmation } from "./components/DeleteCardConfirmation";
@@ -216,6 +218,7 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
   const [activeChecklistForm, setActiveChecklistForm] = useState<string | null>(
     null,
   );
+  const [isAddingLink, setIsAddingLink] = useState(false);
 
   const cardId = Array.isArray(router.query.cardId)
     ? router.query.cardId[0]
@@ -489,6 +492,10 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                           workspaceMembers={workspaceMembers ?? []}
                           readOnly={!canEdit}
                         />
+                        <InlineLinkPreviews
+                          html={card.description}
+                          className="mt-2"
+                        />
                       </div>
                     </form>
                   </div>
@@ -510,9 +517,19 @@ export default function CardPage({ isTemplate }: { isTemplate?: boolean }) {
                           />
                         </div>
                       )}
+                      <CardLinks
+                        links={card.links}
+                        cardPublicId={cardId ?? ""}
+                        isReadOnly={!canEdit}
+                        isAdding={isAddingLink}
+                        setIsAdding={setIsAddingLink}
+                      />
                       {canEdit && (
                         <div className="mt-6">
-                          <AttachmentUpload cardPublicId={cardId} />
+                          <AttachmentUpload
+                            cardPublicId={cardId}
+                            onAddLink={() => setIsAddingLink(true)}
+                          />
                         </div>
                       )}
                     </>

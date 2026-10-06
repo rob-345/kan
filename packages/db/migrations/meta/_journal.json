@@ -267,6 +267,13 @@
       "when": 1791233874699,
       "tag": "20261005205754_AddGoogleIntegrations",
       "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1791313013173,
+      "tag": "20261006185653_AddCardLinksAndLinkPreviews",
+      "breakpoints": true
     }
   ]
 }

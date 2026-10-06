@@ -15,6 +15,7 @@ import type { dbClient } from "@kan/db/client";
 import {
   cardActivities,
   cardAttachments,
+  cardLinks,
   cards,
   cardsToLabels,
   cardToWorkspaceMembers,
@@ -555,6 +556,15 @@ export const getWithListAndMembersByPublicId = async (
         },
         where: isNull(cardAttachments.deletedAt),
         orderBy: asc(cardAttachments.createdAt),
+      },
+      links: {
+        columns: {
+          publicId: true,
+          url: true,
+          title: true,
+        },
+        where: isNull(cardLinks.deletedAt),
+        orderBy: asc(cardLinks.createdAt),
       },
       checklists: {
         columns: {

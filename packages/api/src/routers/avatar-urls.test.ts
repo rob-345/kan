@@ -188,6 +188,7 @@ describe("avatar URL resolution in routers", () => {
       createdBy: "user-1",
       labels: [],
       attachments: [],
+      links: [],
       checklists: [],
       list: {
         publicId: "list-12345678",

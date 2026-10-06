@@ -85,6 +85,13 @@ export const cardDetailSchema = z.object({
       url: z.string().nullable(),
     }),
   ),
+  links: z.array(
+    z.object({
+      publicId: z.string(),
+      url: z.string(),
+      title: z.string().nullable(),
+    }),
+  ),
   checklists: z.array(checklistResponseSchema),
   list: z.object({
     publicId: z.string(),

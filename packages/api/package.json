@@ -36,6 +36,10 @@
       "types": "./src/utils/apiLogging.ts",
       "default": "./src/utils/apiLogging.ts"
     },
+    "./utils/boardBackground": {
+      "types": "./src/utils/boardBackground.ts",
+      "default": "./src/utils/boardBackground.ts"
+    },
     "./utils/dueReminders": {
       "types": "./src/utils/dueReminders.ts",
       "default": "./src/utils/dueReminders.ts"

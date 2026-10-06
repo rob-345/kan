@@ -7,6 +7,7 @@ import {
   HiLink,
   HiOutlineDocumentDuplicate,
   HiOutlineEye,
+  HiOutlinePaintBrush,
   HiOutlineStar,
   HiOutlineTrash,
   HiStar,
@@ -123,6 +124,17 @@ export default function BoardDropdown({
             action: () => openModal("CREATE_TEMPLATE"),
             icon: (
               <HiOutlineDocumentDuplicate className="h-[16px] w-[16px] text-dark-900" />
+            ),
+          },
+        ]
+      : []),
+    ...(canEditBoard
+      ? [
+          {
+            label: t`Change background`,
+            action: () => openModal("BOARD_BACKGROUND"),
+            icon: (
+              <HiOutlinePaintBrush className="h-[16px] w-[16px] text-dark-900" />
             ),
           },
         ]

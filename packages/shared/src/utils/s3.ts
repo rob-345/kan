@@ -132,3 +132,21 @@ export async function generateAttachmentUrl(
     return null;
   }
 }
+
+/**
+ * Resolve a stored board background image to a URL the browser can load.
+ * Bundled presets ("/backgrounds/...") and external https URLs are returned
+ * as-is; uploaded images are stored as S3 keys and get a presigned URL.
+ */
+export async function generateBoardBackgroundUrl(
+  backgroundImage: string | null | undefined,
+): Promise<string | null> {
+  if (!backgroundImage) return null;
+  if (
+    backgroundImage.startsWith("/") ||
+    backgroundImage.startsWith("https://")
+  ) {
+    return backgroundImage;
+  }
+  return generateAttachmentUrl(backgroundImage);
+}

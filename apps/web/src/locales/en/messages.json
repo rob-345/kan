@@ -15695,5 +15695,293 @@
       ]
     ],
     "translation": "YouTube URL"
+  },
+  "zIAOWH": {
+    "translation": "Aurora",
+    "message": "Aurora",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        57
+      ]
+    ]
+  },
+  "fNtuCs": {
+    "translation": "Background images can be up to 10 MB.",
+    "message": "Background images can be up to 10 MB.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        125
+      ]
+    ]
+  },
+  "WltD1M": {
+    "translation": "Bubbles",
+    "message": "Bubbles",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        60
+      ]
+    ]
+  },
+  "sIpTuZ": {
+    "translation": "Change background",
+    "message": "Change background",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        161
+      ],
+      [
+        "src/views/board/components/BoardDropdown.tsx",
+        134
+      ]
+    ]
+  },
+  "l1uXGL": {
+    "translation": "Choose a JPEG, PNG, WebP or GIF image.",
+    "message": "Choose a JPEG, PNG, WebP or GIF image.",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        117
+      ]
+    ]
+  },
+  "LNw9j5": {
+    "translation": "Custom image",
+    "message": "Custom image",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        238
+      ]
+    ]
+  },
+  "Fiagqe": {
+    "translation": "Dunes",
+    "message": "Dunes",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        58
+      ]
+    ]
+  },
+  "NMzjiG": {
+    "translation": "File too large",
+    "message": "File too large",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        124
+      ]
+    ]
+  },
+  "YI4znr": {
+    "translation": "Gradients",
+    "message": "Gradients",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        197
+      ]
+    ]
+  },
+  "cy9wfr": {
+    "translation": "Hills",
+    "message": "Hills",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        59
+      ]
+    ]
+  },
+  "WU4PPU": {
+    "translation": "Mountains",
+    "message": "Mountains",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        55
+      ]
+    ]
+  },
+  "PDvZB8": {
+    "translation": "Paste an https image link",
+    "message": "Paste an https image link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        251
+      ]
+    ]
+  },
+  "LXdhFY": {
+    "translation": "Photos",
+    "message": "Photos",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        173
+      ]
+    ]
+  },
+  "ylbfBl": {
+    "translation": "Remove background",
+    "message": "Remove background",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        304
+      ]
+    ]
+  },
+  "82wVXk": {
+    "translation": "Unable to change background",
+    "message": "Unable to change background",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        72
+      ]
+    ]
+  },
+  "2wWjzQ": {
+    "translation": "Unsupported file",
+    "message": "Unsupported file",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        116
+      ]
+    ]
+  },
+  "ISKWIA": {
+    "translation": "Upload an image",
+    "message": "Upload an image",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        292
+      ]
+    ]
+  },
+  "xfSyLz": {
+    "translation": "Use {0} background",
+    "message": "Use {0} background",
+    "placeholders": {
+      "0": [
+        "photoLabels[photo.key]"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        179
+      ]
+    ]
+  },
+  "wSkN00": {
+    "translation": "Use a full link starting with https://",
+    "message": "Use a full link starting with https://",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        256
+      ]
+    ]
+  },
+  "6kyCBu": {
+    "translation": "Use colour {colour} as background",
+    "message": "Use colour {colour} as background",
+    "placeholders": {
+      "colour": [
+        "colour"
+      ]
+    },
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        226
+      ]
+    ]
+  },
+  "etpYoA": {
+    "translation": "Use gradient background",
+    "message": "Use gradient background",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        208
+      ]
+    ]
+  },
+  "kAv/K1": {
+    "translation": "Use link",
+    "message": "Use link",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        266
+      ]
+    ]
+  },
+  "FItJTE": {
+    "translation": "Waves",
+    "message": "Waves",
+    "placeholders": {},
+    "comments": [],
+    "origin": [
+      [
+        "src/views/board/components/BoardBackgroundModal.tsx",
+        56
+      ]
+    ]
   }
 }

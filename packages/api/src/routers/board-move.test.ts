@@ -68,7 +68,8 @@ vi.mock("@kan/shared/utils", () => ({
   convertDueDateFiltersToRanges: vi.fn(),
 }));
 
-vi.mock("@kan/shared/constants", () => ({
+vi.mock("@kan/shared/constants", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@kan/shared/constants")>()),
   colours: [],
 }));
 

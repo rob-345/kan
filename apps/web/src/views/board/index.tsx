@@ -44,7 +44,7 @@ import { LabelForm } from "~/components/LabelForm";
 import Modal from "~/components/modal";
 import { NewWorkspaceForm } from "~/components/NewWorkspaceForm";
 import { PageHead } from "~/components/PageHead";
-import PatternedBackground from "~/components/PatternedBackground";
+import BoardBackground, { hasBoardBackground } from "~/components/BoardBackground";
 import { Tooltip } from "~/components/Tooltip";
 import { EditYouTubeModal } from "~/components/YouTubeEmbed/EditYouTubeModal";
 import { useDragToScroll } from "~/hooks/useDragToScroll";
@@ -58,6 +58,7 @@ import { api } from "~/utils/api";
 import { formatToArray, isPlaceholderPublicId } from "~/utils/helpers";
 import { DeleteCardConfirmation } from "~/views/card/components/DeleteCardConfirmation";
 import { ArchivedItemsModal } from "./components/ArchivedItemsModal";
+import { BoardBackgroundModal } from "./components/BoardBackgroundModal";
 import BoardDropdown from "./components/BoardDropdown";
 import CalendarView from "./components/CalendarView";
 import { CardContextDueDateModal } from "./components/CardContextDueDateModal";
@@ -215,6 +216,8 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
     enabled: !!boardId,
     placeholderData: keepPreviousData,
   });
+
+  const hasCustomBackground = hasBoardBackground(boardData);
 
   // Redirect to 404 if board doesn't exist
   useEffect(() => {
@@ -888,6 +891,12 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
         </Modal>
         <Modal
           modalSize="md"
+          isVisible={isOpen && modalContentType === "BOARD_BACKGROUND"}
+        >
+          <BoardBackgroundModal queryParams={queryParams} />
+        </Modal>
+        <Modal
+          modalSize="md"
           isVisible={isOpen && modalContentType === "ARCHIVED_ITEMS"}
         >
           <ArchivedItemsModal boardPublicId={boardId ?? ""} />
@@ -922,8 +931,12 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
       <PageHead
         title={`${boardData?.name ?? (isTemplate ? t`Template` : t`Board`)} | ${workspace.name ?? t`Workspace`}`}
       />
-      <div className="relative flex h-full flex-col">
-        <PatternedBackground />
+      <div className="relative isolate flex h-full flex-col">
+        <BoardBackground
+          colour={boardData?.backgroundColour}
+          imageUrl={boardData?.backgroundImageUrl}
+          dimTop
+        />
         <div className="z-10 flex w-full flex-col justify-between p-6 md:flex-row md:p-8">
           {isLoading && !boardData && (
             <div className="flex space-x-2">
@@ -942,7 +955,7 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
                 {...register("name")}
                 onBlur={canEditBoard ? handleSubmit(onSubmit) : undefined}
                 readOnly={!canEditBoard}
-                className="block border-0 bg-transparent p-0 py-0 font-bold leading-[2.3rem] tracking-tight text-neutral-900 focus:ring-0 focus-visible:outline-none disabled:cursor-not-allowed dark:text-dark-1000 sm:text-[1.2rem]"
+                className={`block border-0 bg-transparent p-0 py-0 font-bold leading-[2.3rem] tracking-tight focus:ring-0 focus-visible:outline-none disabled:cursor-not-allowed sm:text-[1.2rem] ${hasCustomBackground ? "text-white drop-shadow" : "text-neutral-900 dark:text-dark-1000"}`}
               />
             </form>
           )}
@@ -1049,7 +1062,9 @@ export default function BoardPage({ isTemplate }: { isTemplate?: boolean }) {
               <>
                 {boardData.lists.length === 0 ? (
                   <div className="z-10 flex h-full w-full flex-col items-center justify-center space-y-8 pb-[150px]">
-                    <div className="flex flex-col items-center">
+                    <div
+                      className={`flex flex-col items-center ${hasCustomBackground ? "rounded-md bg-light-50/90 px-8 py-6 dark:bg-dark-50/90" : ""}`}
+                    >
                       <HiOutlineSquare3Stack3D className="h-10 w-10 text-light-800 dark:text-dark-800" />
                       <p className="mb-2 mt-4 text-[14px] font-bold text-light-1000 dark:text-dark-950">
                         {t`No lists`}

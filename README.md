@@ -189,6 +189,8 @@ pnpm dev
 | `BETTER_AUTH_TRUSTED_ORIGINS`             | Allowed callback origins                                  | No                                          | `http://localhost:3000,http://localhost:3001`               |
 | `GOOGLE_CLIENT_ID`                        | Google OAuth client ID                                    | For Google login, Calendar and Tasks        | `xxx.apps.googleusercontent.com`                            |
 | `GOOGLE_CLIENT_SECRET`                    | Google OAuth client secret                                | For Google login, Calendar and Tasks        | `xxx`                                                       |
+| `GOOGLE_CHAT_PROJECT_NUMBER`              | Google Cloud project number of the Kan Chat app           | For the Google Chat app                     | `123456789012`                                              |
+| `GOOGLE_CHAT_SERVICE_ACCOUNT_KEY`         | Service account key (JSON or base64) for Chat reminders   | For Google Chat app reminders               | `{"type":"service_account",...}`                            |
 | `DISCORD_CLIENT_ID`                       | Discord OAuth client ID                                   | For Discord login                           | `xxx`                                                       |
 | `DISCORD_CLIENT_SECRET`                   | Discord OAuth client secret                               | For Discord login                           | `xxx`                                                       |
 | `GITHUB_CLIENT_ID`                        | GitHub OAuth client ID                                    | For GitHub login                            | `xxx`                                                       |
@@ -220,6 +222,14 @@ See `.env.example` for a complete list of supported environment variables.
 ## Google Workspace 🗓️
 
 **Google Chat.** Workspace admins can post card updates to Chat spaces from **Settings → Google Chat**. In the Chat space, open **Apps & integrations → Webhooks → Add webhook**, copy the URL and paste it into Kan. Each space can follow every board or one board, and you choose which events it gets (new cards, moves, comments, completed cards, due date reminders and more). Messages about the same card are threaded together. Your Google Workspace admin must allow incoming webhooks in Chat.
+
+**Kan app for Google Chat.** Add Kan to a Chat space or message it directly. `@Kan link Product` links a space to a board, then `@Kan add Fix the login bug @Ama due fri 3pm` adds a card there, with Ama as a member and a reminder 15 minutes before (`remind 1h`, `remind 1d` or `no reminder` to change it). Dates are read in the sender's time zone. In a direct message, Kan sends due reminders for your cards; a linked space gets the board's due reminders. `@Kan help` lists the rest (`due`, `boards`, `lists`, `reminders on|off`, `unlink`). People are matched to Kan accounts by email.
+
+To set it up in the same Google Cloud project:
+
+1. Enable the **Google Chat API**. Under **Configuration**, give the app a name and avatar, turn on **Join spaces and group conversations**, choose **HTTP endpoint URL** with `{NEXT_PUBLIC_BASE_URL}/api/integrations/google/chat-app`, and set **Authentication audience** to **Project number**. Make it visible to your domain.
+2. Set `GOOGLE_CHAT_PROJECT_NUMBER` to the project number.
+3. For reminders, create a service account in the project (no roles needed), add a JSON key and put it in `GOOGLE_CHAT_SERVICE_ACCOUNT_KEY`.
 
 **Google Calendar and Tasks.** With `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` set, everyone gets **Connect Google** under **Settings → Account**. Kan then keeps a "Kan" calendar (an event at each due time, carrying the card's reminder) and a "Kan" task list in their own Google account, for the cards they're a member of. Kan can only see the calendar and task list it creates. Google Tasks stores dates only, so tasks show the due day without a time.
 

@@ -11,7 +11,10 @@ import { sendEmail } from "@kan/email";
 import { createLogger } from "@kan/logger";
 import { getDueReminderBase } from "@kan/shared/constants";
 
-import { enqueueChatEvent } from "./integrationJobs";
+import {
+  enqueueChatAppCardReminder,
+  enqueueChatEvent,
+} from "./integrationJobs";
 import { isEmailEnabled } from "./notifications";
 
 const log = createLogger("due-reminders");
@@ -84,7 +87,8 @@ export const getChecklistItemAudienceUserIds = async (
 /**
  * Sends one reminder: an in-app notification and, when email is configured,
  * an email to each person, plus a message to any Google Chat spaces that want
- * reminders. Never throws.
+ * reminders and, through the Kan Chat app, to the people's direct messages and
+ * the board's linked spaces. Never throws.
  */
 export async function deliverDueReminder(
   db: dbClient,
@@ -103,6 +107,13 @@ export async function deliverDueReminder(
       event: "card.due.reminder",
       cardId: card.id,
       context: { dueText, itemTitle: checklistItem?.title },
+    });
+
+    void enqueueChatAppCardReminder(db, {
+      cardId: card.id,
+      userIds: reminder.userIds,
+      dueText,
+      itemTitle: checklistItem?.title,
     });
 
     if (reminder.userIds.length === 0) return;

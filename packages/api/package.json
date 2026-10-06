@@ -44,6 +44,10 @@
       "types": "./src/utils/google/connection.ts",
       "default": "./src/utils/google/connection.ts"
     },
+    "./utils/google/chatApp": {
+      "types": "./src/utils/google/chatApp/index.ts",
+      "default": "./src/utils/google/chatApp/index.ts"
+    },
     "./utils/integrationJobs": {
       "types": "./src/utils/integrationJobs.ts",
       "default": "./src/utils/integrationJobs.ts"
@@ -88,6 +92,7 @@
     "@kan/shared": "workspace:^",
     "@kan/stripe": "workspace:^",
     "@trpc/server": "catalog:",
+    "jose": "^6.1.2",
     "rate-limiter-flexible": "^9.0.1",
     "superjson": "2.2.1",
     "trpc-to-openapi": "^2.3.2",

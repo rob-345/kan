@@ -17,6 +17,7 @@ import {
 
 import { boards } from "./boards";
 import { cards } from "./cards";
+import { lists } from "./lists";
 import { users } from "./users";
 import { workspaces } from "./workspaces";
 
@@ -171,8 +172,101 @@ export const googleSyncItemsRelations = relations(
   }),
 );
 
+export const googleChatAppSpaceTypes = ["DM", "SPACE"] as const;
+export type GoogleChatAppSpaceType = (typeof googleChatAppSpaceTypes)[number];
+
+/**
+ * A Google Chat space or direct message that the Kan Chat app has been added
+ * to. A space can be linked to a board (and optionally a list) so that
+ * "@Kan add …" creates cards there and the board's due reminders are posted to
+ * it. A direct message belongs to one Kan user and receives that person's due
+ * reminders.
+ */
+export const googleChatAppSpaces = pgTable(
+  "google_chat_app_space",
+  {
+    id: bigserial("id", { mode: "number" }).primaryKey(),
+    publicId: varchar("publicId", { length: 12 }).notNull().unique(),
+    // Google's resource name, e.g. "spaces/AAAAxyz"
+    spaceName: varchar("spaceName", { length: 255 }).notNull(),
+    spaceType: varchar("spaceType", { length: 16 })
+      .$type<GoogleChatAppSpaceType>()
+      .notNull(),
+    displayName: varchar("displayName", { length: 255 }),
+    // Set for direct messages: the person the app is talking to
+    userId: uuid("userId").references(() => users.id, { onDelete: "cascade" }),
+    workspaceId: bigint("workspaceId", { mode: "number" }).references(
+      () => workspaces.id,
+      { onDelete: "set null" },
+    ),
+    boardId: bigint("boardId", { mode: "number" }).references(() => boards.id, {
+      onDelete: "set null",
+    }),
+    listId: bigint("listId", { mode: "number" }).references(() => lists.id, {
+      onDelete: "set null",
+    }),
+    remindersEnabled: boolean("remindersEnabled").notNull().default(true),
+    linkedBy: uuid("linkedBy").references(() => users.id, {
+      onDelete: "set null",
+    }),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+  (table) => [
+    uniqueIndex("google_chat_app_space_name_idx").on(table.spaceName),
+    index("google_chat_app_space_user_idx").on(table.userId),
+    index("google_chat_app_space_board_idx").on(table.boardId),
+  ],
+).enableRLS();
+
+export const googleChatAppSpacesRelations = relations(
+  googleChatAppSpaces,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [googleChatAppSpaces.userId],
+      references: [users.id],
+    }),
+    workspace: one(workspaces, {
+      fields: [googleChatAppSpaces.workspaceId],
+      references: [workspaces.id],
+    }),
+    board: one(boards, {
+      fields: [googleChatAppSpaces.boardId],
+      references: [boards.id],
+    }),
+    list: one(lists, {
+      fields: [googleChatAppSpaces.listId],
+      references: [lists.id],
+    }),
+  }),
+);
+
+/**
+ * Remembers which Kan user a Google Chat user is, learned from the email
+ * address Google sends with each message. Lets "@Kan add … @Ama" make Ama a
+ * card member once Ama has talked to the app.
+ */
+export const googleChatAppUsers = pgTable(
+  "google_chat_app_user",
+  {
+    id: bigserial("id", { mode: "number" }).primaryKey(),
+    // Google's resource name, e.g. "users/1234567890"
+    chatUserName: varchar("chatUserName", { length: 255 }).notNull(),
+    userId: uuid("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt"),
+  },
+  (table) => [
+    uniqueIndex("google_chat_app_user_name_idx").on(table.chatUserName),
+    index("google_chat_app_user_user_idx").on(table.userId),
+  ],
+).enableRLS();
+
 export const integrationJobKinds = [
   "google.chat.message",
+  "google.chat.app.message",
   "google.sync.card",
   "google.sync.user",
 ] as const;

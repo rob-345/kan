@@ -3,6 +3,7 @@ import { env } from "next-runtime-env";
 import type { dbClient } from "@kan/db/client";
 import type { GoogleChatEvent } from "@kan/db/schema";
 import * as googleChatRepo from "@kan/db/repository/googleChat.repo";
+import * as googleChatAppRepo from "@kan/db/repository/googleChatApp.repo";
 import * as googleConnectionRepo from "@kan/db/repository/googleConnection.repo";
 import * as integrationJobRepo from "@kan/db/repository/integrationJob.repo";
 import * as userRepo from "@kan/db/repository/user.repo";
@@ -16,6 +17,10 @@ import {
   GoogleChatError,
   postChatMessage,
 } from "./google/chat";
+import {
+  canChatAppSendMessages,
+  sendChatAppMessage,
+} from "./google/chatApp/auth";
 import { GoogleApiError, isGoogleIntegrationConfigured } from "./google/oauth";
 import { getCardIdsToSyncForUser, syncCardToGoogle } from "./google/sync";
 
@@ -166,6 +171,75 @@ export async function enqueueChatEvent(
   }
 }
 
+/**
+ * Queues a message from the Kan Chat app to the direct messages of the given
+ * people and to the spaces linked to the board, wherever reminders are on.
+ * Used for due reminders; anything that reminds people can call it. Skipped
+ * when the Chat app can't post on its own. Never throws.
+ */
+export async function enqueueChatAppReminder(
+  db: dbClient,
+  args: {
+    userIds: string[];
+    boardId: number;
+    text: string;
+    threadKey?: string;
+  },
+) {
+  try {
+    if (!canChatAppSendMessages()) return;
+    const spaceNames = await googleChatAppRepo.getReminderSpaceNames(db, {
+      userIds: args.userIds,
+      boardId: args.boardId,
+    });
+    if (spaceNames.length === 0) return;
+
+    await integrationJobRepo.enqueue(
+      db,
+      spaceNames.map((spaceName) => ({
+        kind: "google.chat.app.message" as const,
+        payload: { spaceName, text: args.text, threadKey: args.threadKey },
+      })),
+    );
+    runSoon();
+  } catch (error) {
+    log.error(
+      { err: error, boardId: args.boardId },
+      "Failed to queue Google Chat app reminder",
+    );
+  }
+}
+
+/** Queues the Chat app's due reminder for a card. Never throws. */
+export async function enqueueChatAppCardReminder(
+  db: dbClient,
+  args: { cardId: number; userIds: string[]; dueText: string },
+) {
+  try {
+    if (!canChatAppSendMessages()) return;
+    const card = await googleChatRepo.getCardForChat(db, args.cardId);
+    if (!card) return;
+
+    await enqueueChatAppReminder(db, {
+      userIds: args.userIds,
+      boardId: card.list.board.id,
+      text: buildChatMessageText("card.due.reminder", {
+        cardTitle: card.title,
+        cardUrl: `${env("NEXT_PUBLIC_BASE_URL")}/cards/${card.publicId}`,
+        boardName: card.list.board.name,
+        listName: card.list.name,
+        dueText: args.dueText,
+      }),
+      threadKey: chatThreadKey(card.publicId),
+    });
+  } catch (error) {
+    log.error(
+      { err: error, cardId: args.cardId },
+      "Failed to queue Google Chat app reminder",
+    );
+  }
+}
+
 type Job = Awaited<ReturnType<typeof integrationJobRepo.claim>>[number];
 
 const runJob = async (db: dbClient, job: Job) => {
@@ -181,6 +255,23 @@ const runJob = async (db: dbClient, job: Job) => {
         String(payload.text),
         typeof payload.threadKey === "string" ? payload.threadKey : undefined,
       );
+      return;
+    }
+    case "google.chat.app.message": {
+      const spaceName = String(payload.spaceName);
+      try {
+        await sendChatAppMessage(
+          spaceName,
+          String(payload.text),
+          typeof payload.threadKey === "string" ? payload.threadKey : undefined,
+        );
+      } catch (error) {
+        // The app was removed from the space or the space was deleted
+        if (error instanceof GoogleChatError && error.status === 404) {
+          await googleChatAppRepo.deleteSpace(db, spaceName);
+        }
+        throw error;
+      }
       return;
     }
     case "google.sync.card":

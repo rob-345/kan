@@ -8,7 +8,10 @@ import * as watcherRepo from "@kan/db/repository/watcher.repo";
 import { sendEmail } from "@kan/email";
 import { createLogger } from "@kan/logger";
 
-import { enqueueChatEvent } from "./integrationJobs";
+import {
+  enqueueChatAppCardReminder,
+  enqueueChatEvent,
+} from "./integrationJobs";
 import { isEmailEnabled } from "./notifications";
 
 const log = createLogger("due-reminders");
@@ -26,7 +29,8 @@ const formatDueText = (dueDate: Date, now: Date) => {
 /**
  * Sends every due date reminder that has come due: an in-app notification and,
  * when email is configured, an email to the card's members and watchers, plus
- * a message to any Google Chat spaces that want reminders.
+ * a message to any Google Chat spaces that want reminders and, through the
+ * Kan Chat app, to the people's direct messages and the board's linked spaces.
  * Safe to run on several instances at once; each reminder is claimed once.
  */
 export async function processDueReminders(db: dbClient, now = new Date()) {
@@ -49,6 +53,13 @@ export async function processDueReminders(db: dbClient, now = new Date()) {
       });
 
       const userIds = await watcherRepo.getCardAudienceUserIds(db, card.id);
+
+      void enqueueChatAppCardReminder(db, {
+        cardId: card.id,
+        userIds,
+        dueText,
+      });
+
       if (userIds.length === 0) continue;
 
       const boardName = card.list.board.name;
